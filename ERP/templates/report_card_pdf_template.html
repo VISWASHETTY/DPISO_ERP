@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report Card PDF</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { padding: 20px; }
+        .header { text-align: center; }
+        .header h1 { font-size: 28px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+        th { background: #f0f0f0; }
+        .total, .percentage { font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Report Card</h1>
+        <p>Exam: {{ exam.examname }}</p>
+    </div>
+
+    <table>
+        <tr>
+            <th>Student Name</th>
+            <td>{{ student.studentname }}</td>
+        </tr>
+        <tr>
+            <th>Admission No</th>
+            <td>{{ student.registrationno }}</td>
+        </tr>
+        <tr>
+            <th>Class</th>
+            <td>{{ student.classs.name }}</td>
+        </tr>
+        <tr>
+            <th>Section</th>
+            <td>{{ student.section.name }}</td>
+        </tr>
+    </table>
+
+    <h2>Marks Details</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Max Marks</th>
+                <th>Obtained Marks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mark in marks %}
+            <tr>
+                <td>{{ mark.subject.name }}</td>
+                <td>100</td>
+                <td>{{ mark.marks }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total">
+                <td colspan="2">Total</td>
+                <td>{{ obtained_marks }} / {{ total_marks }}</td>
+            </tr>
+            <tr class="percentage">
+                <td colspan="2">Percentage</td>
+                <td>{{ percentage }}%</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

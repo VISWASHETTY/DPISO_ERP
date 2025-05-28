@@ -1,0 +1,94 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Student Data</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+</head>
+
+<body>
+
+    <div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+   
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+      
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Student Login Credentials </strong>
+                        </div>
+                        <div class="card-body">
+                            <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Profile</th>
+                                        <th>Admission No</th>
+                                        <th>Class & Section</th>
+                                        <th>Student Name</th>
+                                        <th>Gender</th>
+                                        <th>Date of Birth</th>
+                                        <th>Parents</th>
+                                        <th>Username</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i, j, k, l, m, n in combined_data %}
+                                    <tr>
+                                        {% if i.profile_photo %}
+                                        <td><img src="{{ i.profile_photo.url }}" style="width: 50px; height: 50px; border-radius: 20px;"></td>
+                                        {% else  %}
+                                        <td>No Profile</td>
+                                        {%  endif %}
+                                        <td>{{ i.registrationno }}</td>
+                                        <td>{{ i.classs }}-{{ i.section.name }}</td>
+                                        <td>{{ i.studentname }}</td>
+                                        <td>{{ i.gender }}</td>
+                                        <td>{{ i.dateofbirth }}</td>
+                                        <td>Father: {{ l.father_name }}<br>Mother: {{ l.mother_name }}</td>
+                                        <td>
+                                            {% if i.custid.username %}
+                                                {{ i.custid.username }}
+                                                <p style="color: green;">(Click Assign button to update)</p>
+                                            {% else %}
+                                                <span class="text-danger">Username not available. Click assign button to update</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="/login_edit/{{i.custid_id}}/" class="btn btn-primary btn-custom">Assign</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+      
+      
+            </div>
+        </div>
+      </div>
+        </div>
+        </div>
+        </div>
+
+</body>
+
+</html>
+{% endblock %}

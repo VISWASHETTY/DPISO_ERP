@@ -1,0 +1,1999 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{a1.school.logo.url}}">
+
+    <title>Admin Dashboard</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<!-- Bootstrap 4.0-->
+	<link rel="stylesheet" href="{% static 'assets/vendor_components/bootstrap/dist/css/bootstrap.css' %}">
+		
+	<!-- daterange picker -->	
+	<link rel="stylesheet" href="{% static 'assets/vendor_components/bootstrap-daterangepicker/daterangepicker.css' %}">
+	
+	<!-- theme style -->
+	<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+	
+	<!-- CrmX Admin skins -->
+	<link rel="stylesheet" href="{% static 'css/skin_color.css' %}">
+
+    <link rel="stylesheet" href="{% static 'vendors/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}">
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+	 
+	 <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+      body{
+        font-size: smaller;
+        
+      }
+			a{
+			text-decoration: none !important;
+		}
+        .birthday-container {
+            background: linear-gradient(135deg, #ffffff, #e1f5fe);
+            border-radius: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            padding: 3rem;
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+           
+        }
+        .birthday-header {
+            font-weight: 700;
+            
+            color: #d81b60;
+            margin-bottom: 0.5rem;
+            animation: zoomIn 1s ease-in;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 2rem;
+            animation: fadeIn 1.5s ease-in;
+        }
+        .carousel-inner {
+            padding: 1rem;
+        }
+        .name-card {
+			background: linear-gradient(135deg, #e0f7fa, #ffffff);
+            color: #080808;
+            padding: 1.5rem;
+            border-radius: 15px;
+            font-size: 1.6rem;
+            font-weight: 600;
+           
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: scale(0.7);
+            transition: all 0.6s ease;
+            min-height: 130px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .name-card.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .name-card span {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-top: 0.5rem;
+        }
+        .name-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 10%, transparent 10%);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        .no-birthdays {
+            font-size: 1.6rem;
+            color: #666;
+            font-family: 'Poppins', sans-serif;
+            padding: 2rem;
+            background: #f5f5f5;
+            border-radius: 15px;
+            margin: 1rem 0;
+        }
+        .message {
+            color: #333;
+            animation: slideUp 1s ease-in;
+        }
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #ffd700;
+            border-radius: 50%;
+            opacity: 0;
+            animation: confettiFall 2.5s infinite;
+        }
+        @keyframes confettiFall {
+            0% { transform: translate(0, -100%) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(var(--x), 100%) rotate(360deg); opacity: 0; }
+        }
+        @keyframes shine {
+            0% { transform: rotate(45deg) translateX(-100%); }
+            50% { transform: rotate(45deg) translateX(100%); }
+            100% { transform: rotate(45deg) translateX(-100%); }
+        }
+        .btn-wish {
+            background: #d81b60;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin: 0.5rem;
+        }
+        .btn-wish:hover {
+            background: #b0003a;
+            transform: scale(1.1);
+        }
+        .btn-snapshot {
+            background: #2196f3;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin: 0.5rem;
+        }
+        .btn-snapshot:hover {
+            background: #1976d2;
+            transform: scale(1.1);
+        }
+        .btn-snapshot:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .carousel-control-prev, .carousel-control-next {
+            width: 8%;
+            opacity: 0.8;
+        }
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            background-color: #91cef7;
+            border-radius: 50%;
+            padding: 1rem;
+        }
+        @keyframes zoomIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    .bd{
+			color: white;
+		}
+
+		.leave-container {
+            background: linear-gradient(135deg, #ffffff, #e3f2fd);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            padding: 2.5rem;
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #b0bec5;
+        }
+        .leave-header {
+            font-weight: 700;
+            font-family: 'Roboto', sans-serif;
+            color: #1565c0;
+            margin-bottom: 0.5rem;
+            animation: slideInLeft 1s ease-in;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #555;
+            font-family: 'Open Sans', sans-serif;
+            margin-bottom: 2rem;
+            animation: fadeIn 1.5s ease-in;
+        }
+        .carousel-inner {
+            padding: 1rem;
+        }
+        .request-card {
+            background: #fafafa;
+            color: #333;
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            font-weight: 500;
+            font-family: 'Open Sans', sans-serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            border: 1px solid #e0e0e0;
+        }
+        .request-card.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .request-card span {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-top: 0.3rem;
+            color: #666;
+        }
+        .request-card .reason {
+            font-size: 1rem;
+            font-style: italic;
+            margin-top: 0.5rem;
+            color: #888;
+        }
+        .request-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: gloss 3s infinite;
+        }
+        .no-requests {
+            font-size: 1.5rem;
+            color: #666;
+            font-family: 'Open Sans', sans-serif;
+            padding: 2rem;
+            background: #f5f5f5;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        .message {
+            font-size: 1.2rem;
+            color: #333;
+            line-height: 1.6;
+            font-family: 'Open Sans', sans-serif;
+            margin: 1.5rem 0;
+            animation: fadeIn 1s ease-in;
+        }
+        .sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #bbdefb;
+            border-radius: 50%;
+            opacity: 0;
+            animation: sparkle 2s infinite;
+        }
+        @keyframes sparkle {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+        @keyframes gloss {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+        .btn-action {
+            background: #1565c0;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            color: #fff;
+            font-family: 'Open Sans', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin: 0.5rem;
+        }
+        .btn-action:hover {
+            background: #0d47a1;
+            transform: scale(1.05);
+        }
+        .btn-snapshot {
+            background: #43a047;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            color: #fff;
+            font-family: 'Open Sans', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin: 0.5rem;
+        }
+        .btn-snapshot:hover {
+            background: #2e7d32;
+            transform: scale(1.05);
+        }
+        .btn-snapshot:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .carousel-control-prev, .carousel-control-next {
+            width: 8%;
+            opacity: 0.7;
+        }
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            background-color: #1565c0;
+            border-radius: 50%;
+            padding: 1rem;
+        }
+        @keyframes slideInLeft {
+            0% { opacity: 0; transform: translateX(-50px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+		.aaa {
+            background: #e7f3ff;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .icon-circle {
+            background: #007bff;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+        .card-title {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .card-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #007bff;
+        }
+      
+        @media (max-width: 768px) {
+            .col-3 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+        @media (max-width: 576px) {
+            .col-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+		.date-display {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .today-label {
+            color: black;
+        }
+        .date-info {
+            color: #007bff;
+        }
+		
+    </style>
+
+  </head>
+
+<body class="hold-transition light-skin sidebar-mini theme-classic fixed">
+	
+<div class="wrapper">
+
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="index.html" class="logo">
+      <!-- mini logo -->
+	  <!-- <div class="logo-mini">
+		  <span class="light-logo"><img src="../images/logo-dark.png" alt="logo"></span>
+		  <span class="dark-logo"><img src="../images/logo-dark.png" alt="logo"></span>
+	  </div> -->
+      <!-- logo-->
+      <!-- <div class="logo-lg">
+		  <span class="light-logo"><img src="../images/logo-dark-text.png" alt="logo"></span>
+	  	  <span class="dark-logo"><img src="../images/logo-dark-text.png" alt="logo"></span>
+	  </div> -->
+    </a>
+    <!-- Header Navbar -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+	  <div class="ml-20">
+		  <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+			
+			<i class="bi bi-border-width"></i>
+		  </a>
+		  
+		  <a href="#" data-provide="fullscreen" class="sidebar-toggle" title="Full Screen">
+           <i class="bi bi-fullscreen"></i>
+		  </a> 
+		
+	  </div>
+		
+      <div class="navbar-custom-menu r-side">
+        <ul class="nav navbar-nav">
+		  <!-- full Screen -->
+	      <li class="search-bar">		  
+			  <div class="lookup lookup-circle lookup-right">
+			     <input type="text" name="s">
+			  </div>
+		  </li>			
+		  <!-- Messages -->
+		  <li class="dropdown messages-menu">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Messages">
+			  
+<i class="bi bi-envelope-fill"></i>
+			</a>
+			<ul class="dropdown-menu animated bounceIn">
+
+			  <li class="header">
+				<div class="p-20">
+					<div class="flexbox">
+						<div>
+							<h4 class="mb-0 mt-0">Messages</h4>
+						</div>
+						<div>
+							<a href="#" class="text-danger">Clear All</a>
+						</div>
+					</div>
+				</div>
+			  </li>
+			  <li>
+				<!-- inner menu: contains the actual data -->
+				<ul class="menu sm-scrol">
+				  <li><!-- start message -->
+					<a href="#">
+					  <div class="pull-left">
+						<img src="../images/user2-160x160.jpg" class="rounded-circle" alt="User Image">
+					  </div>
+					  <div class="mail-contnet">
+						 <h4>
+						  Lorem Ipsum
+						  <small><i class="fa fa-clock-o"></i> 15 mins</small>
+						 </h4>
+						 <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
+					  </div>
+					</a>
+				  </li>
+				  <!-- end message -->
+				  <li>
+					<a href="#">
+					  <div class="pull-left">
+						<img src="../images/user3-128x128.jpg" class="rounded-circle" alt="User Image">
+					  </div>
+					  <div class="mail-contnet">
+						 <h4>
+						  Nullam tempor
+						  <small><i class="fa fa-clock-o"></i> 4 hours</small>
+						 </h4>
+						 <span>Curabitur facilisis erat quis metus congue viverra.</span>
+					  </div>
+					</a>
+				  </li>
+				  <li>
+					<a href="#">
+					  <div class="pull-left">
+						<img src="../images/user4-128x128.jpg" class="rounded-circle" alt="User Image">
+					  </div>
+					  <div class="mail-contnet">
+						 <h4>
+						  Proin venenatis
+						  <small><i class="fa fa-clock-o"></i> Today</small>
+						 </h4>
+						 <span>Vestibulum nec ligula nec quam sodales rutrum sed luctus.</span>
+					  </div>
+					</a>
+				  </li>
+				  <li>
+					<a href="#">
+					  <div class="pull-left">
+						<img src="../images/user3-128x128.jpg" class="rounded-circle" alt="User Image">
+					  </div>
+					  <div class="mail-contnet">
+						 <h4>
+						  Praesent suscipit
+						<small><i class="fa fa-clock-o"></i> Yesterday</small>
+						 </h4>
+						 <span>Curabitur quis risus aliquet, luctus arcu nec, venenatis neque.</span>
+					  </div>
+					</a>
+				  </li>
+				  <li>
+					<a href="#">
+					  <div class="pull-left">
+						<img src="../images/user4-128x128.jpg" class="rounded-circle" alt="User Image">
+					  </div>
+					  <div class="mail-contnet">
+						 <h4>
+						  Donec tempor
+						  <small><i class="fa fa-clock-o"></i> 2 days</small>
+						 </h4>
+						 <span>Praesent vitae tellus eget nibh lacinia pretium.</span>
+					  </div>
+
+					</a>
+				  </li>
+				</ul>
+			  </li>
+			  <li class="footer">				  
+				  <a href="#">See all e-Mails</a>
+			  </li>
+			</ul>
+		  </li>
+		  <!-- Notifications -->
+		  <li class="dropdown notifications-menu">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Notifications">
+		
+<i class="bi bi-bell-fill"></i>
+			</a>
+			<ul class="dropdown-menu animated bounceIn">
+
+			  <li class="header">
+				<div class="p-20">
+					<div class="flexbox">
+						<div>
+							<h4 class="mb-0 mt-0">Notifications</h4>
+						</div>
+						<div>
+							<a href="#" class="text-danger">Clear All</a>
+						</div>
+					</div>
+				</div>
+			  </li>
+
+			  <li>
+				<!-- inner menu: contains the actual data -->
+				<ul class="menu sm-scrol">
+                    {% if unread_count > 0 %}
+                                    <span class="count bg-danger">{{ unread_count }}</span>
+                                {% endif %}
+                                {% if notifications %}
+                                    <p class="red">You have {{ unread_count }} notification{{ unread_count|pluralize }}</p>
+                                    {% for note in notifications %}
+                                        <a class="dropdown-item media bg-flat-color-{{ forloop.counter|add:1 }}" href="#">
+                                            <i class="fa fa-info-circle"></i>
+                                            <p style="color: black;">{{ note.message }}</p>
+                                            <small class="text-muted">{{ note.created_at|timesince }} ago</small>
+                                        </a>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="dropdown-item">No new notifications</p>
+                                {% endif %}
+				  
+				</ul>
+			  </li>
+			  <li class="footer">
+				  <a href="#">View all</a>
+			  </li>
+			</ul>
+		  </li>	
+		  
+		  <!-- User Account-->
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="User">
+				{% if a1.logo %}
+              <img src="{{ a1.logo.url }}" class="user-image rounded-circle" alt="User Image">
+			  {% endif %}
+            </a>
+            <ul class="dropdown-menu animated flipInX">
+              <!-- User image -->
+              <li class="user-header bg-img" style="background-image: url(../images/user-info.jpg)" data-overlay="3">
+				  <div class="flexbox align-self-center">	
+						{% if a1.logo %}				  
+				  	<img src="{{ a1.logo.url }}" class="float-left rounded-circle" alt="User Image">	
+					{% endif %}				  
+					<h4 class="user-name align-self-center">
+					  <span>{{ a1.name | upper }}</span>
+					  <br>
+					  <small>{{a1.email}}</small>
+					</h4>
+				  </div>
+              </li>
+              <!-- Menu Body -->
+              <li class="user-body">
+				    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#photoModal"><i class="ion ion-person"></i> My Profile</a>
+					<a class="dropdown-item" href="/inbox"><i class="ion ion-email-unread"></i> Inbox</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="/user_logout"><i class="ion-log-out"></i> Logout</a>
+              </li>
+            </ul>
+          </li>	
+
+          <style>
+    .modal-content {
+      opacity: 1 !important;
+      background-color: #fff !important;
+    }
+  </style>
+          <!-- Modal -->
+  <div class="modal" id="photoModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content border-0 shadow-sm bg-white">
+        <div class="position-relative">
+          <button type="button" class="btn btn-light btn-sm position-absolute top-0 end-0 m-1" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+          </button>
+          <img src="{{ a1.logo.url }}" alt="Profile Photo" class="img-fluid rounded">
+        </div>
+      </div>
+    </div>
+  </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+			
+		  
+          <!-- Control Sidebar Toggle Button -->
+          <!-- <li>
+            <a href="#" data-toggle="control-sidebar" title="Setting"><i class="fa fa-cog fa-spin"></i></a>
+          </li> -->
+			
+        </ul>
+      </div>
+    </nav>
+  </header>
+  
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar-->
+    <section class="sidebar position-relative">	
+		
+        <div class="user-profile">
+			<div class="ulogo" style="display: none;">
+				 <a href="index.html">
+				
+				  <h3><b>CrmX</b>Admin</h3>
+				</a>
+			</div>
+			<div class="profile-pic">
+					{% if a1.logo %}
+				<img src="{{ a1.logo.url }}" alt="user">	
+				{% endif %}
+				<div class="profile-info"><p class="bd">{{ a1.name | upper }}</p>
+				</div>
+			</div>
+        </div>
+	  <div class="multinav">
+		  <div class="scrollable" style="height: 100%;">
+		  <!-- sidebar menu-->
+			  <ul class="sidebar-menu" data-widget="tree">				  
+				<li class="active">
+				  <a href="/dashboard">
+					  <i class="bi bi-wrench-adjustable-circle-fill"></i>
+					  <span>Dashboard</span>
+				  </a>
+				</li> 
+
+				<li class="treeview">
+				  <a href="#">
+				
+
+                <i class="bi bi-mortarboard-fill"></i>
+					<span>Leads</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/leads_list"><i class="bi bi-activity"></i>All Leads</a></li>
+					<li><a href="/lead_statuses"><i class="bi bi-activity"></i>Lead Status</a></li>
+					<li><a href="/lead_sources"><i class="bi bi-activity"></i>Lead Sources</a></li>
+					<li><a href="/admissions"><i class="bi bi-activity"></i>Website Leads</a></li>
+				  </ul>
+				</li>  
+
+
+
+				<li class="treeview">
+				  <a href="#">
+				
+
+                <i class="bi bi-mortarboard-fill"></i>
+					<span>Student</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/insert_student_admission"><i class="bi bi-activity"></i>New Admission</a></li>
+					<li><a href="/student_list"><i class="bi bi-activity"></i>All Students</a></li>
+					<li><a href="/login_list"><i class="bi bi-activity"></i>Student Permissions</a></li>
+					<li><a href="/bulkdataedit"><i class="bi bi-activity"></i>Modify Student Details</a></li>
+					<li><a href="/deleted_students"><i class="bi bi-activity"></i>Droped Students</a></li>
+				  </ul>
+				</li>  
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-journal-bookmark-fill"></i>
+					<span>Teacher</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/assign_teacher"><i class="bi bi-activity"></i>New Teacher</a></li>
+					<li><a href="/teachers_view"><i class="bi bi-activity"></i>All Teachers</a></li>
+					<li><a href="/teacher_login_list"><i class="bi bi-activity"></i>Teacher Permissions</a></li>
+					<li><a href="/assign_teacher_to_class"><i class="bi bi-activity"></i>Class Coordinator</a></li>
+					<li><a href="/class_teachers_list"><i class="bi bi-activity"></i>All Class Coordinators</a></li>
+					<li><a href="/deleted_teachers"><i class="bi bi-activity"></i>Droped Teachers</a></li>
+
+                </ul>
+				</li> 
+                
+                
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-shield-lock"></i>
+					<span>School</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/add_class"><i class="bi bi-activity"></i>Add Class</a></li>
+					<li><a href="/add_section"><i class="bi bi-activity"></i>Add Section</a></li>
+					<li><a href="/add_subject"><i class="bi bi-activity"></i>Add Subjects</a></li>
+					<li><a href="/add_fee"><i class="bi bi-activity"></i>Add Fee</a></li>
+					<li><a href="/transport_fee_view"><i class="bi bi-activity"></i>Add Transport Fee</a></li>
+                </ul>
+				</li> 
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-cash-stack"></i>
+					<span>Fee Payments</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/student_fee_details"><i class="bi bi-activity"></i>Student Fee Details</a></li>
+					<li><a href="/student_updatefee"><i class="bi bi-activity"></i>Modify Student Fee's</a></li>
+                </ul>
+				</li> 
+
+
+        <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-calendar2-week"></i>
+					<span>Time Table</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/create_timetable"><i class="bi bi-activity"></i>Create TimeTable</a></li>
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-file-earmark-text-fill"></i>
+					<span>Examinations</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/insert_exam"><i class="bi bi-activity"></i>Create Exam</a></li>
+					<li><a href="/admin_view_student_marks"><i class="bi bi-activity"></i>Student Marks</a></li>
+					<li><a href="/admin_generate_reportcard"><i class="bi bi-activity"></i>Student Report Card</a></li>
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-person-check-fill"></i>
+					<span>Attendance</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/attendance"><i class="bi bi-activity"></i>View Student Attendance</a></li>
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-person-dash-fill"></i>
+					<span>Leaves</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/admin_teacher_leave_requests"><i class="bi bi-activity"></i>Teacher's Leave Request</a></li>
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-truck-front-fill"></i>
+					<span>Transport</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/students_using_transport"><i class="bi bi-activity"></i>Transport Student's</a></li>
+					<li><a href="/students_not_using_transport"><i class="bi bi-activity"></i>Non-Transport Student's</a></li>
+					<li><a href="/admin_transport_student_list"><i class="bi bi-activity"></i>Student's List</a></li>
+					<li><a href="/admin_view_transport_attendance"><i class="bi bi-activity"></i>Student's Attendance</a></li>
+					<li><a href="/admin_transport_attendance_summary"><i class="bi bi-activity"></i>Student's Attendance Summary</a></li>
+					<li><a href="/admin_transport_list"><i class="bi bi-activity"></i>Transport List</a></li>
+					<li><a href="/admin_driver_list"><i class="bi bi-activity"></i>Driver's List</a></li>
+					<li><a href="/admin_transport_issues"><i class="bi bi-activity"></i>Repots/Issues</a></li>
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-key-fill"></i>
+					<span>Credentials</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/admin_student_credentials"><i class="bi bi-activity"></i>Student Credentials</a></li>
+					<li><a href="/admin_teacher_credentials"><i class="bi bi-activity"></i>Teacher Credentials</a></li>
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-file-text-fill"></i>
+					<span>Circular</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/create_circular"><i class="bi bi-activity"></i>Create New Circular</a></li>
+					<li><a href="/circular_list"><i class="bi bi-activity"></i>Circular List</a></li>
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-person-lines-fill"></i>
+					<span>Non Teaching Staff</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/add_non_teaching_staff"><i class="bi bi-activity"></i>Add New Staff</a></li>
+					<li><a href="/non_teaching_staff_list"><i class="bi bi-activity"></i>Staff List</a></li>
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-images"></i>
+					<span>Gallery</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/create_album"><i class="bi bi-activity"></i>Create New Album</a></li>
+					<li><a href="/gallery_list"><i class="bi bi-activity"></i>Gallery List</a></li>
+                </ul>
+				</li>
+
+
+				<li class="treeview">
+				  <a href="#">
+                <i class="bi bi-images"></i>
+					<span>Events</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/create_event"><i class="bi bi-activity"></i>Create New Event</a></li>
+					<li><a href="/event_list"><i class="bi bi-activity"></i>Event's List</a></li>
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-chat-dots-fill"></i>
+					<span>Chats</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/inbox"><i class="bi bi-activity"></i>Inbox</a></li>
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-grid-fill"></i>
+					<span>Teacher's Dashboard</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/manage_teacher_dashboard"><i class="bi bi-activity"></i>Teacher Dashboard</a></li>
+					<li><a href="/add_heading"><i class="bi bi-activity"></i>Add Heading</a></li>
+					<li><a href="/add_submenu"><i class="bi bi-activity"></i>Add Menu</a></li>
+                </ul>
+				</li>
+
+
+				<!-- <li class="treeview">
+				  <a href="#">
+					
+					<i class="bi bi-window-stack"></i>
+					<span>Teacher</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li class="treeview">
+					  <a href="/assign_teacher"><i class="bi bi-envelope-arrow-down-fill"></i>New Teacher<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/mailbox_inbox.html"><i class="bi bi-activity"></i>Inbox</a></li>
+						<li><a href="pages/mailbox_compose.html"><i class="bi bi-activity"></i>Compose</a></li>
+						<li><a href="pages/mailbox_read_mail.html"><i class="bi bi-activity"></i>Read</a></li>
+					  </ul>
+					</li>					  
+					<li class="treeview">
+					  <a href="/teachers_view">
+<i class="bi bi-person-lines-fill"></i>All Teachers<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/contact_app_chat.html"><i class="bi bi-activity"></i>Chat app</a></li>
+						<li><a href="pages/contact_app.html"><i class="bi bi-activity"></i>Contact / Employee</a></li>
+						<li><a href="pages/contact_userlist_grid.html"><i class="bi bi-activity"></i>Userlist Grid</a></li>
+						<li><a href="pages/contact_userlist.html"><i class="bi bi-activity"></i>Userlist</a></li>
+					  </ul>
+					</li>					  
+					<li class="treeview">
+					  <a href="/teacher_login_list"><i class="ti-layout-grid2"></i>Teacher Permissions<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/extra_app_ticket.html"><i class="bi bi-activity"></i>Support Ticket</a></li>
+						<li><a href="pages/extra_calendar.html"><i class="bi bi-activity"></i>Calendar</a></li>
+						<li><a href="pages/extra_profile.html"><i class="bi bi-activity"></i>Profile</a></li>
+						<li><a href="pages/extra_taskboard.html"><i class="bi bi-activity"></i>Project DashBoard</a></li>
+						<li><a href="pages/invoice.html"><i class="bi bi-activity"></i>Invoice</a></li>
+						<li><a href="pages/invoicelist.html"><i class="bi bi-activity"></i>Invoice List</a></li>
+					  </ul>
+					</li>
+					<li>
+					  <a href="/assign_teacher_to_class"><i class="ti-envelope"></i><span>Class Coordinator</span></a>
+					  <a href="/class_teachers_list"><i class="ti-envelope"></i><span>All Class Coordinators</span></a>
+					  <a href="/deleted_teachers"><i class="ti-envelope"></i><span>Droped Teachers</span></a>
+
+                    </li> 
+				  </ul>
+				</li> 
+				<li class="treeview">
+				  <a href="#">
+					
+<i class="bi bi-pencil-square"></i>
+					<span>UI Elements</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li class="treeview">
+					  <a href="#"><i class="bi bi-pencil-square"></i>Elements<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/ui_badges.html"><i class="bi bi-activity"></i>Badges</a></li>
+						<li><a href="pages/ui_border_utilities.html"><i class="bi bi-activity"></i>Border</a></li>
+						<li><a href="pages/ui_buttons.html"><i class="bi bi-activity"></i>Buttons</a></li>	
+						<li><a href="pages/ui_color_utilities.html"><i class="bi bi-activity"></i>Color</a></li>
+						<li><a href="pages/ui_dropdown.html"><i class="bi bi-activity"></i>Dropdown</a></li>
+						<li><a href="pages/ui_dropdown_grid.html"><i class="bi bi-activity"></i>Dropdown Grid</a></li>
+						<li><a href="pages/ui_typography.html"><i class="bi bi-activity"></i>Typography</a></li>
+						<li><a href="pages/ui_progress_bars.html"><i class="bi bi-activity"></i>Progress Bars</a></li>
+						<li><a href="pages/ui_grid.html"><i class="bi bi-activity"></i>Grid</a></li>
+						<li><a href="pages/ui_ribbons.html"><i class="bi bi-activity"></i>Ribbons</a></li>
+						<li><a href="pages/ui_sliders.html"><i class="bi bi-activity"></i>Sliders</a></li>
+						<li><a href="pages/ui_tab.html"><i class="bi bi-activity"></i>Tabs</a></li>
+						<li><a href="pages/ui_timeline.html"><i class="bi bi-activity"></i>Timeline</a></li>
+						<li><a href="pages/ui_timeline_horizontal.html"><i class="bi bi-activity"></i>Horizontal Timeline</a></li>
+					  </ul>
+					</li>
+					<li class="treeview">
+					  <a href="#"><i class="ti-smallcap"></i>Icons<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/icons_fontawesome.html"><i class="bi bi-activity"></i>Font Awesome</a></li>
+						<li><a href="pages/icons_glyphicons.html"><i class="bi bi-activity"></i>Glyphicons</a></li>
+						<li><a href="pages/icons_material.html"><i class="bi bi-activity"></i>Material Icons</a></li>	
+						<li><a href="pages/icons_themify.html"><i class="bi bi-activity"></i>Themify Icons</a></li>
+						<li><a href="pages/icons_simpleline.html"><i class="bi bi-activity"></i>Simple Line Icons</a></li>
+						<li><a href="pages/icons_cryptocoins.html"><i class="bi bi-activity"></i>Cryptocoins Icons</a></li>
+						<li><a href="pages/icons_flag.html"><i class="bi bi-activity"></i>Flag Icons</a></li>
+						<li><a href="pages/icons_weather.html"><i class="bi bi-activity"></i>Weather Icons</a></li>
+					  </ul>
+					</li>	
+					<li class="treeview">
+					  <a href="#"><i class="ti-check-box"></i>Components<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/component_bootstrap_switch.html"><i class="bi bi-activity"></i>Bootstrap Switch</a></li>
+						<li><a href="pages/component_date_paginator.html"><i class="bi bi-activity"></i>Date Paginator</a></li>
+						<li><a href="pages/component_media_advanced.html"><i class="bi bi-activity"></i>Advanced Medias</a></li>
+						<li><a href="pages/component_modals.html"><i class="bi bi-activity"></i>Modals</a></li>
+						<li><a href="pages/component_nestable.html"><i class="bi bi-activity"></i>Nestable</a></li>
+						<li><a href="pages/component_notification.html"><i class="bi bi-activity"></i>Notification</a></li>
+						<li><a href="pages/component_portlet_draggable.html"><i class="bi bi-activity"></i>Draggable Portlets</a></li>
+						<li><a href="pages/component_sweatalert.html"><i class="bi bi-activity"></i>Sweet Alert</a></li>
+						<li><a href="pages/component_rangeslider.html"><i class="bi bi-activity"></i>Range Slider</a></li>
+						<li><a href="pages/component_rating.html"><i class="bi bi-activity"></i>Ratings</a></li>
+						<li><a href="pages/component_animations.html"><i class="bi bi-activity"></i>Animations</a></li>
+					  </ul>
+					</li>	
+					<li class="treeview">
+					  <a href="#"><i class="ti-package"></i>Box Cards<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/box_cards.html"><i class="bi bi-activity"></i>User Card</a></li>
+						<li><a href="pages/box_advanced.html"><i class="bi bi-activity"></i>Advanced Card</a></li>
+						<li><a href="pages/box_basic.html"><i class="bi bi-activity"></i>Basic Card</a></li>
+						<li><a href="pages/box_color.html"><i class="bi bi-activity"></i>Card Color</a></li>
+						<li><a href="pages/box_group.html"><i class="bi bi-activity"></i>Card Group</a></li>
+					  </ul>
+					</li>
+					<li class="treeview">
+					  <a href="#"><i class="ti-write"></i>Forms<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/forms_advanced.html"><i class="bi bi-activity"></i>Advanced Elements</a></li>
+						<li><a href="pages/forms_code_editor.html"><i class="bi bi-activity"></i>Code Editor</a></li>
+						<li><a href="pages/forms_editor_markdown.html"><i class="bi bi-activity"></i>Markdown</a></li>
+						<li><a href="pages/forms_editors.html"><i class="bi bi-activity"></i>Editors</a></li>
+						<li><a href="pages/forms_validation.html"><i class="bi bi-activity"></i>Form Validation</a></li>
+						<li><a href="pages/forms_wizard.html"><i class="bi bi-activity"></i>Form Wizard</a></li>
+						<li><a href="pages/forms_general.html"><i class="bi bi-activity"></i>General Elements</a></li>
+						<li><a href="pages/forms_mask.html"><i class="bi bi-activity"></i>Formatter</a></li>
+						<li><a href="pages/forms_xeditable.html"><i class="bi bi-activity"></i>Xeditable Editor</a></li>
+						<li><a href="pages/forms_dropzone.html"><i class="bi bi-activity"></i>Dropzone</a></li>
+					  </ul>
+					</li>
+					<li class="treeview">
+					  <a href="#"><i class="ti-layout-grid4"></i>Tables<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/tables_simple.html"><i class="bi bi-activity"></i>Simple tables</a></li>
+						<li><a href="pages/tables_data.html"><i class="bi bi-activity"></i>Data tables</a></li>
+						<li><a href="pages/tables_editable.html"><i class="bi bi-activity"></i>Editable Tables</a></li>
+						<li><a href="pages/tables_color.html"><i class="bi bi-activity"></i>Table Color</a></li>
+					  </ul>
+					</li>					  
+				  </ul>
+				</li>				
+				<li class="treeview">
+				  <a href="#">
+				
+                   <i class="bi bi-bar-chart-line-fill"></i>
+					<span>CHARTS</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li class="treeview">
+					  <a href="#"><i class="ti-pie-chart"></i>Regular Charts<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/charts_chartjs.html"><i class="bi bi-activity"></i>ChartJS</a></li>
+						<li><a href="pages/charts_flot.html"><i class="bi bi-activity"></i>Flot</a></li>
+						<li><a href="pages/charts_inline.html"><i class="bi bi-activity"></i>Inline charts</a></li>
+						<li><a href="pages/charts_morris.html"><i class="bi bi-activity"></i>Morris</a></li>
+						<li><a href="pages/charts_peity.html"><i class="bi bi-activity"></i>Peity</a></li>
+						<li><a href="pages/charts_chartist.html"><i class="bi bi-activity"></i>Chartist</a></li>
+					  </ul>
+					</li>					  
+					<li class="treeview">
+					  <a href="#"><i class="ti-stats-up"></i>C3 Charts<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/charts_c3_axis.html"><i class="bi bi-activity"></i>Axis Chart</a></li>
+						<li><a href="pages/charts_c3_bar.html"><i class="bi bi-activity"></i>Bar Chart</a></li>
+						<li><a href="pages/charts_c3_data.html"><i class="bi bi-activity"></i>Data Chart</a></li>
+						<li><a href="pages/charts_c3_line.html"><i class="bi bi-activity"></i>Line Chart</a></li>
+					  </ul>
+					</li>					  
+					<li class="treeview">
+					  <a href="#"><i class="ti-pie-chart"></i>Echarts<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/charts_echarts_basic.html"><i class="bi bi-activity"></i>Basic Charts</a></li>
+						<li><a href="pages/charts_echarts_bar.html"><i class="bi bi-activity"></i>Bar Chart</a></li>
+						<li><a href="pages/charts_echarts_pie_doughnut.html"><i class="bi bi-activity"></i>Pie & Doughnut Chart</a></li>>
+					  </ul>
+					</li>					  
+				  </ul>
+				</li>
+				<li class="treeview">
+				  <a href="#">
+					
+					<i class="bi bi-palette"></i>
+					<span>Widgets</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="pages/widgets_blog.html"><i class="bi bi-activity"></i>Blog</a></li>
+					<li><a href="pages/widgets_chart.html"><i class="bi bi-activity"></i>Chart</a></li>
+					<li><a href="pages/widgets_list.html"><i class="bi bi-activity"></i>List</a></li>
+					<li><a href="pages/widgets_social.html"><i class="bi bi-activity"></i>Social</a></li>
+					<li><a href="pages/widgets_statistic.html"><i class="bi bi-activity"></i>Statistic</a></li>
+					<li><a href="pages/widgets_weather.html"><i class="bi bi-activity"></i>Weather</a></li>
+					<li><a href="pages/widgets.html"><i class="bi bi-activity"></i>Widgets</a></li>
+									  
+					<li class="treeview">
+					  <a href="#"><i class="ti-map-alt"></i>Map<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/map_google.html"><i class="bi bi-activity"></i>Google Map</a></li>
+						<li><a href="pages/map_vector.html"><i class="bi bi-activity"></i>Vector Map</a></li>
+					  </ul>
+					</li>
+									  
+					<li class="treeview">
+					  <a href="#"><i class="ti-plug"></i>Extension<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/extension_fullscreen.html"><i class="bi bi-activity"></i>Fullscreen</a></li>
+						<li><a href="pages/extension_pace.html"><i class="bi bi-activity"></i>Pace</a></li>
+					  </ul>
+					</li>
+				  </ul>
+				</li>				  
+				<li class="treeview">
+				  <a href="#">
+					<i class="bi bi-cart-check-fill"></i>
+					<span>Ecommerce Pages</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="pages/ecommerce_products.html"><i class="bi bi-activity"></i>Products</a></li>
+					<li><a href="pages/ecommerce_cart.html"><i class="bi bi-activity"></i>Products Cart</a></li>
+					<li><a href="pages/ecommerce_products_edit.html"><i class="bi bi-activity"></i>Products Edit</a></li>
+					<li><a href="pages/ecommerce_details.html"><i class="bi bi-activity"></i>Product Details</a></li>
+					<li><a href="pages/ecommerce_orders.html"><i class="bi bi-activity"></i>Product Orders</a></li>
+					<li><a href="pages/ecommerce_checkout.html"><i class="bi bi-activity"></i>Products Checkout</a></li>
+				  </ul>
+				</li>
+				<li class="treeview">
+				  <a href="#">
+					
+<i class="bi bi-shield-fill-check"></i>
+					<span>Login & Error</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li class="treeview">
+					  <a href="#">
+<i class="bi bi-shield-fill-check"></i>Authentication<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/auth_login.html"><i class="bi bi-activity"></i>Login</a></li>
+						<li><a href="pages/auth_login2.html"><i class="bi bi-activity"></i>Login 2</a></li>
+						<li><a href="pages/auth_register.html"><i class="bi bi-activity"></i>Register</a></li>
+						<li><a href="pages/auth_register2.html"><i class="bi bi-activity"></i>Register 2</a></li>
+						<li><a href="pages/auth_lockscreen.html"><i class="bi bi-activity"></i>Lockscreen</a></li>
+						<li><a href="pages/auth_user_pass.html"><i class="bi bi-activity"></i>Recover password</a></li>
+					  </ul>
+					</li>
+					<li class="treeview">
+					  <a href="#"><i class="ti-alert"></i>Error<span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span></a>
+					  <ul class="treeview-menu">
+						<li><a href="pages/error_400.html"><i class="bi bi-activity"></i>Error 400</a></li>
+						<li><a href="pages/error_403.html"><i class="bi bi-activity"></i>Error 403</a></li>
+						<li><a href="pages/error_404.html"><i class="bi bi-activity"></i>Error 404</a></li>
+						<li><a href="pages/error_500.html"><i class="bi bi-activity"></i>Error 500</a></li>
+						<li><a href="pages/error_503.html"><i class="bi bi-activity"></i>Error 503</a></li>
+						<li><a href="pages/error_maintenance.html"><i class="bi bi-activity"></i>Maintenance</a></li>
+					  </ul>
+					</li>	
+				  </ul>
+				</li>
+				<li class="treeview">
+				  <a href="#">
+					
+<i class="bi bi-journals"></i>
+					<span>Sample Pages</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="pages/sample_blank.html"><i class="bi bi-activity"></i>Blank</a></li>
+					<li><a href="pages/sample_coming_soon.html"><i class="bi bi-activity"></i>Coming Soon</a></li>
+					<li><a href="pages/sample_custom_scroll.html"><i class="bi bi-activity"></i>Custom Scrolls</a></li>
+					<li><a href="pages/sample_faq.html"><i class="bi bi-activity"></i>FAQ</a></li>
+					<li><a href="pages/sample_gallery.html"><i class="bi bi-activity"></i>Gallery</a></li>
+					<li><a href="pages/sample_lightbox.html"><i class="bi bi-activity"></i>Lightbox Popup</a></li>
+					<li><a href="pages/sample_pricing.html"><i class="bi bi-activity"></i>Pricing</a></li>
+				  </ul>
+				</li> 
+				<li class="treeview">
+				  <a href="#">
+					
+<i class="bi bi-amd"></i>
+					<span>Multilevel</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="#">Level One</a></li>
+					<li class="treeview">
+					  <a href="#">Level One
+						<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+					  </a>
+					  <ul class="treeview-menu">
+						<li><a href="#">Level Two</a></li>
+						<li class="treeview">
+						  <a href="#">Level Two
+							<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+						  </a>
+						  <ul class="treeview-menu">
+							<li><a href="#">Level Three</a></li>
+							<li><a href="#">Level Three</a></li>
+						  </ul>
+						</li>
+					  </ul>
+					</li>
+					<li><a href="#">Level One</a></li>
+				  </ul>
+				</li>-->
+			  </ul>
+		  </div>
+	  </div>
+    </section>
+  </aside>
+
+{% block content %}
+       
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+	  <div class="container-full">
+		<!-- Content Header (Page header) -->	  
+		<div class="content-header">
+			<div class="d-flex align-items-center">
+				<div class="mr-auto">
+					<marquee behavior="scroll" direction="left" scrollamount="5">
+					<h3 class="page-title br-0">{{ a1.name | upper }}</h3></marquee>
+					<h4 class="page-title br-0">Welcome Admin</h4>
+				</div>
+				<div class="container mt-4">
+				<div class="d-flex justify-content-end">
+					<div class="date-display">
+						<span class="today-label">Today :</span>
+						<span class="date-info" id="currentDateDay"></span>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+
+		<!-- Main content -->
+		<section class="content">
+			<div class="row">
+				<div class="col-xl-3 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h5 class="card-title">Total Students</h5>
+                    <p class="card-value">{{ std }}</p>
+                </div>
+				</div>
+				<div class="col-xl-3 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h5 class="card-title">Total Teachers</h5>
+                    <p class="card-value">{{ teach }}</p>
+                </div>
+				</div>
+				<div class="col-xl-3 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5 class="card-title">Total Classes</h5>
+                    <p class="card-value">{{ clas }}</p>
+                </div>
+				</div>
+				<div class="col-xl-3 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5 class="card-title">Total Sections</h5>
+                    <p class="card-value">{{ sec }}</p>
+                </div>
+				</div>
+				</div>
+
+			<div class="row">
+				<div class="col-xl-3 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h5 class="card-title">Today Admissions</h5>
+                    <p class="card-value">{{ std1 }}</p>
+                </div>
+				</div>
+				<div class="col-xl-3 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h5 class="card-title">Total Fees</h5>
+                    <p class="card-value">₹{{ total_fee }}</p>
+                </div>
+				</div>
+				<div class="col-xl-3 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-cash-register"></i>
+                    </div>
+                    <h5 class="card-title">Collected Fees</h5>
+                    <p class="card-value">₹{{ amount }}</p>
+                </div>
+				</div>
+				<div class="col-xl-3 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-money-check-alt"></i>
+                    </div>
+                    <h5 class="card-title">Total Balance</h5>
+                    <p class="card-value">{{ balance_amount }}</p>
+                </div>
+				</div>
+			</div>	
+			<div class="row">
+				<div class="col-xl-8 col-12">
+					<div class="box">
+						<div class="box-header">
+							<h4 class="box-title">Profit & Sales Overview</h4>
+						</div>
+						<div class="box-body">
+							<div id="charts_widget_2_chart"></div>
+							<div class="px-30 pt-30 mt-30 bt-1">
+								<div class="d-lg-flex justify-content-between align-items-center">
+									<div class="d-flex align-items-center">
+										<div class="mr-15 h-40 w-40 l-h-50 rounded text-center">
+											  <span class="icon-Library font-size-24 text-success"><span class="path1"></span><span class="path2"></span></span>
+										</div>
+										<div class="d-flex flex-column font-weight-500">
+											<a href="#" class="hover-success font-size-16">$800</a>
+											<span>Account Ballance</span>
+										</div>
+									</div>
+									<div class="d-flex align-items-center">
+										<div class="mr-15 h-40 w-40 l-h-50 rounded text-center">
+											<span class="icon-Write font-size-24 text-warning"><span class="path1"></span><span class="path2"></span></span>
+										</div>
+										<div class="d-flex flex-column font-weight-500">
+											<a href="#" class="hover-danger font-size-16">$400</a>
+											<span>Ads Earning</span>
+										</div>
+									</div>
+									<div class="d-flex align-items-center">
+										<div class="mr-15 bg-white h-40 w-40 l-h-50 rounded text-center">
+											<span class="icon-Group-chat font-size-24 text-primary"><span class="path1"></span><span class="path2"></span></span>
+										</div>
+										<div class="d-flex flex-column font-weight-500">
+											<a href="#" class="hover-success font-size-16">$900</a>
+											<span>Sales</span>
+										</div>
+									</div>
+									<div class="d-flex align-items-center">
+										<div class="mr-15 h-40 w-40 l-h-50 rounded text-center">
+											<span class="icon-Attachment1 font-size-24 text-info"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></span>
+										</div>
+										<div class="d-flex flex-column font-weight-500">
+											<a href="#" class="hover-info font-size-16">$80</a>
+											<span>Total Earning</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-4 col-12">
+  <div class="box">
+    <div class="box-header d-flex justify-content-between align-items-center">
+  <h4 class="box-title">Today's Attendance</h4>
+  <div class="d-flex">
+    <select id="classSelect" class="form-control form-control-sm mr-2" style="width: auto;">
+      {% for cls in classes %}
+        <option value="{{ cls.id }}">{{ cls.name }}</option>
+      {% endfor %}
+    </select>
+    <select id="sectionSelect" class="form-control form-control-sm" style="width: auto;">
+      {% for sec in sections %}
+        <option value="{{ sec.id }}">{{ sec.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+    <div class="box-body">
+      <canvas id="attendanceChart" height="230"></canvas>
+      <div class="mt-30 bt-1">
+        <div class="d-lg-flex justify-content-between align-items-center">
+          <div>
+            <h2 class="font-weight-700" id="presentCount">0</h2>
+            <div class="d-flex align-items-center">
+              <span class="badge badge-lg badge-dot bg-success mr-10"></span> Present
+            </div>
+          </div>
+          <div>
+            <h2 class="font-weight-700" id="absentCount">0</h2>
+            <div class="d-flex align-items-center">
+              <span class="badge badge-lg badge-dot bg-danger mr-10"></span> Absent
+            </div>
+          </div>
+          <div>
+            <h2 class="font-weight-700" id="totalCount">0</h2>
+            <div class="d-flex align-items-center">
+              <span class="badge badge-lg badge-dot bg-primary mr-10"></span> Total
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let attendanceChart;
+  const ctx = document.getElementById('attendanceChart').getContext('2d');
+
+  // Initialize the chart
+  function updateChart(present, absent) {
+    const data = [present, absent];
+    if (attendanceChart) {
+      attendanceChart.data.datasets[0].data = data;
+      attendanceChart.update();
+    } else {
+      attendanceChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Present', 'Absent'],
+          datasets: [{
+            data: data,
+            backgroundColor: ['#4caf50', '#f44336'],
+            borderColor: ['#ffffff'],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          cutout: '70%',
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Fetch attendance data from backend
+  function fetchAttendance(classId, sectionId) {
+  fetch("{% url 'dashboard' %}", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-CSRFToken': '{{ csrf_token }}'
+    },
+    body: `class_id=${classId}&section_id=${sectionId}`
+  })
+  .then(response => {
+    if (!response.ok) throw new Error('Network response was not ok.');
+    return response.json();
+  })
+  .then(data => {
+    document.getElementById('presentCount').innerText = data.admin_present_count;
+    document.getElementById('absentCount').innerText = data.admin_absent_count;
+    document.getElementById('totalCount').innerText = data.admin_total;
+    updateChart(data.admin_present_count, data.admin_absent_count);
+  })
+  .catch(error => {
+    console.error('Error fetching attendance:', error);
+  });
+}
+
+// On change of class or section
+document.getElementById('classSelect').addEventListener('change', function () {
+  const classId = this.value;
+  const sectionId = document.getElementById('sectionSelect').value;
+  fetchAttendance(classId, sectionId);
+});
+
+document.getElementById('sectionSelect').addEventListener('change', function () {
+  const classId = document.getElementById('classSelect').value;
+  const sectionId = this.value;
+  fetchAttendance(classId, sectionId);
+});
+
+// Load default attendance on page load
+window.addEventListener('DOMContentLoaded', () => {
+  const classId = document.getElementById('classSelect').value;
+  const sectionId = document.getElementById('sectionSelect').value;
+  if (classId && sectionId) {
+    fetchAttendance(classId, sectionId);
+  }
+});
+
+</script>
+</div>
+			
+		</section>
+		  <div class="container my-5">
+        <div class="row g-4">
+        <!-- STUDENT BIRTHDAYS -->
+		 <div class="col-md-4">
+<div class="birthday-container" id="studentBirthdayContainer">
+    <h4 class="birthday-header">🎉 Students Birthday!</h4>
+    <p class="subtitle">Celebrating Our Stars Today</p>
+    <div id="birthdayCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% if students %}
+                {% for student in students %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="name-card">
+                            <div>{{ student.studentname }}</div>
+                            <span>{{ student.classs.name }} - {{ student.section.name }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="carousel-item active">
+                    <div class="no-birthdays">No Birthdays Today</div>
+                </div>
+            {% endif %}
+        </div>
+        {% if students %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#birthdayCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#birthdayCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        {% endif %}
+    </div>
+    <p class="message">
+        {% if students %}
+        {% else %}
+            Check back tomorrow for more birthday celebrations!
+        {% endif %}
+    </p>
+</div>
+</div>
+
+<!-- TEACHER BIRTHDAYS -->
+ <div class="col-md-4">
+<div class="birthday-container"  id="teacherBirthdayContainer">
+    <h4 class="birthday-header">🎉 Teacher Birthdays</h4>
+    <p class="subtitle">Celebrating Our Amazing Educators</p>
+
+    <div id="teacherBirthdayCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <div class="carousel-inner">
+            {% if birthday_teachers %}
+                {% for teacher in birthday_teachers %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="name-card d-flex align-items-center justify-content-center gap-3">
+						{% if teacher.profile_photo %}
+							<img src="{{ teacher.profile_photo.url }}" class="rounded-circle" width="60" height="60" style="object-fit: cover;">
+						{% else %}
+							<div class="avatar bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 60px; height: 60px; font-size: 1.5rem;">
+								{{ teacher.first_name|default:"T"|slice:":1" }}
+							</div>
+						{% endif %}
+						<div style="font-size: 1.1rem; font-weight: 500;">
+							{{ teacher.first_name }} {{ teacher.last_name }}&nbsp;
+							<span>{% for subject in teacher.assigned_subjects1.all %}
+            ( {{ subject.name }} Teacher ){% if not forloop.last %}, {% endif %}
+        {% empty %}
+            <span>No Subject Assigned</span>
+        {% endfor %}</span>
+						</div>
+					</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="carousel-item active">
+                    <div class="no-birthdays">No Teacher Birthdays Today</div>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if birthday_teachers %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#teacherBirthdayCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#teacherBirthdayCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        {% endif %}
+    </div>
+
+    <p class="message">
+        {% if birthday_teachers %}
+        {% else %}
+            Check back tomorrow for more birthday celebrations!
+        {% endif %}
+    </p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="leave-container">
+        <h3 class="leave-header">Leave Requests</h3>
+        <p class="subtitle">Pending Teacher's Leave Requests</p>
+        <div id="leaveCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% if leave_requests %}
+                    {% for request in leave_requests %}
+					 {% if request.status == 'pending' %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <div class="request-card">
+                                <div>{{ request.teacher.username }}</div>
+                                <span>{{ request.from_date }} - {{ request.to_date }}</span>
+                                <div class="reason">Reason: {{ request.purpose }}</div>
+                            </div>
+                        </div>
+						{% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="carousel-item active">
+                        <div class="no-requests">No Leave Requests</div>
+                    </div>
+                {% endif %}
+            </div>
+            {% if leave_requests %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#leaveCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#leaveCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            {% endif %}
+        </div>
+        <p class="message">
+            {% if leave_requests %}
+                Reviewing pending leave requests from our teacher's.
+            {% else %}
+                No leave requests submitted for today. Check back tomorrow.
+            {% endif %}
+        </p>
+        
+    </div>
+	</div>
+
+        </div>
+      </div>
+      
+        
+		<!-- /.content -->
+	  </div>
+  </div>
+  {% endblock %}
+  
+  
+  <!-- /.content-wrapper -->
+  <!-- <footer class="main-footer">
+    <div class="pull-right d-none d-sm-inline-block">
+        <ul class="nav nav-primary nav-dotted nav-dot-separated justify-content-center justify-content-md-end">
+		  <li class="nav-item">
+			<a class="nav-link" href="javascript:void(0)">FAQ</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="#">Purchase Now</a>
+		  </li>
+		</ul>
+    </div>
+	  &copy; 2020 <a href="https://www.multipurposethemes.com/">Multi-Purpose Themes</a>. All Rights Reserved.
+  </footer> -->
+
+  
+  	
+	 
+	
+	<!-- js -->
+	<script src="{% static 'assets/vendor_components/jquery-3.3.1/jquery-3.3.1.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/screenfull/screenfull.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/popper/dist/popper.min.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/bootstrap/dist/js/bootstrap.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/fastclick/lib/fastclick.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/perfect-scrollbar-master/perfect-scrollbar.jquery.min.js' %}"></script>
+		
+	<!-- Plugin -->
+	<script src="{% static 'assets/vendor_components/moment/min/moment.min.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/apexcharts-bundle/dist/apexcharts.js' %}"></script>
+	
+	<!-- CrmX Admin App -->
+	<script src="{% static 'js/template.js' %}"></script>
+	<script src="{% static 'js/pages/dashboard.js' %}"></script>
+	<script src="{% static 'js/demo.js' %}"></script>
+	
+
+    <script src="{% static 'vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'vendors/jszip/dist/jszip.min.js' %}"></script>
+   
+    <script src="{% static 'vendors/pdfmake/build/pdfmake.min.js' %}"></script>
+    <script src="{% static 'vendors/pdfmake/build/vfs_fonts.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+    <script src="{% static 'assets/js/init-scripts/data-table/datatables-init.js' %}"></script>
+ 
+    <!-- Bootstrap JS and Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+    // STUDENT BIRTHDAY CAROUSEL
+    (function() {
+        const studentContainer = document.getElementById('studentBirthdayContainer');
+        const carousel = document.getElementById('birthdayCarousel');
+        let bootstrapCarousel = null;
+
+        {% if students %}
+            bootstrapCarousel = new bootstrap.Carousel(carousel);
+        {% endif %}
+
+        function animateNames() {
+            const activeCard = studentContainer.querySelector('.carousel-item.active .name-card');
+            if (activeCard) activeCard.classList.add('active');
+            const others = studentContainer.querySelectorAll('.carousel-item:not(.active) .name-card');
+            others.forEach(card => card.classList.remove('active'));
+        }
+
+        function createConfetti() {
+            {% if students %}
+                const colors = ['#ffd700', '#ff4081', '#d81b60', '#2196f3'];
+                for (let i = 0; i < 30; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = Math.random() * 100 + '%';
+                    confetti.style.setProperty('--x', (Math.random() - 0.5) * 200 + 'px');
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    studentContainer.appendChild(confetti);
+                }
+            {% endif %}
+        }
+
+        window.addEventListener('load', () => {
+            animateNames();
+            createConfetti();
+            {% if students %}
+                carousel.addEventListener('slid.bs.carousel', animateNames);
+            {% endif %}
+        });
+    })();
+
+
+    // TEACHER BIRTHDAY CAROUSEL
+    (function() {
+        const teacherContainer = document.getElementById('teacherBirthdayContainer');
+        const teacherCarousel = document.getElementById('teacherBirthdayCarousel');
+        let bootstrapTeacherCarousel = null;
+
+        {% if birthday_teachers %}
+            bootstrapTeacherCarousel = new bootstrap.Carousel(teacherCarousel, {
+                interval: 3000,
+                ride: 'carousel'
+            });
+        {% endif %}
+
+        function animateTeacherCards() {
+            const activeCard = teacherContainer.querySelector('.carousel-item.active .name-card');
+            if (activeCard) activeCard.classList.add('active');
+            const others = teacherContainer.querySelectorAll('.carousel-item:not(.active) .name-card');
+            others.forEach(card => card.classList.remove('active'));
+        }
+
+        function createTeacherConfetti() {
+            {% if birthday_teachers %}
+                const colors = ['#ffd700', '#ff4081', '#d81b60', '#2196f3'];
+                for (let i = 0; i < 30; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = Math.random() * 100 + '%';
+                    confetti.style.setProperty('--x', (Math.random() - 0.5) * 200 + 'px');
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    teacherContainer.appendChild(confetti);
+                }
+            {% endif %}
+        }
+
+        window.addEventListener('load', () => {
+            animateTeacherCards();
+            createTeacherConfetti();
+            {% if birthday_teachers %}
+                teacherCarousel.addEventListener('slid.bs.carousel', animateTeacherCards);
+            {% endif %}
+        });
+    })();
+</script>
+
+<!-- Bootstrap JS and Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        let currentIndex = 0;
+        const carousel = document.getElementById('leaveCarousel');
+        let bootstrapCarousel = null;
+        {% if leave_requests %}
+            bootstrapCarousel = new bootstrap.Carousel(carousel);
+        {% endif %}
+
+        // Animate request cards on carousel slide
+        function animateCards() {
+            const activeCard = document.querySelector('.carousel-item.active .request-card');
+            if (activeCard) {
+                activeCard.classList.add('active');
+            }
+            const otherCards = document.querySelectorAll('.carousel-item:not(.active) .request-card');
+            otherCards.forEach(card => card.classList.remove('active'));
+        }
+
+        // Restart animation
+        function restartAnimation() {
+            const requestCards = document.querySelectorAll('.request-card');
+            requestCards.forEach(card => {
+                card.classList.remove('active');
+            });
+            currentIndex = 0;
+            if (bootstrapCarousel) {
+                bootstrapCarousel.to(currentIndex);
+            }
+            setTimeout(animateCards, 100);
+        }
+
+        // Capture snapshot by moving to next request
+        function captureSnapshot() {
+            const items = document.querySelectorAll('.carousel-item').length;
+            if (bootstrapCarousel && items > 0) {
+                bootstrapCarousel.to(currentIndex);
+                animateCards();
+                alert(`Ready to capture snapshot for request ${currentIndex + 1}. Take a screenshot now!`);
+                currentIndex = (currentIndex + 1) % items;
+            }
+        }
+
+        // Create sparkle effect
+        function createSparkles() {
+            {% if leave_requests %}
+                const colors = ['#bbdefb', '#90caf9', '#1565c0'];
+                for (let i = 0; i < 20; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.top = Math.random() * 100 + '%';
+                    sparkle.style.animationDelay = Math.random() * 1.5 + 's';
+                    document.querySelector('.leave-container').appendChild(sparkle);
+                }
+            {% endif %}
+        }
+
+        // Initialize
+        window.onload = () => {
+            animateCards();
+            createSparkles();
+            {% if leave_requests %}
+                carousel.addEventListener('slid.bs.carousel', animateCards);
+            {% endif %}
+        };
+    </script>
+	<script>
+        const date = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const dayName = date.toLocaleDateString(undefined, { weekday: 'long' });
+        const formattedDate = date.toLocaleDateString(undefined, options);
+        document.getElementById("currentDateDay").textContent = `${formattedDate} (${dayName})`;
+    </script>
+
+</body>
+
+</html>
+
+
+
+

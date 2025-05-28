@@ -1,0 +1,228 @@
+{% extends 'teacher_base.html' %}
+
+{% block content %}
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Insert Extra Subject Marks</h1>
+
+    
+    <form method="POST" action="">
+        {% csrf_token %}
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            
+            <!-- Select Student -->
+            <div>
+                <label for="student" class="block text-sm font-medium text-gray-700">Select Student:</label>
+                <select name="student" id="student" class="w-full p-2 border border-gray-300 rounded">
+                    <option value="">-- Select Student --</option>
+                    {% for student in students %}
+                        <option value="{{ student.id }}">{{ student.studentname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Select Exam -->
+            <div>
+                <label for="exam" class="block text-sm font-medium text-gray-700">Select Exam:</label>
+                <select name="exam" id="exam" class="w-full p-2 border border-gray-300 rounded">
+                    <option value="">-- Select Exam --</option>
+                    {% for exam in exams %}
+                        <option value="{{ exam.id }}">{{ exam.examname }}</option>
+                    {% empty %}
+                        <option value="" disabled>No exams available</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+       <!-- Subjects Table -->
+    <div id="subjects-container">
+        <h3 class="text-lg font-semibold">Subjects with Marks</h3>
+        <table class="w-full border-collapse border border-black mb-4">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="p-2 border">Subject</th>
+                    <th class="p-2 border">PA</th>
+                    <th class="p-2 border">SE</th>
+                    <th class="p-2 border">MA</th>
+                    <th class="p-2 border">NB</th>
+                    <th class="p-2 border">Term</th>
+                </tr>
+            </thead>
+            <tbody id="subjects-body">
+                <!-- Subjects will be dynamically populated here -->
+            </tbody>
+        </table>
+    </div>
+
+
+        <!-- Table for Multiple Subject Grade Entries -->
+        <table class="w-full border-collapse border border-black mb-4">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="p-2 border">Subject</th>
+                    <th class="p-2 border">Grade</th>
+                    <!-- <th class="p-2 border">Marks</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Multiple Subject Rows -->
+                <tr>
+                    <td class="p-2 border">
+                        <input type="text" name="subject[]" placeholder="Enter Subject" class="w-full p-2 border">
+                    </td>
+                    <td class="p-2 border">
+                        <input type="text" name="grade[]" placeholder="Enter Grade (e.g., A1)" class="w-full p-2 border">
+                    </td>
+                    <!-- <td class="p-2 border">
+                        <input type="number" name="marks[]" placeholder="Enter Marks" class="w-full p-2 border">
+                    </td> -->
+                </tr>
+
+                <tr>
+                    <td class="p-2 border">
+                        <input type="text" name="subject[]" placeholder="Enter Subject" class="w-full p-2 border">
+                    </td>
+                    <td class="p-2 border">
+                        <input type="text" name="grade[]" placeholder="Enter Grade (e.g., A1)" class="w-full p-2 border">
+                    </td>
+                    <!-- <td class="p-2 border">
+                        <input type="number" name="marks[]" placeholder="Enter Marks" class="w-full p-2 border">
+                    </td> -->
+                </tr>
+
+                <tr>
+                    <td class="p-2 border">
+                        <input type="text" name="subject[]" placeholder="Enter Subject" class="w-full p-2 border">
+                    </td>
+                    <td class="p-2 border">
+                        <input type="text" name="grade[]" placeholder="Enter Grade (e.g., A1)" class="w-full p-2 border">
+                    </td>
+                    <!-- <td class="p-2 border">
+                        <input type="number" name="marks[]" placeholder="Enter Marks" class="w-full p-2 border">
+                    </td> -->
+                </tr>
+
+                <tr>
+                    <td class="p-2 border">
+                        <input type="text" name="subject[]" placeholder="Enter Subject" class="w-full p-2 border">
+                    </td>
+                    <td class="p-2 border">
+                        <input type="text" name="grade[]" placeholder="Enter Grade (e.g., A1)" class="w-full p-2 border">
+                    </td>
+                    <!-- <td class="p-2 border">
+                        <input type="number" name="marks[]" placeholder="Enter Marks" class="w-full p-2 border">
+                    </td> -->
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Co-Scholastic Grades -->
+    <h3 class="text-lg font-semibold">Co-Scholastic Grades</h3>
+    <div class="mb-4">
+        <table class="w-full border-collapse border border-gray-400">
+            <thead>
+                <tr>
+                    <th class="border px-4 py-2">Grade</th>
+                    <th class="border px-4 py-2">Grade Point</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" name="co_grade[]" placeholder="Enter Grade" class="border w-full px-2 py-1"></td>
+                    <td><input type="number" name="co_point[]" placeholder="Enter Point" class="border w-full px-2 py-1"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="co_grade[]" placeholder="Enter Grade" class="border w-full px-2 py-1"></td>
+                    <td><input type="number" name="co_point[]" placeholder="Enter Point" class="border w-full px-2 py-1"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="co_grade[]" placeholder="Enter Grade" class="border w-full px-2 py-1"></td>
+                    <td><input type="number" name="co_point[]" placeholder="Enter Point" class="border w-full px-2 py-1"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Discipline Grade -->
+    <h3 class="text-lg font-semibold">Discipline Grade</h3>
+    <div class="mb-4">
+        <label for="discipline_grade">Grade:</label>
+        <select name="discipline_grade" class="border px-2 py-1 w-full">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+        </select>
+    </div>
+
+    <!-- Remarks -->
+    <h3 class="text-lg font-semibold">Remarks</h3>
+    <div class="mb-4">
+        <label for="remark">Remark:</label>
+        <textarea name="remark" class="border px-2 py-1 w-full" rows="3" placeholder="Enter remark"></textarea>
+    </div>
+
+    <!-- Teacher Signature -->
+    <h3 class="text-lg font-semibold">Signature</h3>
+    <div class="mb-4">
+        <label for="teacher_signature">Teacher Signature:</label>
+        <input type="text" name="teacher_signature" placeholder="Teacher Name" class="border px-2 py-1 w-full">
+    </div>
+
+        <div class="flex justify-end">
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Save Marks
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const studentSelect = document.getElementById('student');
+        const examSelect = document.getElementById('exam');
+        const subjectsBody = document.getElementById('subjects-body');
+
+        function fetchSubjectsAndMarks() {
+            const studentId = studentSelect.value;
+            const examId = examSelect.value;
+
+            if (studentId && examId) {
+                fetch(`/get_subjects_and_term_marks/?student_id=${studentId}&exam_id=${examId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        subjectsBody.innerHTML = '';  // Clear previous subjects
+
+                        if (data.length === 0) {
+                            subjectsBody.innerHTML = '<tr><td colspan="6">No subjects found</td></tr>';
+                        } else {
+                            data.forEach(item => {
+                                subjectsBody.innerHTML += `
+                                    <tr>
+                                        <td class="p-2 border">${item.name}
+                                            <input type="hidden" name="subject[]" value="${item.name}">
+                                        </td>
+                                        <td class="p-2 border"><input type="number" name="pa[]" placeholder="PA" required></td>
+                                        <td class="p-2 border"><input type="number" name="se[]" placeholder="SE" required></td>
+                                        <td class="p-2 border"><input type="number" name="ma[]" placeholder="MA" required></td>
+                                        <td class="p-2 border"><input type="number" name="nb[]" placeholder="NB" required></td>
+                                        <td class="p-2 border">
+                                            <input type="text" name="term_marks" value="${item.term_marks}" readonly>
+                                        </td>
+                                    </tr>`;
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        }
+
+        studentSelect.addEventListener('change', fetchSubjectsAndMarks);
+        examSelect.addEventListener('change', fetchSubjectsAndMarks);
+    });
+</script>
+
+
+
+
+{% endblock %}

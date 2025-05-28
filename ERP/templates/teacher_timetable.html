@@ -1,0 +1,70 @@
+{% extends 'teacher_base.html' %}
+
+{% block content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Timetable</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .free {
+            background-color: #e6f3ff;
+            color: #333;
+        }
+        .assigned {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+<div class="container-full">
+    <div class="content-header">
+    <h2>Timetable</h2>
+    <table>
+    <thead>
+        <tr>
+            <th>Day/Period</th>
+            {% for period in period_numbers %}
+                <th>{{ period }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in timetable_matrix %}
+            <tr>
+                <th>{{ row.day }}</th>
+                {% for entry in row.periods %}
+                    {% if entry %}
+                        <td class="assigned">{{ entry.class_name }} - {{ entry.section.name }}</td>
+                    {% else %}
+                        <td class="free">Free</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    </div>
+</div>
+    </div>
+
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'admin_dashboard.html' %}
+
+{% block main_content %}
+<div class="container mt-4">
+    <h2 class="text-center">Assign Classes, Sections, and Subjects to Teacher</h2>
+
+    <form method="post" class="p-4 shadow rounded bg-light">
+        {% csrf_token %}
+        <h4 class="text-primary">User Details</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="form-label">Username:</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Email:</label>
+                <input type="email" name="email" class="form-control" >
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label class="form-label">Password:</label>
+                <input type="password" name="password" class="form-control" >
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" style="display: none;">Role:</label>
+                <!-- <select name="role" class="form-select" required>
+                    <option value="teacher">Teacher</option>
+                    <option value="admin">Admin</option>
+                </select> -->
+                <input type="text" name="role" value="teacher" class="form-control" style="display: none;">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">First Name:</label>
+            <input type="text" name="first_name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Last Name:</label>
+            <input type="text" name="last_name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email:</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Phone:</label>
+            <input type="text" name="phone" class="form-control" required>
+        </div>
+
+        <hr>
+
+        <h4>Select Classes:</h4>
+        {% for class in classes %}
+            <div class="form-check">
+                <input class="form-check-input class-checkbox" type="checkbox" name="assigned_classes" value="{{ class.id }}">
+                <label class="form-check-label">{{ class.name }}</label>
+            </div>
+        {% endfor %}
+
+        <h4>Select Sections:</h4>
+        <div id="sections-container">
+            <p class="text-muted">Select classes first to see sections.</p>
+        </div>
+
+        <h4>Select Subjects:</h4>
+        <div id="subjects-container">
+            <p class="text-muted">Select classes first to see subjects.</p>
+        </div>
+
+        <br>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let classCheckboxes = document.querySelectorAll(".class-checkbox");
+
+    classCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            let selectedClasses = [];
+            document.querySelectorAll(".class-checkbox:checked").forEach(cb => {
+                selectedClasses.push(cb.value);
+            });
+
+            if (selectedClasses.length > 0) {
+                fetch(/get-sections-subjects/?class_ids[]= + selectedClasses.join("&class_ids[]="))
+                    .then(response => response.json())
+                    .then(data => {
+                        updateSections(data.sections);
+                        updateSubjects(data.subjects);
+                    });
+            } else {
+                document.getElementById("sections-container").innerHTML = '<p class="text-muted">Select classes first to see sections.</p>';
+                document.getElementById("subjects-container").innerHTML = '<p class="text-muted">Select classes first to see subjects.</p>';
+            }
+        });
+    });
+});
+
+function updateSections(sections) {
+    let sectionsContainer = document.getElementById("sections-container");
+    sectionsContainer.innerHTML = "";
+    sections.forEach(section => {
+        let sectionHtml = 
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="assigned_sections" value="${section.id}">
+                <label class="form-check-label">${section.name} (Class ${section.class_id})</label>
+            </div>
+        ;
+        sectionsContainer.innerHTML += sectionHtml;
+    });
+}
+
+function updateSubjects(subjects) {
+    let subjectsContainer = document.getElementById("subjects-container");
+    subjectsContainer.innerHTML = "";
+    subjects.forEach(subject => {
+        let subjectHtml = 
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="assigned_subjects" value="${subject.id}">
+                <label class="form-check-label">${subject.name} (Class ${subject.class_id})</label>
+            </div>
+        ;
+        subjectsContainer.innerHTML += subjectHtml;
+    });
+}
+</script>
+
+{% endblock main_content %}

@@ -1,0 +1,28 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+<h3>Inbox</h3>
+<ul class="list-group">
+    {% for item in messages %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        {% if item.message.sender.role == 'student' and item.student %}
+            {{ item.student.studentname }},
+            {{ item.student.classs }},
+            {{ item.student.section.name }}
+        {% else %}
+            {{ item.message.sender.first_name }} ({{ item.message.sender.role }})
+        {% endif %}
+        <small>{{ item.message.timestamp }}</small>
+        <a href="{% url 'chat_with_user' item.message.sender.id %}" class="btn btn-sm btn-primary">View Chat</a>
+    </li>
+    {% empty %}
+    <li class="list-group-item">No messages yet.</li>
+    {% endfor %}
+</ul>
+</div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,1707 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+    }
+    .content-wrapper {
+        padding: 20px;
+    }
+    .content-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #f8f9fa;
+        padding: 10px 20px;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .profile-section {
+        display: flex;
+        align-items: center;
+    }
+    .profile-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #ff9800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 16px;
+        margin-right: 10px;
+    }
+    .student-name {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+    }
+    .student-class {
+        font-size: 14px;
+        color: #666;
+    }
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+    }
+    .action-buttons button {
+        font-size: 14px;
+    }
+    .nav-tabs {
+        background-color: #fff;
+        border-bottom: 1px solid #dee2e6;
+        padding: 0 20px;
+    }
+    .nav-tabs .nav-link {
+        color: #495057;
+        font-weight: 500;
+        padding: 10px 20px;
+        border: none;
+        border-bottom: 2px solid transparent;
+    }
+    .nav-tabs .nav-link.active {
+        color: #007bff;
+        border-bottom: 2px solid #007bff;
+    }
+    .nav-tabs .nav-link:hover {
+        color: #007bff;
+        border-bottom: 2px solid #007bff;
+    }
+    .tab-content {
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #dee2e6;
+        border-top: none;
+    }
+    .form-section {
+        max-width: 100%;
+    }
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 15px;
+    }
+    .form-group {
+        flex: 1;
+        min-width: 200px;
+    }
+    .form-group label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 5px;
+        display: block;
+    }
+    .form-control {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        padding: 8px;
+        font-size: 14px;
+        color: #495057;
+    }
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: none;
+    }
+    .form-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+     input[type="radio"] {
+    position: static !important;
+    left: auto !important;
+    opacity: 1 !important;
+}
+</style>
+
+<div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+            <div class="profile-section">
+                {% if ob.profile %}
+                    <img src="{{ ob.profile_photo.url }}" alt="Profile Image" width="40" height="40" class="profile-img rounded-circle">
+                {% else %}
+                    <div class="profile-placeholder">
+                        <span>{{ ob.studentname|slice:":2"|upper }}</span>
+                    </div>
+                {% endif %}
+                <div>
+                    <div class="student-name">{{ ob.studentname }}</div>
+                    <div class="student-class">Student, Grade {{ ob.classs }}-{{ ob.section.name }}</div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-outline-secondary btn-sm"><i class="fas fa-search"></i></button>
+                <button class="btn btn-outline-secondary btn-sm"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+        </div>
+
+        
+
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs" id="demoTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab">Basic Details</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab">Family</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">Transport</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab">Fee Details</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab5" type="button" role="tab">Attendance</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab6" type="button" role="tab">Documents</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab7" type="button" role="tab">Report Card</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab8" type="button" role="tab">Performance</button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="demoTabsContent">
+            <!-- Basc Details Tab -->
+            <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+                <!-- <div class="content-wrapper">
+        <div class="container-full">
+            <div class="content-header"> -->
+                <form method="post" action="/update_student/{{ob.id}}/" enctype="multipart/form-data" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <!-- Student Information -->
+            <div class="form-section">
+                <h3 class="section-title">Student Information</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-id-card"></i> Registration No.</label>
+                        <input type="text" name="registrationno" class="form-control" value="{{ob.registrationno}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-image"></i> Profile Photo</label>
+                        <input type="file" name="profile_photo" class="form-control" value="{{ob.profile_photo}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-question"></i> Enquiry No.</label>
+                        <input type="text" name="enqno" class="form-control" value="{{ob.enqno}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-calendar"></i> Session No.</label>
+                        <input type="text" name="session" class="form-control" value="{{ob.session}}">
+                    </div>
+                    <!-- <div class="col-md-4">
+                        <label><i class="fas fa-chalkboard"></i> Select Class</label>
+                        <select name="classs" id="classs" class="form-select">
+                            <option value="">-- Select Class --</option>
+                            {% for class_obj in fees %}
+                                <option value="{{ class_obj.class_assigned.id }}">{{ class_obj.class_assigned.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-layer-group"></i> Select Section</label>
+                        <select name="section" id="section" class="form-select">
+                            <option value="">-- Select Section --</option>
+                        </select>
+                    </div> -->
+                    <div class="col-md-4">
+                        <label><i class="fas fa-money-bill"></i> Fee Amount</label>
+                        <input type="text" id="amount" name="amount" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-percentage"></i> Discount Category</label>
+                        <div class="radio-group">
+                            <div class="form-check form-check-inline">
+                                <input type="radio" name="category" value="admin" class="form-check-input" id="adminDiscount">
+                                <label class="form-check-label" for="adminDiscount">Admin (50%)</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" name="category" value="staff" class="form-check-input" id="staffDiscount">
+                                <label class="form-check-label" for="staffDiscount">Staff (25%)</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" name="category" value="normal" class="form-check-input" id="normalDiscount">
+                                <label class="form-check-label" for="normalDiscount">Normal (10%)</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-calculator"></i> Discounted Amount</label>
+                        <input type="text" id="totalAmountField" name="total_amount" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-id-badge"></i> SRN No.</label>
+                        <input type="text" name="srnno" class="form-control" value="{{ob.srnno}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-file-alt"></i> Form No.</label>
+                        <input type="text" name="formno" class="form-control" value="{{ob.formno}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-user-graduate"></i> Student Type</label>
+                        <select name="studenttype" class="form-select" value="{{ob.studenttype}}">
+                            <option value="">--</option>
+                            <option value="HOSTEL">HOSTEL</option>
+                            <option value="DAY SCHOLAR">DAY SCHOLAR</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-user"></i> Student Name</label>
+                        <input type="text" name="studentname" class="form-control" value="{{ob.studentname}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-venus-mars"></i> Gender</label>
+                        <input type="text" name="gender" class="form-control" value="{{ob.gender}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-birthday-cake"></i> Date of Birth</label>
+                        <input type="date" name="dateofbirth" class="form-control" value="{{ob.dateofbirth}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-id-card-alt"></i> Aadhar No.</label>
+                        <input type="text" name="aadharno" class="form-control" value="{{ob.aadharno}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-home"></i> House</label>
+                        <select name="house" class="form-select" value="{{ob.house}}">
+                            <option value="">--------------</option>
+                            <option value="1">N/A</option>
+                            <option value="5">AGNI</option>
+                            <option value="6">NEER</option>
+                            <option value="7">VAAYU</option>
+                            <option value="8">PRITHVI</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-stream"></i> Stream</label>
+                        <select name="stream" class="form-select" value="{{ob.email}}">
+                            <option value="">--</option>
+                            <option value="1">N/A</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" name="emil" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-clipboard-check"></i> Previous Year Attendance</label>
+                        <textarea name="previousyearattendance" class="form-control" value="{{ob.previousyearattendance}}"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-language"></i> Mother Tongue</label>
+                        <input type="text" name="mothertongue" value="HINDI" class="form-control" value="{{ob.mothertongue}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-child"></i> Adopted Child</label>
+                        <select name="adoptedchild" class="form-select">
+                            <option value="">--</option>
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-users"></i> Minority</label>
+                        <select name="minority" class="form-select">
+                            <option value="">--</option>
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-comment"></i> Specify</label>
+                        <textarea name="specify" class="form-control"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-flag"></i> Nationality</label>
+                        <input type="text" name="nationality" value="INDIAN" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-book"></i> Medium of Instruction</label>
+                        <input type="text" name="mediumofinstruction" value="ENGLISH" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-users-cog"></i> Caste Category</label>
+                        <select name="castecategory" class="form-select">
+                            <option value="">--</option>
+                            <option value="2">SC</option>
+                            <option value="1">OC</option>
+                            <option value="4">BC</option>
+                            <option value="3">ST</option>
+                            <option value="8">CASTE</option>
+                            <option value="9">OBC</option>
+                            <option value="10">OC REDDY</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-book-open"></i> Optional Subject</label>
+                        <select name="optionalsubject" multiple class="form-select">
+                            <option value="1">Testing</option>
+                            <option value="2">Demo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-book-reader"></i> Offered Subject</label>
+                        <select name="offeredsubject" multiple class="form-select">
+                            <option value="1">Hindi</option>
+                            <option value="2">Demo</option>
+                            <option value="3">ENGLISH</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-pen"></i> Pen No.</label>
+                        <input type="text" name="penno" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Status -->
+            <div class="form-section">
+                <h3 class="section-title">Health Status</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-tint"></i> Blood Group</label>
+                        <select name="bloodgroup" class="form-select">
+                            <option value="">-- Group --</option>
+                            <option value="1">O+</option>
+                            <option value="2">O-</option>
+                            <option value="3">A</option>
+                            <option value="4">A-</option>
+                            <option value="5">B+</option>
+                            <option value="6">B-</option>
+                            <option value="7">AB+</option>
+                            <option value="8">AB-</option>
+                            <option value="9">Not Available</option>
+                            <option value="10">A+</option>
+                            <option value="11">BOMBAY BLOOD GROUP</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-eye"></i> Left Vision</label>
+                        <input type="text" name="leftvision" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-eye"></i> Right Vision</label>
+                        <input type="text" name="rightvision" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-weight"></i> Weight</label>
+                        <input type="number" step="0.01" name="weight" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-ruler-vertical"></i> Height</label>
+                        <input type="number" step="0.01" name="height" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-weight"></i> Weight 1</label>
+                        <input type="number" step="0.01" name="weight1" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-ruler-vertical"></i> Height 1</label>
+                        <input type="number" step="0.01" name="height1" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-wheelchair"></i> Type of Disability</label>
+                        <input type="text" name="disability" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-running"></i> Sports Activity</label>
+                        <select name="sportsactivity" class="form-select">
+                            <option value="">-------------Select--------------</option>
+                            <option value="Krate">Krate</option>
+                            <option value="Gym">Gym</option>
+                            <option value="Music">Music</option>
+                            <option value="Dance">Dance</option>
+                            <option value="Skating">Skating</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-calendar-check"></i> Admission Date</label>
+                        <input type="date" name="admissiondate" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bank Details -->
+            <div class="form-section">
+                <h3 class="section-title">Bank Details</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-university"></i> Bank Name</label>
+                        <input type="text" name="bankname" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-code-branch"></i> Branch Name</label>
+                        <input type="text" name="branchname" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-piggy-bank"></i> A/C No.</label>
+                        <input type="text" name="accountno" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-barcode"></i> IFSC Code</label>
+                        <input type="text" name="ifsccode" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Family Profile -->
+            <div class="form-section">
+                <h3 class="section-title">Family Profile</h3>
+                <div class="row g-4">
+                    <!-- Father Profile -->
+                    <div class="col-md-4">
+                        <h5 class=" mb-3">Father Profile</h5>
+                        <div class="row g-3">
+                            <div class="col-12"><input type="text" name="father_name" class="form-control" placeholder="Father Name" value="{{l.father_name}}"></div>
+                            <div class="col-12"><input type="email" name="father_email" class="form-control" placeholder="Father Email"></div>
+                            <div class="col-12"><input type="text" name="father_nationality" class="form-control" placeholder="Nationality"></div>
+                            <div class="col-12"><input type="text" name="father_occupation" class="form-control" placeholder="Occupation"></div>
+                            <div class="col-12"><input type="text" name="father_department" class="form-control" placeholder="Department"></div>
+                            <div class="col-12"><input type="text" name="father_designation" class="form-control" placeholder="Designation"></div>
+                            <div class="col-12"><input type="text" name="father_name_of_office" class="form-control" placeholder="Name of Office"></div>
+                            <div class="col-12"><input type="text" name="father_office_address" class="form-control" placeholder="Office Address"></div>
+                            <div class="col-12"><input type="text" name="father_office_contact_no" class="form-control" placeholder="Office Contact No."></div>
+                            <div class="col-12"><input type="text" name="father_aadhar_no" class="form-control" placeholder="Aadhar No."></div>
+                            <div class="col-12"><input type="text" name="father_pan_no" class="form-control" placeholder="PAN No."></div>
+                            <div class="col-12"><input type="text" name="father_annual_income" class="form-control" placeholder="Annual Income"></div>
+                            <div class="col-12"><input type="text" name="father_mobile" class="form-control" placeholder="Mobile"></div>
+                            <div class="col-12"><input type="text" name="father_mobile2" class="form-control" placeholder="Mobile 2"></div>
+                            <div class="col-12"><input type="text" name="father_religion" class="form-control" placeholder="Religion"></div>
+                            <div class="col-12"><input type="text" name="father_caste" class="form-control" placeholder="Caste"></div>
+                            <div class="col-12"><input type="text" name="father_marital_status" class="form-control" placeholder="Marital Status"></div>
+                        </div>
+                    </div>
+                    <!-- Mother Profile -->
+                    <div class="col-md-4">
+                        <h5 class=" mb-3">Mother Profile</h5>
+                        <div class="row g-3">
+                            <div class="col-12"><input type="text" name="mother_name" class="form-control" placeholder="Mother Name" value="{{l.mother_name}}"></div>
+                            <div class="col-12"><input type="email" name="mother_email" class="form-control" placeholder="Mother Email"></div>
+                            <div class="col-12"><input type="text" name="mother_nationality" class="form-control" placeholder="Nationality"></div>
+                            <div class="col-12"><input type="text" name="mother_occupation" class="form-control" placeholder="Occupation"></div>
+                            <div class="col-12"><input type="text" name="mother_department" class="form-control" placeholder="Department"></div>
+                            <div class="col-12"><input type="text" name="mother_designation" class="form-control" placeholder="Designation"></div>
+                            <div class="col-12"><input type="text" name="mother_name_of_office" class="form-control" placeholder="Name of Office"></div>
+                            <div class="col-12"><input type="text" name="mother_office_address" class="form-control" placeholder="Office Address"></div>
+                            <div class="col-12"><input type="text" name="mother_office_contact_no" class="form-control" placeholder="Office Contact No."></div>
+                            <div class="col-12"><input type="text" name="mother_aadhar_no" class="form-control" placeholder="Aadhar No."></div>
+                            <div class="col-12"><input type="text" name="mother_pan_no" class="form-control" placeholder="PAN No."></div>
+                            <div class="col-12"><input type="text" name="mother_annual_income" class="form-control" placeholder="Annual Income"></div>
+                            <div class="col-12"><input type="text" name="mother_mobile" class="form-control" placeholder="Mobile"></div>
+                            <div class="col-12"><input type="text" name="mother_mobile2" class="form-control" placeholder="Mobile 2"></div>
+                            <div class="col-12"><input type="text" name="mother_religion" class="form-control" placeholder="Religion"></div>
+                            <div class="col-12"><input type="text" name="mother_caste" class="form-control" placeholder="Caste"></div>
+                            <div class="col-12"><input type="text" name="mother_marital_status" class="form-control" placeholder="Marital Status"></div>
+                        </div>
+                    </div>
+                    <!-- Guardian Profile -->
+                    <div class="col-md-4">
+                        <h5 class=" mb-3">Guardian Profile</h5>
+                        <div class="row g-3">
+                            <div class="col-12"><input type="text" name="guardian_name" class="form-control" placeholder="Guardian Name"></div>
+                            <div class="col-12"><input type="email" name="guardian_email" class="form-control" placeholder="Guardian Email"></div>
+                            <div class="col-12"><input type="text" name="guardian_nationality" class="form-control" placeholder="Nationality"></div>
+                            <div class="col-12"><input type="text" name="guardian_occupation" class="form-control" placeholder="Occupation"></div>
+                            <div class="col-12"><input type="text" name="guardian_department" class="form-control" placeholder="Department"></div>
+                            <div class="col-12"><input type="text" name="guardian_designation" class="form-control" placeholder="Designation"></div>
+                            <div class="col-12"><input type="text" name="guardian_name_of_office" class="form-control" placeholder="Name of Office"></div>
+                            <div class="col-12"><input type="text" name="guardian_office_address" class="form-control" placeholder="Office Address"></div>
+                            <div class="col-12"><input type="text" name="guardian_office_contact_no" class="form-control" placeholder="Office Contact No."></div>
+                            <div class="col-12"><input type="text" name="guardian_aadhar_no" class="form-control" placeholder="Aadhar No."></div>
+                            <div class="col-12"><input type="text" name="guardian_pan_no" class="form-control" placeholder="PAN No."></div>
+                            <div class="col-12"><input type="text" name="guardian_annual_income" class="form-control" placeholder="Annual Income"></div>
+                            <div class="col-12"><input type="text" name="guardian_mobile" class="form-control" placeholder="Mobile"></div>
+                            <div class="col-12"><input type="text" name="guardian_mobile2" class="form-control" placeholder="Mobile 2"></div>
+                            <div class="col-12"><input type="text" name="guardian_religion" class="form-control" placeholder="Religion"></div>
+                            <div class="col-12"><input type="text" name="guardian_caste" class="form-control" placeholder="Caste"></div>
+                            <div class="col-12"><input type="text" name="guardian_marital_status" class="form-control" placeholder="Marital Status"></div>
+                            <div class="col-12"><input type="text" name="guardian_relation" class="form-control" placeholder="Relation"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guardian Additional Details -->
+            <div class="form-section">
+                <h3 class="section-title">Guardian Additional Details</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map-marker-alt"></i> Address</label>
+                        <input type="text" name="guardian_address" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fab fa-whatsapp"></i> WhatsApp</label>
+                        <input type="text" name="guardian_whatsapp" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map-pin"></i> Place</label>
+                        <input type="text" name="guardian_place" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map"></i> Area</label>
+                        <input type="text" name="guardian_area" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-location-arrow"></i> Location</label>
+                        <input type="text" name="guardian_location" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-globe"></i> State</label>
+                        <input type="text" name="guardian_state" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-city"></i> City</label>
+                        <input type="text" name="guardian_city" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Correspondence Address -->
+            <div class="form-section">
+                <h3 class="section-title">Correspondence Address</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map-marker-alt"></i> Address</label>
+                        <input type="text" name="corres_address" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-phone"></i> Mobile No.</label>
+                        <input type="text" name="corres_mobile_no" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fab fa-whatsapp"></i> WhatsApp</label>
+                        <input type="text" name="corres_whatsapp" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map-pin"></i> Place</label>
+                        <input type="text" name="corres_place" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map"></i> Area</label>
+                        <input type="text" name="corres_area" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-location-arrow"></i> Location</label>
+                        <input type="text" name="corres_location" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-globe"></i> State</label>
+                        <input type="text" name="corres_state" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-city"></i> City</label>
+                        <input type="text" name="corres_city" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Qualifications -->
+            <div class="form-section">
+                <h3 class="section-title">Qualifications</h3>
+                <!-- Father Qualifications -->
+                <h5 class="text-primary mb-3">Father's Qualifications</h5>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-2"><input type="text" name="qualificationf1" class="form-control" placeholder="Highest School Qual"></div>
+                    <div class="col-md-2"><input type="text" name="specializationf1" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namef1" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statef1" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityf1" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationf2" class="form-control" placeholder="Graduate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationf2" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namef2" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statef2" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityf2" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationf3" class="form-control" placeholder="Post-Graduate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationf3" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namef3" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statef3" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityf3" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationf4" class="form-control" placeholder="Doctorate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationf4" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namef4" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statef4" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityf4" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationf5" class="form-control" placeholder="Others"></div>
+                    <div class="col-md-2"><input type="text" name="specializationf5" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namef5" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statef5" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityf5" class="form-control" placeholder="City"></div>
+                </div>
+                <!-- Mother Qualifications -->
+                <h5 class="text-primary mb-3">Mother's Qualifications</h5>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-2"><input type="text" name="qualificationm1" class="form-control" placeholder="Highest School Qual"></div>
+                    <div class="col-md-2"><input type="text" name="specializationm1" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namem1" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statem1" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="citym1" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationm2" class="form-control" placeholder="Graduate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationm2" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namem2" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statem2" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="citym2" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationm3" class="form-control" placeholder="Post-Graduate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationm3" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namem3" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statem3" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="citym3" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationm4" class="form-control" placeholder="Doctorate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationm4" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namem4" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statem4" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="citym4" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationm5" class="form-control" placeholder="Others"></div>
+                    <div class="col-md-2"><input type="text" name="specializationm5" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namem5" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statem5" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="citym5" class="form-control" placeholder="City"></div>
+                </div>
+                <!-- Guardian Qualifications -->
+                <h5 class="text-primary mb-3">Guardian's Qualifications</h5>
+                <div class="row g-4">
+                    <div class="col-md-2"><input type="text" name="qualificationg1" class="form-control" placeholder="Highest School Qual"></div>
+                    <div class="col-md-2"><input type="text" name="specializationg1" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_nameg1" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="stateg1" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityg1" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationg2" class="form-control" placeholder="Graduate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationg2" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_nameg2" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="stateg2" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityg2" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationg3" class="form-control" placeholder="Post-Graduate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationg3" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_nameg3" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="stateg3" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityg3" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationg4" class="form-control" placeholder="Doctorate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationg4" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_nameg4" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="stateg4" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityg4" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationg5" class="form-control" placeholder="Others"></div>
+                    <div class="col-md-2"><input type="text" name="specializationg5" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_nameg5" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="stateg5" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityg5" class="form-control" placeholder="City"></div>
+                </div>
+            </div>
+
+            
+
+            
+
+            <!-- Previous Schooling -->
+            <div class="form-section">
+                <h3 class="section-title">Previous Schooling</h3>
+                <div class="row g-4">
+                    <!-- School 1 -->
+                    <div class="col-md-3"><input type="text" name="schoolnameandaddress[]" class="form-control" placeholder="School Name & Address"></div>
+                    <div class="col-md-2"><input type="number" name="classname[]" class="form-control" placeholder="Class"></div>
+                    <div class="col-md-2"><input type="text" name="session[]" class="form-control" placeholder="Session"></div>
+                    <div class="col-md-2"><input type="text" name="curriculum[]" class="form-control" placeholder="Curriculum"></div>
+                    <div class="col-md-2"><input type="text" name="subjects[]" class="form-control" placeholder="Subjects"></div>
+                    <!-- School 2 -->
+                    <div class="col-md-3"><input type="text" name="schoolnameandaddress[]" class="form-control" placeholder="School Name & Address"></div>
+                    <div class="col-md-2"><input type="number" name="classname[]" class="form-control" placeholder="Class"></div>
+                    <div class="col-md-2"><input type="text" name="session[]" class="form-control" placeholder="Session"></div>
+                    <div class="col-md-2"><input type="text" name="curriculum[]" class="form-control" placeholder="Curriculum"></div>
+                    <div class="col-md-2"><input type="text" name="subjects[]" class="form-control" placeholder="Subjects"></div>
+                    <!-- School 3 -->
+                    <div class="col-md-3"><input type="text" name="schoolnameandaddress[]" class="form-control" placeholder="School Name & Address"></div>
+                    <div class="col-md-2"><input type="number" name="classname[]" class="form-control" placeholder="Class"></div>
+                    <div class="col-md-2"><input type="text" name="session[]" class="form-control" placeholder="Session"></div>
+                    <div class="col-md-2"><input type="text" name="curriculum[]" class="form-control" placeholder="Curriculum"></div>
+                    <div class="col-md-2"><input type="text" name="subjects[]" class="form-control" placeholder="Subjects"></div>
+                </div>
+            </div>
+
+            
+            
+
+            <div class="text-center mt-5">
+                <button type="submit" class="btn btn-submit"><i class="fas fa-paper-plane"></i> Submit Application</button>
+            </div>
+        </form>
+        
+    <!-- </div>
+
+        </div>
+</div> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+    <script>
+        $(document).ready(function () {
+            $("#classs").change(function () {
+                var classId = $(this).val();
+                if (classId) {
+                    $.ajax({
+                        url: "{% url 'get_sections_and_fee' %}",
+                        type: "GET",
+                        data: { class_id: classId },
+                        success: function (data) {
+                            var sectionDropdown = $("#section");
+                            sectionDropdown.empty();
+                            sectionDropdown.append('<option value="">-- Select Section --</option>');
+                            $.each(data.sections, function (index, section) {
+                                sectionDropdown.append('<option value="' + section.id + '">' + section.name + '</option>');
+                            });
+                        }
+                    });
+
+                    $.ajax({
+                        url: "{% url 'get_fee_amount' %}",
+                        type: "GET",
+                        data: { class_id: classId },
+                        success: function (data) {
+                            $("#amount").val(data.amount);
+                            calculateDiscount();
+                        }
+                    });
+                }
+            });
+
+            $('input[name="category"]').change(function() {
+                calculateDiscount();
+            });
+
+            function calculateDiscount() {
+                let amount = parseFloat($("#amount").val()) || 0;
+                let discount = 0;
+                let category = $('input[name="category"]:checked').val();
+                
+                if (category === 'admin') discount = 0.50;
+                else if (category === 'staff') discount = 0.25;
+                else if (category === 'normal') discount = 0.10;
+
+                let discountedAmount = amount * (1 - discount);
+                $("#totalAmountField").val(discountedAmount.toFixed(2));
+            }
+        });
+
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })();
+    </script>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+            </div>
+
+            <!-- Family Tab -->
+            <div class="tab-pane fade" id="tab2" role="tabpanel">
+                <div class="card p-4 mb-4">
+                    <h4 class="section-title">👪 Family Details</h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5 class="text-primary mb-3">👨 Father</h5>
+                            <div><strong>Name:</strong> {{ l.father_name }}</div>
+                            <div><strong>Occupation:</strong> {{ l.father_occupation }}</div>
+                            <div><strong>Email:</strong> {{ l.father_email }}</div>
+                            <div><strong>Mobile:</strong> {{ l.father_mobile }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5 class="text-primary mb-3">👩 Mother</h5>
+                            <div><strong>Name:</strong> {{ l.mother_name }}</div>
+                            <div><strong>Occupation:</strong> {{ l.mother_occupation }}</div>
+                            <div><strong>Email:</strong> {{ l.mother_email }}</div>
+                            <div><strong>Mobile:</strong> {{ l.mother_mobile }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5 class="text-primary mb-3">🧑‍🤝‍🧑 Guardian</h5>
+                            <div><strong>Name:</strong> {{ l.guardian_name }}</div>
+                            <div><strong>Occupation:</strong> {{ l.guardian_occupation }}</div>
+                            <div><strong>Email:</strong> {{ l.guardian_email }}</div>
+                            <div><strong>Mobile:</strong> {{ l.guardian_mobile }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transport Tab -->
+            <div class="tab-pane fade" id="tab3" role="tabpanel">
+                <!-- Transport Details -->
+                 <form method="post" action="/update_student_profile/{{ob5.stdid_id}}/" enctype="multipart/form-data" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="form-section">
+                <h3 class="section-title">Transport Details</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-bus"></i> Transport Available</label>
+                        <select name="transport_available" id="transportAvailable" class="form-select" onchange="toggleTransportFields()">
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        </select>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-bus-alt"></i> Bus No.</label>
+                        <select id="busNoDropdown" name="bus_no" class="form-select transport-field" readonly>
+                            <option value="">-- Select Bus Number --</option>
+                            {% if bus_numbers %}
+                                {% for number in bus_numbers %}
+                                    <option value="{{ number }}">{{ number }}</option>
+                                {% endfor %}
+                            {% else %}
+                                <option value="--">No Buses Available</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-user-tie"></i> Driver Name</label>
+                        <input type="text" name="driver_name" id="driverName" class="form-control transport-field" disabled>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-phone"></i> Mobile</label>
+                        <input type="number" name="mobile" id="mobile" class="form-control transport-field" disabled>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-route"></i> Route</label>
+                        <select name="route" class="form-select transport-field" readonly>
+                            <option value="">-- Select Route --</option>
+                            {% if routes %}
+                                {% for route in routes %}
+                                    <option value="{{ route.id }}">{{ route.name }} ({{ route.start_point }} → {{ route.end_point }})</option>
+                                {% endfor %}
+                            {% else %}
+                                <option value="">No Routes Available</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map-signs"></i> Stoppage</label>
+                        <select name="stoppage" class="form-select transport-field" disabled>
+                            <option value="Stop1">Stop 1</option>
+                            <option value="Stop2">Stop 2</option>
+                            <option value="Stop3">Stop 3</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="distance">Distance:</label>
+                        <select id="distance" name="fee1" class="form-control transport-field">
+                            <option value="">-- Select Distance --</option>
+                            {% for item in trans %}
+                                <option value="{{ item.id }}" data-fee="{{ item.fee }}">{{ item.distance }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="fee">Fee (₹):</label>
+                        <input type="text" id="fee" class="form-control transport-field" readonly>
+                    </div>
+
+                    <script>
+                        $(document).ready(function(){
+                            $('#distance').change(function(){
+                                var selectedOption = $(this).find(':selected');
+                                var fee = selectedOption.data('fee');
+                                $('#fee').val(fee ? '₹' + fee : '');
+                            });
+                        });
+                    </script>
+
+
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-clock"></i> Pick Up</label>
+                        <input type="text" name="pick_up" class="form-control transport-field" disabled>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-clock"></i> Drop Off</label>
+                        <input type="text" name="drop_off" class="form-control transport-field" disabled>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-tags"></i> Fee Category</label>
+                        <select name="fee_category" class="form-select transport-field" disabled>
+                            <option value="staffWard">STAFF WARD</option>
+                            <option value="staffWard2">STAFF WARD2</option>
+                        </select>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-calendar-alt"></i> Fee Type</label>
+                        <select name="fee_type" class="form-select transport-field" disabled>
+                            <option value="monthly">MONTHLY</option>
+                            <option value="quarterly">QUARTERLY</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                function toggleTransportFields() {
+                    const isTransportAvailable = document.getElementById('transportAvailable').value === 'yes';
+                    const transportFields = document.querySelectorAll('.transport-field');
+            
+                    transportFields.forEach(field => {
+                        field.disabled = !isTransportAvailable;
+                    });
+                }
+            
+                // Trigger once on page load
+                document.addEventListener('DOMContentLoaded', toggleTransportFields);
+            </script>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $('#busNoDropdown').on('change', function () {
+    const busNo = $(this).val();
+
+    if (busNo) {
+      $.ajax({
+        url: '{% url "get_driver_details" %}',
+        data: {
+          'bus_no': busNo
+        },
+        dataType: 'json',
+        success: function (data) {
+          $('#driverName').val(data.driver_name);
+          $('#mobile').val(data.mobile);
+
+          // Set the route dropdown value
+          if (data.route_id) {
+            $('select[name="route"]').val(data.route_id);
+          } else {
+            $('select[name="route"]').val('');
+          }
+        }
+      });
+    } else {
+      $('#driverName').val('');
+      $('#mobile').val('');
+      $('select[name="route"]').val('');
+    }
+  });
+</script>
+<div class="text-center mt-5">
+                <button type="submit" class="btn btn-submit"><i class="fas fa-paper-plane"></i> Update Transport</button>
+            </div>
+        </form>
+
+            </div>
+
+            <!-- Fee Details Tab -->
+            <div class="tab-pane fade" id="tab4" role="tabpanel">
+                <div class="card p-4 mb-4">
+                    <h4 class="section-title">⭐ Fee Details</h4>
+                    <div class="row mb-4 text-center">
+                        <div class="col-md-3 col-6 mb-2">
+                            <div class="detail-item"><strong>Original Amount:</strong> {{ o.original_amount }}</div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-2">
+                            <div class="detail-item"><strong>Discount Percentage:</strong> {{ o.discount_percentage }}</div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-2">
+                            <div class="detail-item"><strong>Discount Amount:</strong> {{ o.discount }}</div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-2">
+                            <div class="detail-item"><strong>Total Amount:</strong> {{ o.total_amount }}</div>
+                        </div>
+                    </div>
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Mar</th>
+                                <th>Apr</th>
+                                <th>May</th>
+                                <th>Jun</th>
+                                <th>Jul</th>
+                                <th>Aug</th>
+                                <th>Sep</th>
+                                <th>Oct</th>
+                                <th>Nov</th>
+                                <th>Dec</th>
+                                <th>Jan</th>
+                                <th>Feb</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Fee Amount</strong></td>
+                                <td>-</td><td>-</td><td>-</td>
+                                <td>{{ o.part1 }}</td>
+                                <td>-</td><td>-</td><td>-</td>
+                                <td>{{ o.part2 }}</td>
+                                <td>-</td><td>-</td>
+                                <td>{{ o.part3 }}</td>
+                                <td>-</td>
+                                <td class="bg-warning"><strong>{{ o.total_amount }}</strong></td>
+                            </tr>
+                            {% if ob5.fee1 %}
+                            <tr>
+                                <td><strong>Transport Amount</strong></td>
+                                <td>-</td><td>-</td><td>-</td>
+                                <td>{{ part1  }}</td>
+                                <td>-</td><td>-</td><td>-</td>
+                                <td>{{ part2  }}</td>
+                                <td>-</td><td>-</td>
+                                <td>{{ part3  }}</td>
+                                <td>-</td>
+                                <td class="bg-danger"><strong>{{ ob5.fee1.fee }}</strong></td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <td><strong>Paid Amount</strong></td>
+                                <td>-</td><td>-</td><td>-</td>
+                                <td>{{ paid1 }}</td>
+                                <td>-</td><td>-</td><td>-</td>
+                                <td>{{ paid2 }}</td>
+                                <td>-</td><td>-</td>
+                                <td>{{ paid3 }}</td>
+                                <td>-</td>
+                                <td class="bg-success"><strong>{{ total_paid }}</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Balance Amount</strong></td>
+                                <td>-</td><td>-</td><td>-</td>
+                                <td>{{ balance1 }}</td>
+                                <td>-</td><td>-</td><td>-</td>
+                                <td>{{ balance2 }}</td>
+                                <td>-</td><td>-</td>
+                                <td>{{ balance3 }}</td>
+                                <td>-</td>
+                                <td class="bg-danger"><strong>{{ total_balance }}</strong></td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Attendance Tab -->
+            <div class="tab-pane fade" id="tab5" role="tabpanel">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Adm.No</th>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for h in pj %}
+                        <tr>
+                            <td>{{ h.student.registrationno }}</td>
+                            <td>{{ h.student.studentname }}</td>
+                            <td>{{ h.date }}</td>
+                            <td>{{ h.status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Document Details Tab -->
+            <div class="tab-pane fade" id="tab6" role="tabpanel">
+                <form method="post" action="/update_student_profile1/{{m.stdid_id}}/" enctype="multipart/form-data" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+                <!-- Sibling Information -->
+            <div class="form-section">
+                <h3 class="section-title">Sibling Information</h3>
+                <div class="row g-4">
+                    <!-- Sibling 1 -->
+                    <div class="col-md-2"><input type="text" name="name1" class="form-control" placeholder="Name"></div>
+                    <div class="col-md-2"><input type="number" name="age1" class="form-control" placeholder="Age"></div>
+                    <div class="col-md-2">
+                        <select name="gender1" class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" name="school1" class="form-control" placeholder="Current School"></div>
+                    <div class="col-md-2"><input type="text" name="class1" class="form-control" placeholder="Current Class"></div>
+                    <!-- Sibling 2 -->
+                    <div class="col-md-2"><input type="text" name="name2" class="form-control" placeholder="Name"></div>
+                    <div class="col-md-2"><input type="number" name="age2" class="form-control" placeholder="Age"></div>
+                    <div class="col-md-2">
+                        <select name="gender2" class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" name="school2" class="form-control" placeholder="Current School"></div>
+                    <div class="col-md-2"><input type="text" name="class2" class="form-control" placeholder="Current Class"></div>
+                    <!-- Sibling 3 -->
+                    <div class="col-md-2"><input type="text" name="name3" class="form-control" placeholder="Name"></div>
+                    <div class="col-md-2"><input type="number" name="age3" class="form-control" placeholder="Age"></div>
+                    <div class="col-md-2">
+                        <select name="gender3" class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" name="school3" class="form-control" placeholder="Current School"></div>
+                    <div class="col-md-2"><input type="text" name="class3" class="form-control" placeholder="Current Class"></div>
+                    <!-- Sibling 4 -->
+                    <div class="col-md-2"><input type="text" name="name4" class="form-control" placeholder="Name"></div>
+                    <div class="col-md-2"><input type="number" name="age4" class="form-control" placeholder="Age"></div>
+                    <div class="col-md-2">
+                        <select name="gender4" class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" name="school4" class="form-control" placeholder="Current School"></div>
+                    <div class="col-md-2"><input type="text" name="class4" class="form-control" placeholder="Current Class"></div>
+                    <!-- Sibling 5 -->
+                    <div class="col-md-2"><input type="text" name="name5" class="form-control" placeholder="Name"></div>
+                    <div class="col-md-2"><input type="number" name="age5" class="form-control" placeholder="Age"></div>
+                    <div class="col-md-2">
+                        <select name="gender5" class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" name="school5" class="form-control" placeholder="Current School"></div>
+                    <div class="col-md-2"><input type="text" name="class5" class="form-control" placeholder="Current Class"></div>
+                </div>
+            </div><br>
+                <!-- Document Submission -->
+            <div class="form-section">
+                <h3 class="section-title">Document Submission</h3>
+                <div class="row g-4">
+                    <div class="col-12">
+                        <label><i class="fas fa-file-alt"></i> Admission Form</label>
+                        <div class="radio-group">
+                            <div class="form-check form-check-inline"><input type="radio" name="admission_form" value="yes" class="form-check-input"> Yes</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="admission_form" value="no" class="form-check-input"> No</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="admission_form" value="partial" class="form-check-input"> Partial</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="admission_form" value="na" class="form-check-input"> N/A</div>
+                        </div>
+                        <input type="text" name="admission_form_remarks" class="form-control" placeholder="Remarks">
+                    </div>
+                    <div class="col-12">
+                        <label><i class="fas fa-file-alt"></i> School Leaving Certificate (TC)</label>
+                        <div class="radio-group">
+                            <div class="form-check form-check-inline"><input type="radio" name="school_leaving_certificate" value="yes" class="form-check-input"> Yes</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="school_leaving_certificate" value="no" class="form-check-input"> No</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="school_leaving_certificate" value="partial" class="form-check-input"> Partial</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="school_leaving_certificate" value="na" class="form-check-input"> N/A</div>
+                        </div>
+                        <input type="text" name="school_leaving_certificate_remarks" class="form-control" placeholder="Remarks">
+                    </div>
+                    <div class="col-12">
+                        <label><i class="fas fa-file-alt"></i> Bonafide Certificate</label>
+                        <div class="radio-group">
+                            <div class="form-check form-check-inline"><input type="radio" name="bonafide_certificate" value="yes" class="form-check-input"> Yes</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="bonafide_certificate" value="no" class="form-check-input"> No</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="bonafide_certificate" value="partial" class="form-check-input"> Partial</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="bonafide_certificate" value="na" class="form-check-input"> N/A</div>
+                        </div>
+                        <input type="text" name="bonafide_certificate_remarks" class="form-control" placeholder="Remarks">
+                    </div>
+                    <div class="col-12">
+                        <label><i class="fas fa-file-alt"></i> Birth Certificate</label>
+                        <div class="radio-group">
+                            <div class="form-check form-check-inline"><input type="radio" name="birth_certificate" value="yes" class="form-check-input"> Yes</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="birth_certificate" value="no" class="form-check-input"> No</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="birth_certificate" value="partial" class="form-check-input"> Partial</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="birth_certificate" value="na" class="form-check-input"> N/A</div>
+                        </div>
+                        <input type="text" name="birth_certificate_remarks" class="form-control" placeholder="Remarks">
+                    </div>
+                    <div class="col-12">
+                        <label><i class="fas fa-file-alt"></i> Caste Certificate</label>
+                        <div class="radio-group">
+                            <div class="form-check form-check-inline"><input type="radio" name="caste_certificate" value="yes" class="form-check-input"> Yes</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="caste_certificate" value="no" class="form-check-input"> No</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="caste_certificate" value="partial" class="form-check-input"> Partial</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="caste_certificate" value="na" class="form-check-input"> N/A</div>
+                        </div>
+                        <input type="text" name="caste_certificate_remarks" class="form-control" placeholder="Remarks">
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-5">
+                <button type="submit" class="btn btn-submit"><i class="fas fa-paper-plane"></i> Update Document</button>
+            </div>
+                </form>
+            </div>
+
+            <!-- Report Card Details Tab -->
+            <div class="tab-pane fade" id="tab7" role="tabpanel">
+
+                <div class="form-section">
+        <h3 class="section-title">Report Card</h3>
+
+        <div class="container mt-5">
+
+    <form id="reportForm" method="post">
+        {% csrf_token %}
+        <div class="row mb-3">
+            <!-- Exam Dropdown -->
+            <div class="col-md-4">
+                <label for="examSelect" class="form-label">Exam</label>
+                <select id="examSelect" name="exam_id" class="form-control" required>
+                    <option value="">-- Select Exam --</option>
+                    {% for exam in exams %}
+                        <option value="{{ exam.id }}" {% if selected_exam == exam.id|stringformat:"s" %}selected{% endif %}>
+                            {{ exam.examname }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <button type="submit" class="btn btn-primary">Generate</button>
+        </div>
+    </form>
+
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Report Card</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            .border-custom {
+                border: 7px solid #006400;
+                height: 750px;
+    
+            }
+            .header-text {
+                color: #006400;
+            }
+            .table-header {
+                background-color: #f0f0f0;
+                text-align: center;
+            }
+            .table-cell {
+                border: 1px solid #000;
+                text-align: center;
+            }
+            .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 20px;
+            font-weight: bold;
+            color: #141d25; 
+        }
+        @media print {
+                .page-break {
+                    page-break-after: always;
+                }
+            }
+            @page {
+                size: A4;
+                margin: 20mm;
+            }
+            
+        </style>
+    </head>
+    <body class="p-4 ">
+        {% for data in report_data %}
+        <div class="page">
+        <div class="border-custom p-4" style="background-color: white;">
+            <div class="mb-4">
+                <img src="{% static 'img/Report_card_header.PNG' %}" width="990" height="100">
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <p><strong>NAME OF THE STUDENT:</strong> {{ data.student.studentname }}</p>
+                    <p><strong>FATHER'S NAME:</strong> {{ data.student.workshifts2.first.father_name }}</p>
+                    <p><strong>CLASS & SECTION:</strong> {{ data.student.classs.name }} - {{ data.student.section.name }}</p>
+                    <p><strong>DATE OF BIRTH:</strong> {{ data.student.dateofbirth|date:"d M, Y" }}</p>
+                    <p><strong>RESIDENTIAL ADDRESS:</strong> {{ data.student.address }}</p>
+                </div>
+                <div>
+                    <p><strong>ADMISSION NO:</strong> {{ data.student.registrationno }} </p>
+                    <p><strong>MOTHER'S NAME:</strong> {{ data.student.workshifts2.first.mother_name }}</p>
+                    <p><strong>AADHAR NO:</strong> {{ data.student.aadharno }}</p>
+                    <p><strong>HOUSE:</strong> {{ data.student.house }}</p>
+                    <p><strong>TELEPHONE NO:</strong> {{ data.student.workshifts2.first.father_mobile }}</p>
+                </div>
+            </div>
+            <table class="w-full mb-4 border-collapse border border-black">
+                <thead class="table-header">
+                    <tr>
+                        <th class="table-cell ">ATTENDANCE</th>
+                        <th class="table-cell "></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="table-cell ">TOTAL NO OF WORKING DAYS</td>
+                        <td class="table-cell  text-center">82</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell ">NUMBER OF DAYS PRESENT</td>
+                        <td class="table-cell  text-center">80</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="w-full mb-4 border-collapse border border-black">
+                <thead class="table-header">
+                    <tr>
+                        <th class="table-cell ">Health Status</th>
+                        <th class="table-cell "></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="table-cell ">Height(cm)</td>
+                        <td class="table-cell  text-center">82</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell ">Weight(cm)</td>
+                        <td class="table-cell  text-center">80</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div><br>
+    
+    <div class="page">
+        <div class="page-break">
+            <div class="border-custom p-4" style="background-color: white;">
+            <table class="w-full mb-4 border-collapse border border-black">
+                <thead class="table-header">
+                    <tr>
+                        <th class="table-cell ">S.No.</th>
+                        <th class="table-cell ">SCHOLASTIC</th>
+                        <th class="table-cell ">PA (05)</th>
+                        <th class="table-cell ">SE (05)</th>
+                        <th class="table-cell ">MA (05)</th>
+                        <th class="table-cell ">NB (05)</th>
+                        <th class="table-cell ">TERM (80)</th>
+                        <th class="table-cell ">TOTAL (100)</th>
+                        <th class="table-cell ">GRADE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in data.report_data %}
+                    <tr>
+                        <td class="table-cell text-center">{{ subject.sno }}</td>
+                        <td class="table-cell">{{ subject.subject }}</td>
+                        <td class="table-cell text-center">{{ subject.pa }}</td>
+                        <td class="table-cell text-center">{{ subject.se }}</td>
+                        <td class="table-cell text-center">{{ subject.ma }}</td>
+                        <td class="table-cell text-center">{{ subject.nb }}</td>
+                        <td class="table-cell text-center">{{ subject.term }}</td>
+                        <td class="table-cell text-center">{{ subject.total }}</td>
+                        <td class="table-cell text-center">{{ subject.grade }}</td>
+                    </tr>
+                    {% endfor %}
+            
+                    <tr class="table-header">
+                        <td class="table-cell text-center font-bold" colspan="7">TOTAL MARKS</td>
+                        <td class="table-cell text-center font-bold">{{ data.total_obtained }}</td>
+                        <td class="table-cell text-center font-bold">
+                            {% if percentage >= 91 %} A1
+                            {% elif percentage >= 81 %} A2
+                            {% elif percentage >= 71 %} B1
+                            {% elif percentage >= 61 %} B2
+                            {% elif percentage >= 51 %} C1
+                            {% elif percentage >= 41 %} C2
+                            {% else %} D
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr class="table-header">
+                        <td class="table-cell text-center font-bold" colspan="7">TOTAL %</td>
+                        <td class="table-cell text-center font-bold">{{ data.percentage }}</td>
+                        <td class="table-cell text-center font-bold">100</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div><br>
+    
+    <div class="page">
+    <div class="page-break">
+    <div class="border-custom p-4" style="background-color: white;">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <table class="w-full mb-4 border-collapse border border-black">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell">S.No.</th>
+                                <th class="table-cell">SUBJECT</th>
+                                <th class="table-cell">GRADE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for extra in extra_subjects %}
+                            <tr>
+                                <td class="table-cell text-center">{{ forloop.counter }}</td>
+                                <td class="table-cell">{{ extra.subject }}</td>  <!-- Use extra.subject -->
+                                <td class="table-cell text-center">{{ extra.grade }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center">No extra subject grades available</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+        
+                    <table class="w-full mb-4 border-collapse border border-black">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell">CO-SCHOLASTIC AREAS & DISCIPLINE GRADING SCALE</th>
+                                <th class="table-cell">GRADE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th class="table-cell">GRADE</th>
+                                <th class="table-cell text-center">GRADE POINT</th>
+                            </tr>
+                            {% for grade in co_scholastic_grades %}
+                            <tr>
+                                <td class="table-cell">{{ grade.grade }}</td>
+                                <td class="table-cell">{{ grade.grade_point }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center">No grades available</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <!-- <table class="w-full mb-4 border-collapse border border-black">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell ">ATTENDANCE</th>
+                                <th class="table-cell "></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="table-cell ">TOTAL NO OF WORKING DAYS</td>
+                                <td class="table-cell  text-center">82</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">NUMBER OF DAYS PRESENT</td>
+                                <td class="table-cell  text-center">80</td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                    <table class="w-full mb-4 border-collapse border border-black">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell ">SCHOLASTIC AREAS GRADING SYSTEM</th>
+                                <th class="table-cell ">GRADE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="table-cell ">A1</td>
+                                <td class="table-cell  text-center">91-100</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">A2</td>
+                                <td class="table-cell  text-center">81-90</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">B1</td>
+                                <td class="table-cell  text-center">71-80</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">B2</td>
+                                <td class="table-cell  text-center">61-70</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">C1</td>
+                                <td class="table-cell  text-center">51-60</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">C2</td>
+                                <td class="table-cell  text-center">41-50</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">D</td>
+                                <td class="table-cell  text-center">33-40</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">E1</td>
+                                <td class="table-cell  text-center">21-32</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">E2</td>
+                                <td class="table-cell  text-center">00-20</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    
+                    <table class="w-full mb-4 border-collapse border border-black">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" class="table-cell  border border-black">
+                                    <strong>DISCIPLINE:(GRADES A-C) on 3 point grading scale</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell  border border-black w-1/2">
+                                    <strong>Grade</strong>
+                                </td>
+                                <td class="table-cell  border border-black w-1/2 text-center">
+                                    <p>{{ discipline_grade.grade }}</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+    
+                    <table class="w-full mb-4 border-collapse border border-black">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" class="table-cell  border border-black">
+                                    <strong>REMARKS:</strong> {{ remark.remark }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell  border border-black w-1/2">
+                                    <strong>SIGNATURE</strong>
+                                </td>
+                                <td class="table-cell  border border-black w-1/2 text-left">
+                                    <strong><p class="signature"> {{ signature.teacher_signature }}</p>Class Teacher</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="table-cell  border border-black w-1/2 text-center">
+                                    <strong>REPORT CARD GENERATED ON: {{ signature.report_date|date:"d/m/Y" }}</strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <table class="w-full mb-4 border-collapse border border-black">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell ">CO SCHOLASTIC AREAS</th>
+                                <th class="table-cell ">GRADE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="table-cell ">WORK EDUCATION</td>
+                                <td class="table-cell  text-center">A</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">ART EDUCATION</td>
+                                <td class="table-cell  text-center">A</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">HEALTH & PHYSICAL EDUCATION</td>
+                                <td class="table-cell  text-center">A</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">SWIMMING</td>
+                                <td class="table-cell  text-center">A</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">MUSIC</td>
+                                <td class="table-cell  text-center">A</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">DANCE</td>
+                                <td class="table-cell  text-center">A</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        
+        <table class="w-full border-collapse border border-black">
+            <tr>
+                <td class="table-cell  text-center"><b>Key</b></td>
+            </tr>
+            <tr>
+                <td class="text-center"><b>PA</b> - PERIODIC ASSESSMENT,&nbsp;&nbsp; <b>SE</b> - SUBJECT ENRICHMENT ACTIVITY,&nbsp;&nbsp; <b>MA</b> - MULTIPLE ASSESSMENT,&nbsp;&nbsp; <b>NB</b> - NOTE BOOK SUBMISSION,&nbsp;&nbsp; <b>AB</b> - ABSENT</td>
+            </tr>
+        </table>
+    </div>
+    </div>
+    </div><br>
+    
+    <div class="page">
+        <div class="page-break">
+          <div class="border-custom p-4 d-flex justify-content-center align-items-center" style="background-color: white; min-height: 600px;">
+            {% if class_photo %}
+              <img src="{{ class_photo.photo.url }}" alt="Class Photo"
+                   class="img-fluid"
+                   style="max-height: 600px; border: 2px solid #ccc; padding: 5px;">
+            {% else %}
+              <p>No class photo available for this class, section, and exam.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+</div>
+
+            <!-- Performance Details Tab -->
+            <div class="tab-pane fade" id="tab8" role="tabpanel">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+{% endblock %}

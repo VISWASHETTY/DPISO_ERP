@@ -1,0 +1,158 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Dashboard Settings</title>
+    <style>
+       
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 25px;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .section {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .active {
+            display: block;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 0;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        label:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background: #2ecc71;
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+        }
+
+        .submit-btn:hover {
+            background: #27ae60;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <script>
+        function toggleSection(section) {
+            document.getElementById('heading_section').classList.remove('active');
+            document.getElementById('submenu_section').classList.remove('active');
+            document.getElementById(section).classList.add('active');
+        }
+    </script>
+</head>
+<body>
+    <div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+    <h2>Teacher Dashboard Settings</h2>
+    
+    <div class="button-container">
+        <button onclick="toggleSection('heading_section')">Teacher Headings</button>
+        <button onclick="toggleSection('submenu_section')">Submenu</button>
+    </div>
+
+    <!-- Headings -->
+    <form method="post">
+        {% csrf_token %}
+        <div id="heading_section" class="section active">
+            <h3>Teacher Headings</h3>
+            {% for heading in heading_data %}
+                <label>
+                    <input type="checkbox" name="heading_checkbox" value="{{ heading.id }}" {% if heading.status == 1 %}checked{% endif %}>
+                    {{ heading.heading }}
+                </label>
+            {% endfor %}
+            <button type="submit" name="heading_submit" class="submit-btn">Update Headings</button>
+        </div>
+    </form>
+
+    <!-- Submenus -->
+    <form method="post">
+        {% csrf_token %}
+        <div id="submenu_section" class="section">
+            <h3>Teacher Submenus</h3>
+            {% for submenu in submenu_data %}
+                <label>
+                    <input type="checkbox" name="submenu_checkbox" value="{{ submenu.id }}" {% if submenu.status == 1 %}checked{% endif %}>
+                    {{ submenu.title }} ({{ submenu.teacherid.heading }})
+                </label>
+            {% endfor %}
+            <button type="submit" name="submenu_submit" class="submit-btn">Update Submenus</button>
+        </div>
+    </form>
+</div>
+</div>
+</div>
+</body>
+</html>
+
+{% endblock %}

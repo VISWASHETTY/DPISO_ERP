@@ -1,0 +1,72 @@
+{% extends 'student_base.html' %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+<div class="container mt-5">
+    <h3>Report Transport Issue</h3>
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            
+                        <div class="card-body">
+                            <form method="post" class="needs-validation" novalidate>
+                                {% csrf_token %}
+    
+                                <!-- Issue Type -->
+                                <div class="form-group">
+                                    <label for="issue_type" class="form-label">Issue Type</label>
+                                    <select name="issue_type" class="form-control" required>
+                                        <option value="">-- Select Issue --</option>
+                                        <option>Bus Delay</option>
+                                        <option>Safety Concern</option>
+                                        <option>Missed Pickup</option>
+                                        <option>No Transport Service</option>
+                                        <option>Other</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select an issue type.
+                                    </div>
+                                </div>
+    
+                                <!-- Description -->
+                                <div class="form-group">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea name="description" class="form-control" rows="3" placeholder="Provide more details if necessary" required></textarea>
+                                    <div class="invalid-feedback">
+                                        Please type the description.
+                                    </div>
+                                </div>
+    
+                                <!-- Submit Button -->
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary mt-3">Submit Issue</button>
+                                </div>
+                            </form>
+                        </div>
+        </div>
+    </div>
+    
+    <script>
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+            
+                Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+    
+</div>
+</div>
+    </div>
+</div>
+{% endblock %}

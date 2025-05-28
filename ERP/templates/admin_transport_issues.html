@@ -1,0 +1,114 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+    <!-- <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Bus</th>
+                <th>Issue Type</th>
+                <th>Description</th>
+                <th>Date Reported</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for issue in issues %}
+            <tr>
+                <td>{{ issue.student.studentname }}</td>
+                <td>{{ issue.transport.vechile_number }}</td>
+                <td>{{ issue.get_issue_type_display }}</td>
+                <td>{{ issue.description }}</td>
+                <td>{{ issue.date_reported|date:"d M Y" }}</td>
+                <td>
+                    {% if issue.status == 'Resolved' %}
+                        <span class="badge bg-success">Resolved</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if issue.status == 'Pending' %}
+                        <a href="{% url 'admin_resolve_transport_issue' issue.id %}" class="btn btn-sm btn-success">Mark as Resolved</a>
+                    {% else %}
+                        <button class="btn btn-sm btn-secondary" disabled>Resolved</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No issues reported.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table> -->
+    
+<div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+      
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Transport Issues Reported</strong>
+                        </div>
+                        <div class="card-body">
+                            <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Bus</th>
+                                        <th>Issue Type</th>
+                                        <th>Description</th>
+                                        <th>Date Reported</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for issue in issues %}
+                                    <tr>
+                                        <td>{{ issue.student.studentname }}</td>
+                                        <td>{{ issue.transport.vechile_number }}</td>
+                                        <td>{{ issue.get_issue_type_display }}</td>
+                                        <td>{{ issue.description }}</td>
+                                        <td>{{ issue.date_reported|date:"d M Y" }}</td>
+                                        <td>
+                                            {% if issue.status == 'Resolved' %}
+                                                <span class="badge bg-success">Resolved</span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if issue.status == 'Pending' %}
+                                                <a href="{% url 'admin_resolve_transport_issue' issue.id %}" class="btn btn-sm btn-success">Mark as Resolved</a>
+                                            {% else %}
+                                                <button class="btn btn-sm btn-secondary" disabled>Resolved</button>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                  
+                                    {% endfor %}
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+      
+      
+            </div>
+        </div>
+      </div>
+      </div>
+      </div>
+      </div>
+
+{% endblock %}

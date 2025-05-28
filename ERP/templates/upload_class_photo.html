@@ -1,0 +1,77 @@
+<!-- upload_class_photo.html -->
+{% extends 'teacher_base.html' %}
+
+{% block content %}
+  <h2>Upload Class Photo</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="col-md-4">
+        <label for="class_name" class="form-label">Class</label>
+        <select name="class_name" id="class_name" class="form-control" onchange="loadSections(this.value)">
+            <option value="">Select Class</option>
+            {% for class in classes %}
+            <option value="{{ class.id }}" {% if selected_class == class.id|stringformat:"s" %}selected{% endif %}>
+                {{ class.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Section Dropdown -->
+    <div class="col-md-4">
+        <label for="section" class="form-label">Section</label>
+        <select name="section" id="section" class="form-control">
+            <option value="">Select Section</option>
+            {% for section in sections %}
+            <option value="{{ section.id }}" {% if selected_section == section.id|stringformat:"s" %}selected{% endif %}>
+                {{ section.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label for="examm">Exam:</label>
+    <select id="examm" name="examm" class="form-control" required>
+      <option value="">Select Exam</option>
+      {% for exam in examms %}
+        <option value="{{ exam.id }}">{{ exam.examname }}</option>
+      {% endfor %}
+    </select>
+    </div>
+
+    <label for="photo">Upload Photo:</label>
+    <input type="file" name="photo" accept="image/*" class="form-control" required><br>
+
+    <button type="submit" class="btn-primary">Upload</button>
+  </form>
+
+  <script>
+    // AJAX function to load sections dynamically based on the selected class
+    function loadSections(classId) {
+        const sectionSelect = document.getElementById("section");
+        sectionSelect.innerHTML = '<option value="">Select Section</option>';
+
+        if (classId) {
+            fetch(`/get_sections3/?class_id=${classId}`)  // Ensure the URL matches the `urls.py`
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sections.length > 0) {
+                        data.sections.forEach(section => {
+                            const option = document.createElement("option");
+                            option.value = section.id;
+                            option.textContent = section.name;
+                            sectionSelect.appendChild(option);
+                        });
+                    } else {
+                        const noOption = document.createElement("option");
+                        noOption.textContent = "No sections available";
+                        sectionSelect.appendChild(noOption);
+                    }
+                })
+                .catch(error => console.error("Error loading sections:", error));
+        }
+    }
+</script>
+{% endblock %}

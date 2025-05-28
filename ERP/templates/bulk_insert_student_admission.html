@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard with Reusable Nav & Sidebar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Google Fonts: Roboto -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <!-- Custom Inline Styles -->
+  <style>
+    /* Scoped styles for the dashboard template */
+    .dashboard-template {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    a{
+      font-size: 13px;
+    }
+    
+
+    :root {
+      --navbar-gradient: white;
+      --sidebar-gradient: white;;
+      --primary-text: black;
+      --secondary-text: black;
+      --hover-bg: rgba(255, 255, 255, 0.2);
+      --card-bg: #ffffff;
+      --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    span{
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    /* Navbar Styles */
+    .dashboard-template .navbar {
+      background: var(--navbar-gradient) !important;
+      box-shadow: var(--card-shadow);
+      animation: fadeInDown 0.6s ease;
+    }
+
+    .dashboard-template .navbar-brand {
+      font-weight: 700;
+      color: var(--primary-text) !important;
+    }
+
+    .dashboard-template .navbar-nav .nav-link {
+      color: var(--secondary-text) !important;
+      margin-left: 15px;
+      transition: color 0.3s;
+    }
+
+    .dashboard-template .navbar-nav .nav-link:hover {
+      color: var(--primary-text) !important;
+    }
+
+    /* Force nav items to align right */
+    .dashboard-template .navbar .navbar-collapse {
+      justify-content: flex-end !important;
+    }
+
+    .dashboard-template .toggle-sidebar {
+      display: none;
+      color: var(--primary-text);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Sidebar Styles */
+    .dashboard-template .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100vh;
+      background: var(--sidebar-gradient) !important;
+      color: var(--primary-text);
+      padding: 2rem 1rem;
+      overflow-y: auto;
+      animation: slideInLeft 0.6s ease;
+    }
+
+    .dashboard-template .sidebar h5 {
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .dashboard-template .sidebar a {
+      display: block;
+      color: var(--secondary-text) !important;
+      text-decoration: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .dashboard-template .sidebar a:hover,
+    .dashboard-template .sidebar a.active {
+      background: var(--hover-bg) !important;
+      color: var(--primary-text) !important;
+      transform: translateX(5px);
+    }
+
+    /* Student Submenu Styles */
+    .dashboard-template .sidebar .submenu a {
+      padding-left: 30px;
+      font-size: 0.9rem;
+    }
+
+    /* Content Area */
+    .dashboard-template .content {
+      margin-left: 250px;
+      padding: 2rem;
+      animation: fadeInUp 0.6s ease;
+      overflow-y: auto;
+      height: calc(100vh);
+    }
+
+    /* Card Styles */
+    .dashboard-template .card {
+      background: var(--card-bg);
+      border: none;
+      border-radius: 10px;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .dashboard-template .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .dashboard-template .card-title {
+      color: #1a73e8;
+    }
+
+    .dashboard-template .card-text {
+      color: #202124;
+    }
+    .sidebar {
+          
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+     
+        .navbar {
+            background-color: #f8f9fa;
+            padding: 10px 20px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard-card {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .profile-menu {
+            position: relative;
+        }
+        .dropdown-menu {
+            right: 0;
+            left: auto;
+        }
+        .search-bar {
+            width: 500px !important;
+        }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .dashboard-template .sidebar {
+        transform: translateX(-250px);
+      }
+
+      .dashboard-template .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .dashboard-template .content {
+        margin-left: 0;
+      }
+
+      .dashboard-template .toggle-sidebar {
+        display: block;
+      }
+    }
+
+    /* Keyframe Animations */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-100%); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="dashboard-template">
+  <div class="sidebar">
+    <h4 class="text-center">Admin Panel</h4>
+    <a href="#"><i class="bi bi-speedometer2"></i> Dashboard</a>
+    <a href="#"><i class="bi bi-person"></i> Students</a>
+    <a href="#"><i class="bi bi-book"></i> Classes</a>
+    <a href="#"><i class="bi bi-cash"></i> Fees</a>
+    <a href="#"><i class="bi bi-gear"></i> Settings</a>
+</div>
+
+<div class="main-content">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-grid fs-4 me-3"></i>
+                <input type="text" class="form-control search-bar" placeholder="Search student by name, father name, admission no or mobile no...">
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="me-3">Session: 2025 - 2026</span>
+                <i class="bi bi-bell fs-4 me-3 position-relative">
+                    <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">13</span>
+                </i>
+                <div class="dropdown profile-menu">
+                    <img src="profile.png" class="rounded-circle" width="40" height="40" data-bs-toggle="dropdown" aria-expanded="false">
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> My Profile</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-chat"></i> Support (Chat)</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-down"></i> Check Updates</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-headset"></i> Help Desk</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-shield-lock"></i> Two Authentication</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-activity"></i> Active Sessions</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-trash"></i> Clear Cache</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <div class="sidebar" id="sidebar">
+    <h5>Menu</h5>
+    <a href="#" class="active"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+
+    <a href="#studentnew" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-person me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Student (New)</span>
+      <i class="bi bi-chevron-down"></i>
+      
+    </a>
+    <div class="collapse submenu" id="studentnew">
+      <ul class="list-unstyled ps-3">
+      
+
+     
+					<li ><a style="font-size: 13px;" href="/insert_student_admission"> New Admission</a></li>
+					<li ><a style="font-size: 13px;" href="/student_list"> Student List</a></li>
+					<li ><a style="font-size: 13px;" href="/login_list">Assign Students Credits</a></li>
+					
+				
+      </ul>
+    </div>
+
+    <a href="#teacher" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-person me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Teacher's Management</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="teacher">
+      <ul class="list-unstyled ps-3">
+      
+
+     
+					<li ><a style="font-size: 13px;" href="/insert_teacher"> Add New Teacher</a></li>
+					<li ><a style="font-size: 13px;" href="/teachers_view"> Teacher's List</a></li>
+					<li ><a style="font-size: 13px;" href="/assign_teacher_to_class"> Assign Class Teacher</a></li>
+					
+					
+				
+      </ul>
+    </div>
+
+    <a href="#fee" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-person me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Fee Management</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="fee">
+      <ul class="list-unstyled ps-3">
+        <li ><a style="font-size: 13px;" href="/student_updatefee"> Update Student Fee</a></li>
+
+      </ul>
+    </div>
+
+    <a href="#studentSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-person me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Student</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="studentSubmenu">
+      <ul class="list-unstyled ps-3">
+      
+
+     
+					<li ><a style="font-size: 13px;" href="/insert_student_admission"> New Registration</a></li>
+					<li ><a style="font-size: 13px;" href="/list_new_admission"> List New Admission</a></li>
+					<li ><a style="font-size: 13px;" href="/list_admissions_bydate"> List Admissions (By Date)</a></li>
+					<li ><a style="font-size: 13px;" href="/change_admissionno">Change Adm. No.</a></li>
+					<li ><a style="font-size: 13px;"> Student Listing</a></li>
+					<li ><a style="font-size: 13px;" href="/list_student_classwise">List Students (Classwise)</a></li>
+					<li ><a style="font-size: 13px;" href="/list_student_addresswise">List Students (Address Wise)</a></li>
+					<li ><a style="font-size: 13px;" href="/master_student_edit"> Master Student Edit</a></li>
+					<li ><a style="font-size: 13px;" href="/search_student">Search Student</a></li>
+					<li ><a style="font-size: 13px;" href="/student_strength">Student Strength</a></li>
+					<li ><a style="font-size: 13px;" href="/nso_updation_list"> NSO Updation List</a></li>
+					<li ><a style="font-size: 13px;" href="/student_strength_categiorywise">Student Strength (Categorywise)</a></li>
+					<li ><a style="font-size: 13px;" href="#"> Student Strength (Session Wise)</a></li>
+					<li ><a style="font-size: 13px;" href="/student_strength_agewise">Student Strength (Age Wise)</a></li>
+					<li ><a style="font-size: 13px;" href="/create_sibilings"> Create Sibling</a></li>
+					<li ><a style="font-size: 13px;" href="/sibiling_report"> Sibling Report</a></li>
+					<li ><a style="font-size: 13px;" href="/print_marks_list">Print Mark List</a></li>
+					<li ><a style="font-size: 13px;"> Other Listing</a></li>
+					<li ><a style="font-size: 13px;" href="/nso_notshown_student_list"> NSO / Not Shown List</a></li>
+					<li ><a style="font-size: 13px;" href="/cancel_admissions">Cancelled Admissions</a></li>
+					<li ><a style="font-size: 13px;" href="/tc_issued_students"> TC Issued</a></li>
+					<li ><a style="font-size: 13px;" href="/issue_admint_cards"> Admit Card</a></li>
+					<li ><a style="font-size: 13px;" href="/manage_date_sheet"> Manage Datesheet</a></li>
+					<li ><a style="font-size: 13px;" href="/print_admit_card"> Print Admit Card</a></li>
+					<li ><a style="font-size: 13px;" href="/print_idcard">Print ID Card (New)</a></li>
+					<li ><a style="font-size: 13px;" href="/print_staff_idcard">Print Staff ID Card (New)</a></li>
+					<li ><a style="font-size: 13px;" href="/print_idcard_auth">Print ID Card Auth(New)</a></li>
+					<li ><a style="font-size: 13px;" href="#"> NSO/TC Strength</a></li>
+					<li ><a style="font-size: 13px;" href="/list_nso_summery"> List NSO Summary</a></li>
+				
+      </ul>
+    </div>
+
+    <a href="#certificates" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-newspaper me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Certificates</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="certificates">
+      <ul class="list-unstyled ps-3">
+        <li><a href="/experience_certificate" style="font-size: 13px;">Experience Certificate</a></li>
+        <li><a href="/fee_certificate" style="font-size: 13px;">Fee Certificate</a></li>
+        <li><a href="/bonafide_certificate" style="font-size: 13px;">Bonafide Certificate</a></li>
+        <li><a href="/character_certificate" style="font-size: 13px;">Character Certificate</a></li>
+        <li><a href="/birth_certificate" style="font-size: 13px;">Birth Certificate</a></li>
+        <li><a href="/transfer_certificate" style="font-size: 13px;">Transfer Certificate</a></li>
+        <li><a href="/certificate_defaulters" style="font-size: 13px;">Certificate Defaulters</a></li>
+        <li><a href="/certificate_report" style="font-size: 13px;">Certificate Report</a></li>
+      </ul>
+    </div>
+
+    <!-- Inventory Submenu -->
+    <a href="#inventory" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-border-style me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Inventory</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="inventory">
+      <ul class="list-unstyled ps-3">
+        <li><a href="/inventory" style="font-size: 13px;">Inventory</a></li>
+      </ul>
+    </div>
+
+    <!-- Transport Submenu -->
+    <a href="#transport" style="font-size: 13px;" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span>
+        <i class="bi bi-truck-front icon-space" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;" ></i> Transport
+    </span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="transport">
+      <ul class="list-unstyled ps-3">
+        <li><a href="/students_list_transport" style="font-size: 13px;">Students List (Using Transport)</a></li>
+        <li><a href="/students_list_nottransport">Students List (Not Using Transport)</a></li>
+        <li><a href="/buswise_list" style="font-size: 13px;">Buswise List</a></li>
+        <li><a href="/routewise_list" style="font-size: 13px;">Routewise List New</a></li>
+        <li><a href="/stopwise_list" style="font-size: 13px;" >Stopwise List New</a></li>
+        <li><a href="/oneclick_buswise_listnew" style="font-size: 13px;">One Click Buswise List New</a></li>
+        <li><a href="/stoppagewise_list" style="font-size: 13px;">Routewise / Stoppagewise List</a></li>
+        <li><a href="/buswise_student_count" style="font-size: 13px;">Buswise Student Count</a></li>
+        <li><a href="/transport_attendance" style="font-size: 13px;">Transport Attendance New</a></li>
+        <li><a href="/attendance_transport_register" style="font-size: 13px;">Attendance Transport Register New</a></li>
+      </ul>
+    </div>
+
+    <!-- Frontdesk Submenu -->
+    <a href="#frontdesk" style="font-size: 13px;" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-window-plus me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Frontdesk</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="frontdesk">
+      <ul class="list-unstyled ps-3">
+        <li><a href="/add_feedback" style="font-size: 13px;">Add Feedback / Suggestions</a></li>
+        <li><a href="/view_feedback" style="font-size: 13px;">View Feedbacks / Suggestions</a></li>
+        <li><a href="/record_visits" style="font-size: 13px;">Record Visits</a></li>
+        <li><a href="/list_visitors" style="font-size: 13px;">List Visitors</a></li>
+        <li><a href="/add_short_leaves" style="font-size: 13px;">Add Short Leaves</a></li>
+        <li><a href="/list_short_leaves" style="font-size: 13px;">List Short Leaves</a></li>
+        <li><a href="/process" style="font-size: 13px;">Process</a></li>
+        <li><a href="/report" style="font-size: 13px;">Report</a></li>
+        <li><a href="/add_hrm" style="font-size: 13px;">Add HRM</a></li>
+        <li><a href="/list_hrm" style="font-size: 13px;">List HRM</a></li>
+        <li><a href="/add_letter" style="font-size: 13px;">Add Letter</a></li>
+      </ul>
+     
+    </div>
+
+    <a href="#administration" style="font-size: 13px;" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-window-plus me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Administration</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="administration">
+      <ul class="list-unstyled ps-3">
+        <li ><a style="font-size: 13px;" href="/accounting"> Accounting</a></li>
+				<li ><a style="font-size: 13px;" href="/transport_expense"> Transport Expense</a></li>
+				<li ><a style="font-size: 13px;" href="/mess_inventory"> Mess Inventory</a></li>
+				<li ><a style="font-size: 13px;" href="/salary"> Salary</a></li>
+				<li ><a style="font-size: 13px;" href="/salary_details"> Salary Details</a></li>
+				<li ><a style="font-size: 13px;" href="/generate_salary"> Generate Salary</a></li>
+				<li ><a style="font-size: 13px;" href="/bank_letter"> Bank Letter</a></li>
+				<li ><a style="font-size: 13px;" href="/reports"> Reports</a></li>
+				<li ><a style="font-size: 13px;" href="/salary_slip"> Salary Slip</a></li>
+      </ul>
+     
+    </div>
+
+
+    <a href="#feesection" style="font-size: 13px;" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-window-plus me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Fee Section</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="feesection">
+      <ul class="list-unstyled ps-3">
+        <li ><a style="font-size: 13px;" href="/master_setup"> Master Setup</a></li>
+        <li ><a style="font-size: 13px;" href="/pay_fee"> Pay Fee</a></li>
+        <li ><a style="font-size: 13px;" href="/pay_extra_fee"> Pay Extra Fee</a></li>
+        <li ><a style="font-size: 13px;" href="/pay_extra_teacher_fee"> Pay Extra teacher Fee</a></li>
+        <li ><a style="font-size: 13px;" href="/pay_extra_teacher_fee_list"> Pay Extra teacher Fee List</a></li>
+        <li ><a style="font-size: 13px;" href="/pay_extra_student_fee"> Pay Extra Student Fee</a></li>
+        <li ><a style="font-size: 13px;" href="/pay_extra_other_fee"> Pay Extra Other Fee</a></li>
+        <li ><a style="font-size: 13px;" href="/registration_fee_entry"> Registration Fee Entry</a></li>
+        <li ><a style="font-size: 13px;" href="/check_pending_transaction"> Check Pending Transaction</a></li>
+        <li ><a style="font-size: 13px;" href="/view_receipts"> View Receipts</a></li>
+        <li ><a style="font-size: 13px;" href="/transport_error"> Transport error</a></li>
+        <li ><a style="font-size: 13px;" href="/cheques_listing"> Cheques Listing</a></li>
+        <li ><a style="font-size: 13px;" href="/bounced_cheque_clearing"> Bounced Cheque Clearing.</a></li>
+        <li ><a style="font-size: 13px;" href="/fee_transactions"> Fee Transactions</a></li>
+        <li ><a style="font-size: 13px;" href="/fee_collection"> Fee Collection (Paid/Unpaid)</a></li>
+        <li ><a style="font-size: 13px;" href="/quarterly_fee_collection"> Quarterly Fee Collection (Paid/Unpaid)</a></li>
+        <li ><a style="font-size: 13px;" href="/transport_collection"> Transport Collection (Paid/Unpaid)</a></li>
+        <li ><a style="font-size: 13px;" href="/annual_fee_report"> Annual Fee Report</a></li>
+        <li ><a style="font-size: 13px;" href="/other_reports"> Other Reports</a></li>
+        <li ><a style="font-size: 13px;" href="/fee_defaulter"> Fee Defaulter</a></li>
+      </ul>
+     
+    </div>
+
+    <a href="#master" style="font-size: 13px;" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-window-plus me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Master</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="master">
+      <ul class="list-unstyled ps-3">
+        <li ><a style="font-size: 13px;" href="/school_master"> School Master</a></li>
+        <li ><a style="font-size: 13px;" href="/session_master"> Session Master</a></li>
+        <li ><a style="font-size: 13px;" href="/define_fee_location"> Define Fee Location</a></li>
+        <li ><a style="font-size: 13px;" href="/leave_master"> Leave Master</a></li>
+        <li ><a style="font-size: 13px;" href="/leave_status"> Leave Status</a></li>
+        <li ><a style="font-size: 13px;" href="/define_no_of_leave"> Define No. of Leave</a></li>
+        <li ><a style="font-size: 13px;" href="/sub_category_master"> Sub Category Master</a></li>
+        <li ><a style="font-size: 13px;" href="/class_master"> Class Master</a></li>
+        <li ><a style="font-size: 13px;" href="/class_section_master"> Class Section Master</a></li>
+        <li ><a style="font-size: 13px;" href="/stream_master"> Stream Master</a></li>
+        <li ><a style="font-size: 13px;" href="/house_master"> House Master</a></li>
+        <li ><a style="font-size: 13px;" href="/documents_master"> Documents Master</a></li>
+        <li ><a style="font-size: 13px;" href="/blood_group_master"> Blood Group Master</a></li>
+        <li ><a style="font-size: 13px;" href="/promote"> Promote</a></li>
+        <li ><a style="font-size: 13px;" href="/not_promote"> Not Promote</a></li>
+        <li ><a style="font-size: 13px;" href="/applied_fee_structure"> Applied Fee Structure</a></li>
+        <li ><a style="font-size: 13px;" href="/additional_fee_master"> Additional Fee Master</a></li>
+        <li ><a style="font-size: 13px;" href="/caste_category_master"> Caste Category Master</a></li>
+        <li ><a style="font-size: 13px;" href="/marital_status_master"> Marital Status Master</a></li>
+        <li ><a style="font-size: 13px;" href="/religion_master"> Religion Master</a></li>
+        <li ><a style="font-size: 13px;" href="/job_occupation_master">Job Occupation Master</a></li>
+        <li ><a style="font-size: 13px;" href="/department_designation_master"> Department Designation Master</a></li>
+        <li ><a style="font-size: 13px;" href="/state_city_master"> State City Master</a></li>
+        <li ><a style="font-size: 13px;" href="/place_area_location"> Place/Area/Location</a></li>
+        <li ><a style="font-size: 13px;" href="/bus_no_master"> Bus No. Master</a></li>
+        <li ><a style="font-size: 13px;" href="/route_master"> Route Master</a></li>
+        <li ><a style="font-size: 13px;" href="/stop_master"> Stop Master</a></li>
+        <li ><a style="font-size: 13px;" href="/update_route_and_stop_in_next_session"> Update Route and Stop in Next Session</a></li>
+        <li ><a style="font-size: 13px;" href="/vehicle_master"> Vehicle Master</a></li>
+        <li ><a style="font-size: 13px;" href="/vehicle_making_company_model"> Vehicle Making/Company/Model</a></li>
+        <li ><a style="font-size: 13px;" href="/vehicle_parts"> Vehicle Parts</a></li>
+        <li ><a style="font-size: 13px;" href="/add_visitors_right_master"> Add Visitors Right Master</a></li>
+        <li ><a style="font-size: 13px;" href="/assign_fee_to_class"> Assign Fee to class</a></li>
+        <li ><a style="font-size: 13px;" href="/follow_up_master"> Follow Up Master</a></li>
+      </ul>
+     
+    </div>
+    <a href="#setting" style="font-size: 13px;" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-window-plus me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Settings</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="setting">
+      <ul class="list-unstyled ps-3">
+        <li ><a style="font-size: 13px;" href="/manage_users"> Manage Users</a></li>
+        <li ><a style="font-size: 13px;" href="/manage_users_menu"> Manage Users Menu</a></li>
+        <li ><a style="font-size: 13px;" href="/user_activity"> User Activity</a></li>
+        <li ><a style="font-size: 13px;" href="/sms_settings_beta"> SMS Settings BETA</a></li>
+        <li ><a style="font-size: 13px;" href="/admin_support"> Admin Support</a></li>
+        <li ><a style="font-size: 13px;" href="/change_password"> Change Password</a></li>
+      </ul>
+     
+    </div>
+
+    <h5>E-Login</h5>
+
+    <a href="#library" style="font-size: 13px;" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-collection me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Library</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="library">
+      <ul class="list-unstyled ps-3">
+       
+          <li><a href="{% url 'dashboard1' %}" style="font-size: 13px;">Dashboard</a></li>
+          <li><a href="{% url 'issued_books' %}" style="font-size: 13px;">Issued Books</a></li>
+          <li><a href="{% url 'book_return' %}" style="font-size: 13px;">Book Return</a></li>
+          <li><a href="{% url 'late_fee_details' %}" style="font-size: 13px;">Late Fee Details</a></li>
+      </ul>
+     
+    </div>
+
+    <a href="#staff" style="font-size: 13px;" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-collection me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Staff</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="staff">
+      <ul class="list-unstyled ps-3">
+        <li ><a style="font-size: 13px;" href="/department_master"> Department Master</a></li>
+        <li ><a style="font-size: 13px;" href="/staff_list"> Staff List</a></li>
+        <li ><a style="font-size: 13px;" href="/search_staff"> Search Staff</a></li>
+        <li ><a style="font-size: 13px;" href="/manage_shift"> Manage Shift</a></li>
+        <li ><a style="font-size: 13px;" href="/master_edit"> Master Edit</a></li>
+        <li ><a style="font-size: 13px;" href="/strength"> Strength</a></li>
+        <li ><a style="font-size: 13px;" href="/staff_Leave_request"> Staff Leave Request (New)</a></li>
+        <li ><a style="font-size: 13px;" href="/download_excel"> Download Excel</a></li>
+      </ul>
+     
+    </div>
+
+    <a href="#timetable" style="font-size: 13px;" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-collection me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Time Table</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="timetable">
+      <ul class="list-unstyled ps-3">
+        <li ><a style="font-size: 13px;" href="/add_update"> Add/Update (*new)</a></li>
+        <li ><a style="font-size: 13px;" href="/add_update_final_test"> Add/Update (Final Test)</a></li>
+        <li ><a style="font-size: 13px;" href="/view_teachers_timetable"> View Teacher's Timetable</a></li>
+        <li ><a style="font-size: 13px;" href="/view_daywise_timetable"> View Daywise Timetable</a></li>
+        <li ><a style="font-size: 13px;" href="/classwise_timetable"> Classwise Timetable</a></li>
+        <li ><a style="font-size: 13px;" href="/online_slot_master"> Online Slot Master</a></li>
+        <li ><a style="font-size: 13px;" href="/online_slot_link_update"> Online Slot Link Update</a></li>
+        <li ><a style="font-size: 13px;" href="/online_holidays_master"> Online Holidays Master</a></li>
+        <li ><a style="font-size: 13px;" href="/online_PTM_slot_master"> Online PTM Slot Master</a></li>
+      </ul>
+     
+    </div>
+
+
+    <a href="#ct" style="font-size: 13px;" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-back me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Ct</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="ct">
+      <ul class="list-unstyled ps-3">
+        <li><a href="{% url 'class_test_master' %}" style="font-size: 13px;">Class Test Master</a></li>
+        <li><a href="{% url 'assign_class_test' %}" style="font-size: 13px;">Assign Class Test</a></li>
+        <li><a href="{% url 'class_test_marks_feeding' %}" style="font-size: 13px;">Class Test Marks Feeding</a></li>
+        <li><a href="{% url 'student_progress_report' %}" style="font-size: 13px;">Student Progress Report</a></li>
+      </ul>
+     
+    </div>
+
+    <a href="#cce" style="font-size: 13px;" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-back me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Cce</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="cce">
+      <ul class="list-unstyled ps-3">
+        <li ><a style="font-size: 13px;" href="/assign_subjects_test"> Assign Subjects & Test</a></li>
+        <li ><a style="font-size: 13px;" href="/marks_feeding_new"> Marks Feeding_new</a></li>
+        <li ><a style="font-size: 13px;" href="/marks_update_log"> Marks Update Log</a></li>
+        <li ><a style="font-size: 13px;" href="/marks_status_classwise"> Marks Status (Classwise)</a></li>
+        <li ><a style="font-size: 13px;" href="/calculation_master"> Calculation Master</a></li>
+        <li ><a style="font-size: 13px;" href="/signature_master">Signature Master</a></li>
+      </ul>
+     
+    </div>
+
+    <a href="#attendence" style="font-size: 13px;" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-back me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Attendence</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="attendence">
+      <ul class="list-unstyled ps-3">
+        <li ><a style="font-size: 13px;" href="/student_attendance5454"> Student Attendance5454</a></li>
+        <li ><a style="font-size: 13px;" href="/student_attendance_month_wise"> Student Attendance(Month Wise)</a></li>
+        <li ><a style="font-size: 13px;" href="/student_attendance_count"> Student Attendance(Count)</a></li>
+        <li ><a style="font-size: 13px;" href="/student_attendance_new"> Student Attendance New</a></li>
+        <li ><a style="font-size: 13px;" href="/attendance_register_new"> Attendance Register New</a></li>
+        <li ><a style="font-size: 13px;" href="/absent_log_new"> Absent Log New</a></li>
+        <li ><a style="font-size: 13px;" href="/classwise_status_new"> Classwise Status New</a></li>
+        <li ><a style="font-size: 13px;" href="/datewise_summary_new"> Datewise Summary New</a></li>
+        <li ><a style="font-size: 13px;" href="/online_class_attendance_day_wise"> Online Class Attendance(Day Wise)</a></li>
+        <li ><a style="font-size: 13px;" href="/online_class_attendance_month_wise_count"> Online Class Attendance(Month Wise Count)</a></li>
+        <li ><a style="font-size: 13px;" href="/online_class_attendance_month_wise_details"> Online Class Attendance(Month Wise Details)</a></li>
+        <li ><a style="font-size: 13px;" href="/update_student_online_class_attendance"> Update Student Online Class Attendance</a></li>
+        <li ><a style="font-size: 13px;" href="/datewise_attendance_register_new"> Datewise Attendance Register (new)</a></li>
+        <li ><a style="font-size: 13px;" href="/staff_attendance"> Staff Attendance</a></li>
+        <li ><a style="font-size: 13px;" href="/monthly_staff_attendance_report"> Monthly Staff Attendance Report</a></li>
+        <li ><a style="font-size: 13px;" href="/online_class_attendance"> Online Class Attendance</a></li>
+        <li ><a style="font-size: 13px;" href="/staff_leave"> Staff Leave</a></li>
+        <li ><a style="font-size: 13px;" href="/leave_request_list"> Leave Request List</a></li>
+      </ul>
+     
+    </div>
+
+    <a href="#hw" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-person-workspace me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>HW</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="hw">
+      <ul class="list-unstyled ps-3">
+        <li><a href="{% url 'assign_class_hw' %}" style="font-size: 13px;">Assign Class HW</a></li>
+        <li><a href="{% url 'view_hw_report' %}" style="font-size: 13px;">View HW Report</a></li>
+       
+      </ul>
+     
+    </div>
+
+
+    <a href="#accadamics" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-person-workspace me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>Accadamics</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="accadamics">
+      <ul class="list-unstyled ps-3">
+        <li ><a style="font-size: 13px;" href="/photo_gallery"> Photo Gallery</a></li>
+        <li ><a style="font-size: 13px;" href="/video_gallery"> Video Gallery</a></li>
+        <li ><a style="font-size: 13px;" href="/activity_calendar"> Activity Calendar</a></li>
+        <li ><a style="font-size: 13px;" href="/uploads"> Uploads</a></li>
+        <li ><a style="font-size: 13px;" href="/datesheet"> Datesheet</a></li>
+        <li ><a style="font-size: 13px;" href="/student_notice">Student Notice</a></li>
+        <li ><a style="font-size: 13px;" href="/school_jewels"> School Jewels</a></li>
+        <li ><a style="font-size: 13px;" href="/staff_notice">Staff Notice</a></li>
+        <li ><a style="font-size: 13px;" href="/staff_holiday_list"> Staff Holiday List</a></li>
+        <li ><a style="font-size: 13px;" href="/add_events"> Add Events</a></li>
+        <li ><a style="font-size: 13px;" href="/add_course"> Add Course</a></li>
+        <li ><a style="font-size: 13px;" href="/add_chapter"> Add Chapter</a></li>
+        <li ><a style="font-size: 13px;" href="/add_study_material"> Add Study Material</a></li>
+        <li ><a style="font-size: 13px;" href="/upload_type"> Upload Type</a></li>
+        <li ><a style="font-size: 13px;" href="/create_assignment">Create Assignment</a></li>
+        <li ><a style="font-size: 13px;" href="/student_assignment_material"> Student Assignment Material</a></li>
+       
+      </ul>
+     
+    </div>
+
+    <a href="#message" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-chat-left me-2 " style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>MESSAGES</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="message">
+      <ul class="list-unstyled ps-3">
+     
+        <li><a href="{% url 'template_view' %}">Template</a></li>
+        <li><a href="{% url 'confirmation' %}">Confirmation</a></li>
+        <li><a href="{% url 'schedule_messages' %}">Schedule Messages</a></li>
+        <li><a href="{% url 'performance_message' %}">Performance Message</a></li>
+        <li><a href="{% url 'send_performance_message' %}">Send Performance Message</a></li>
+        <li><a href="{% url 'shorten_url' %}">Shorten URL</a></li>
+        <li><a href="{% url 'send_smart_message' %}">Send Smart Message</a></li>
+        <li><a href="{% url 'send_common_messages' %}">Send Common Messages</a></li>
+        <li><a href="{% url 'defaulter_message' %}">Defaulter Message</a></li>
+        <li><a href="{% url 'group_message' %}">Group Message</a></li>
+        <li><a href="{% url 'msg_to_outer_nos' %}">Msg To Outer Nos.</a></li>
+        <li><a href="{% url 'msg_to_staff' %}">Msg To Staff</a></li>
+        <li><a href="{% url 'student_message_report' %}">Student Message Report</a></li>
+        <li><a href="{% url 'staff_message_report' %}">Staff Message Report</a></li>
+        <li><a href="{% url 'call_report' %}">Call Report</a></li>
+        <li><a href="{% url 'file_status' %}">File Status</a></li>
+       
+      </ul>
+     
+    </div>
+
+    <a href="#reportcard" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-card-list me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>REPORT CARD</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="reportcard">
+      <ul class="list-unstyled ps-3">
+     
+        <li><a href="{% url 'reportcard_testwise' %}">ReportCard [Testwise]</a></li>
+        <li><a href="{% url 'greensheet_testwise' %}">Greensheet [Testwise]</a></li>
+        <li><a href="{% url 'greensheet_testwise_1_5' %}">Greensheet [Testwise] (1-5)</a></li>
+        <li><a href="{% url 'greensheet_co_scholastic' %}">Greensheet [Co-Scholastic]</a></li>
+        <li><a href="{% url 'greensheet_complete' %}">Greensheet [Complete]</a></li>
+        <li><a href="{% url 'generate_reportcard' %}">Generate ReportCard</a></li>
+        <li><a href="{% url 'teacher_remark_failed' %}">Teacher Remark For Failed Students</a></li>
+        <li><a href="{% url 'report_analysis_graph' %}">Report-Analysis [With Graph]</a></li>
+        <li><a href="{% url 'fail_student_report' %}">Fail Student Report</a></li>
+        <li><a href="{% url 'performance_report_testwise' %}">Performance Report [Testwise]</a></li>
+        <li><a href="{% url 'student_attendance_report' %}">Student Attendance Report</a></li>
+       
+      </ul>
+     
+    </div>
+
+    <a href="#onlinetest" data-bs-toggle="collapse" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-display me-2" style="margin-right: 4px;color: #0dcaf0;font-weight: bold;"></i>ONLINE TEST</span>
+      <i class="bi bi-chevron-down"></i>
+    </a>
+    <div class="collapse submenu" id="onlinetest">
+      <ul class="list-unstyled ps-3">
+     
+        <li><a href="{% url 'subject' %}">Subject</a></li>
+        <li><a href="{% url 'question' %}">Question</a></li>
+        <li><a href="{% url 'instruction' %}">Instruction</a></li>
+        <li><a href="{% url 'test' %}">Test</a></li>
+        <li><a href="{% url 'google_form_test' %}">Google Form Test</a></li>
+        <li><a href="{% url 'question_papers_subjective' %}">Question Papers (Subjective)</a></li>
+        <li><a href="{% url 'answer_sheet_subjective' %}">Answer Sheet (Subjective)</a></li>
+        <li><a href="{% url 'question_set' %}">Question Set</a></li>
+        <li><a href="{% url 'result' %}">Result</a></li>
+        <li><a href="{% url 'add_student' %}">Add Student</a></li>
+        <li><a href="{% url 'update_marks' %}">Update Marks</a></li>
+        <li><a href="{% url 'test_2' %}">Test (2)</a></li>  
+        <li><a href="{% url 'question_2' %}">Question (2)</a></li>  
+       
+      </ul>
+     
+    </div>
+
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="content">
+    <div class="container-fluid">
+     
+      {% block main_content %}
+      <h2 class="mb-4">Dashboard Overview</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card p-3">
+            <div class="card-body">
+              <h5 class="card-title">Total Users</h5>
+              <p class="card-text display-6">1,234</p>
+              <a href="#" class="btn btn-outline-primary btn-sm">View Details</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-3">
+            <div class="card-body">
+              <h5 class="card-title">Revenue</h5>
+              <p class="card-text display-6">$12,345</p>
+              <a href="#" class="btn btn-outline-success btn-sm">View Details</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-3">
+            <div class="card-body">
+              <h5 class="card-title">New Orders</h5>
+              <p class="card-text display-6">567</p>
+              <a href="#" class="btn btn-outline-warning btn-sm">View Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endblock %}
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Sidebar Toggle Script -->
+  <script>
+    // Toggle sidebar on mobile devices
+    document.getElementById('toggleSidebar').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('active');
+    });
+  </script>
+
+  <!-- Script to keep the correct dropdown open based on current URL -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Normalize the current path (remove trailing slash if any)
+      var currentPath = window.location.pathname.replace(/\/$/, "");
+      // Select all submenu links
+      var submenuLinks = document.querySelectorAll('.submenu a');
+
+      submenuLinks.forEach(function(link) {
+        // Normalize link href
+        var linkPath = link.getAttribute('href').replace(/\/$/, "");
+        // Check if the current path matches the link path
+        if (currentPath === linkPath) {
+          // Mark the link as active
+          link.classList.add('active');
+          // Expand the parent collapse (dropdown)
+          var collapseElement = link.closest('.collapse');
+          if (collapseElement) {
+            collapseElement.classList.add('show');
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

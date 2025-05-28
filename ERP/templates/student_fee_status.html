@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <h1>Processing Payment...</h1>
+
+    <script>
+        var options = {
+            "key": "{{ razorpay_key }}",
+            "amount": "{{ amount1|floatformat:2 }}",
+            "currency": "INR",
+            "name": "School Fee Payment",
+            "description": "Fee Payment for {{ std_class }}",
+            "order_id": "{{ order.id }}",
+            "handler": function (response) {
+                document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                document.getElementById('payment-form').submit();
+            },
+            "prefill": {
+                "name": "{{ fullname }}",
+                "email": "user@example.com",
+                "contact": "{{ mobilenumber }}"
+            },
+            "theme": {
+                "color": "#3399cc"
+            },
+            "modal": {
+                "ondismiss": function () {
+                    window.location.href = "/"; // Redirect if user closes the payment modal
+                }
+            }
+        };
+
+        // Auto trigger Razorpay on page load
+        window.onload = function () {
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        };
+    </script>
+
+    <form id="payment-form" action="{% url 'student_fee_status' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+        <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+        <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+        <input type="hidden" name="admissionno" value="{{ admissionno }}">
+        <input type="hidden" name="fullname" value="{{ fullname }}">
+        <input type="hidden" name="fathername" value="{{ fathername }}">
+        <input type="hidden" name="std_class" value="{{ std_class }}">
+        <input type="hidden" name="mobilenumber" value="{{ mobilenumber }}">
+        <input type="hidden" name="total_price" value="{{ amount1 }}">
+    </form>
+</body>
+</html>

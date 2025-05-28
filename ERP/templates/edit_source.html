@@ -1,0 +1,31 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Lead Source</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+<div class="container mt-5">
+    <h4>Edit Lead Source</h4>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="sourceName" class="form-label">Source Name</label>
+            <input type="text" class="form-control" id="sourceName" name="source_name" value="{{ source.name }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a href="{% url 'lead_sources' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+{% endblock %}

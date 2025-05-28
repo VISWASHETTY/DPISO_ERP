@@ -1,0 +1,83 @@
+{% extends 'non_teaching_staff_base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Students Using Transport</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #searchInput {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+    <h2 class="text-success mb-3">Students Using Transport</h2>
+
+    <input type="text" id="searchInput" class="form-control" placeholder="Search students...">
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-success">
+            <tr>
+                <th>Student Name</th>
+                <th>Class & Section</th>
+                <th>Bus No</th>
+                <th>Driver</th>
+                <th>Mobile</th>
+                <th>Route</th>
+                <th>Stoppage</th>
+                <th>Fee</th>
+            </tr>
+        </thead>
+        <tbody id="studentTable">
+            {% for student in students %}
+                <tr>
+                    <td>{{ student.stdid.studentname }}</td>
+                    <td>{{ student.stdid.classs }} {{ student.stdid.section.name }}</td>
+                    <td>{{ student.bus_no }}</td>
+                    <td>{{ student.driver_name }}</td>
+                    <td>{{ student.mobile }}</td>
+                    <td>{{ student.route }}</td>
+                    <td>{{ student.stoppage }}</td>
+                    <td>{{ student.fee}}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="6">No students using transport.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const rows = document.querySelectorAll('#studentTable tr');
+
+    searchInput.addEventListener('keyup', function () {
+        const query = this.value.toLowerCase();
+
+        rows.forEach(row => {
+            const studentName = row.cells[0]?.innerText.toLowerCase();
+            const classs = row.cells[1]?.innerText.toLowerCase();
+            const bus_no = row.cells[2]?.innerText.toLowerCase();
+            const driver = row.cells[3]?.innerText.toLowerCase();
+            const mobile = row.cells[4]?.innerText.toLowerCase();
+            const route = row.cells[5]?.innerText.toLowerCase();
+
+            const match =
+                studentName.includes(query) ||
+                classs.includes(query) ||
+                bus_no.includes(query) ||
+                driver.includes(query) ||
+                mobile.includes(query) ||
+                route.includes(query);
+
+            row.style.display = match ? '' : 'none';
+        });
+    });
+</script>
+
+</body>
+</html>
+{% endblock %}

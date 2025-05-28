@@ -1,0 +1,81 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admissions Data</title>
+    <style>
+        .table-container {
+            max-height: 500px; /* Adjust height as needed */
+       
+            overflow-x: auto; 
+            width: 100%;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            padding: 8px; /* Smaller padding for compact display */
+            vertical-align: middle;
+            border: 1px solid #ddd; /* Optional: for better visibility */
+        }
+
+        .table thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f8f9fa;
+            z-index: 1; /* Keep headers above scrolling content */
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="container-full">
+            <div class="content-header">
+                <h2>Admissions Data</h2>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Parent Name</th>
+                                <th>Child Name</th>
+                                <th>Mobile Number</th>
+                                <th>Email</th>
+                                <!-- <th>Location</th> -->
+                                <th>Grade</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for admission in admissions %}
+                            <tr>
+                                <td>{{ admission.sno }}</td>
+                                <td>{{ admission.parentname }}</td>
+                                <td>{{ admission.childname }}</td>
+                                <td>{{ admission.mobilenumber }}</td>
+                                <td>{{ admission.email }}</td>
+                                <!-- <td>{{ admission.location }}</td> -->
+                                <td>{{ admission.grade }}</td>
+                                <td>{{ admission.date }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8">No data available</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

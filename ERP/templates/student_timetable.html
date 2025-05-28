@@ -1,0 +1,66 @@
+{% extends 'student_base.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title> Timetable</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #888;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #eee;
+        }
+        .free {
+            background-color: #f9f9f9;
+            color: #999;
+        }
+        .assigned {
+            background-color: #e0f7fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+    <h3>Student Timetable</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Day / Period</th>
+                {% for period in period_numbers %}
+                    <th>{{ period }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in timetable_matrix %}
+                <tr>
+                    <th>{{ row.day }}</th>
+                    {% for entry in row.periods %}
+                        {% if entry %}
+                            <td class="assigned">{{ entry.subject.name }}</td>
+                        {% else %}
+                            <td class="free">Free Period</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    </div>
+</div>
+</body>
+</html>
+{% endblock %}

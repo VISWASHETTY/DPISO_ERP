@@ -1,0 +1,137 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="event-container">
+    <div class="event-card">
+        <div class="event-header1">
+            <h2>International Delhi Public School<br>Cherukupalli</h2>
+            <p>The Management, Staff, Students and Parents of IDPS are invited you to </p>
+        </div>
+        <div class="event-header">
+            <h3>Let's Celebrate</h3>
+        </div>
+
+        <div class="event-body">
+            <h3 class="event-title">{{ event.title }}</h3>
+
+            <p class="ddd"><i class="fas fa-calendar-alt"></i> <strong>Date:</strong> {{ event.event_date|date:"F d, Y H:i" }}</p>
+            <p class="vvv"><i class="fas fa-map-marker-alt"></i> <strong>Venue:</strong> {{ event.venue }}</p>
+            
+            <hr>
+
+            <h4>Description:</h4>
+            <p class="event-description">{{ event.description }}</p>
+        </div>
+
+        <div class="event-footer">
+            <a href="{% url 'event_list' %}" class="btn-back">Back to Events</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Background Gradient */
+    .event-container {
+        background: linear-gradient(to bottom, #b3e0ff, #ffffff);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+    }
+
+    /* Card Styling */
+    .event-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        max-width: 500px;
+    }
+
+    /* Header Styling */
+    .event-header h3 {
+        font-family: 'Brush Script MT', cursive;
+        font-size: 26px;
+        color: #0056b3;
+        margin-bottom: 10px;
+    }
+
+    .event-header1 h2 {
+        font-family: 'Brush Script MT', cursive;
+        font-size: 20px;
+        color: #0056b3;
+        margin-bottom: 10px;
+    }
+
+    .event-header1 p {
+        font-family: 'Brush Script MT', cursive;
+        font-size: 15px;
+        color: #0056b3;
+        margin-bottom: 10px;
+    }
+
+    .subtitle {
+        font-size: 18px;
+        font-weight: bold;
+        color: #ff6600;
+    }
+
+    /* Event Details */
+    .event-body {
+        font-size: 18px;
+        color: #333;
+    }
+
+    .event-title {
+        font-family: 'Brush Script MT', cursive;
+        font-weight: bold;
+        font-size: 46px;
+        margin-bottom: 15px;
+        color: #008080;
+    }
+
+    .ddd {
+        font-weight: bold;
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: #044d66;
+    }
+
+    .vvv {
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #044d66;
+    }
+
+    .event-description {
+        font-style: italic;
+        color: #012d41;
+    }
+
+    /* Footer Styling */
+    .event-footer {
+        margin-top: 20px;
+    }
+
+    .btn-back {
+        display: inline-block;
+        background: #000d35;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .btn-back:hover {
+        background: #000d35;
+        transform: scale(1.05);
+    }
+</style>
+
+{% endblock %}

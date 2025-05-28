@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IDPS Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .input-group {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+      color: #f1f5f9;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .input-group input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 2px 6px rgba(56, 189, 248, 0.5);
+    }
+    .input-group label {
+      position: absolute;
+      left: 10px;
+      top: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 16px;
+      transition: 0.3s;
+      pointer-events: none;
+    }
+    .input-group input:focus + label,
+    .input-group input:valid + label {
+      top: -10px;
+      font-size: 14px;
+      color: #38bdf8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-cover bg-center" 
+  style="background-image: url('https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=1600&q=80')">
+
+  <div class="bg-gray-900 bg-opacity-80 backdrop-blur-lg shadow-2xl rounded-3xl p-10 w-full max-w-3xl text-gray-100 flex flex-col items-center space-y-6">
+
+    <!-- Logo -->
+    <img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?crop=entropy&cs=tinysrgb&fit=crop&h=150&w=150&q=80" 
+         alt="School Logo" 
+         class="w-24 h-24 rounded-full border-4 border-white shadow-lg">
+
+    <h1 class="text-3xl font-bold text-center">Login</h1>
+    <p class="text-center text-gray-300 max-w-sm">Empowering education beyond classrooms through technology and care.</p>
+
+    <!-- Toggle Buttons -->
+    <div class="flex space-x-4 mt-4">
+      <button id="btn-dashboard" class="tab-btn px-4 py-2 rounded-full bg-cyan-500 hover:bg-cyan-600 transition" onclick="showForm('dashboard')">Dashboard Login</button>
+      <button id="btn-registration" class="tab-btn px-4 py-2 rounded-full bg-white bg-opacity-20 text-gray-100 hover:bg-opacity-30 transition" onclick="showForm('registration')">School Registration</button>
+    </div>
+
+    <!-- Dashboard Login Form -->
+    <form id="form-dashboard" method="post" class="hidden w-full max-w-sm space-y-4">
+      {% csrf_token %}
+      <div class="input-group">
+        <input type="text" name="username" required>
+        <label>Username</label>
+      </div>
+      <div class="input-group relative">
+        <input type="password" id="password" name="password" required>
+        <label>Password</label>
+        <span class="absolute right-3 top-3 cursor-pointer text-gray-300 hover:text-white transition" onclick="togglePassword()">👁️</span>
+      </div>
+      <button type="submit" class="w-full py-3 rounded-full bg-cyan-500 hover:bg-cyan-600 transition font-semibold">Login</button>
+    </form>
+
+    <!-- School Registration Form -->
+    <form id="form-registration" method="post" class="hidden w-full max-w-sm space-y-4">
+      {% csrf_token %}
+      <div class="input-group">
+        <input type="email" name="email" required>
+        <label>Enter School Email</label>
+      </div>
+      <button type="submit" class="w-full py-3 rounded-full bg-cyan-500 hover:bg-cyan-600 transition font-semibold">Send OTP</button>
+    </form>
+
+  </div>
+
+  <script>
+    function showForm(type) {
+      const dashForm = document.getElementById('form-dashboard');
+      const regForm = document.getElementById('form-registration');
+      const dashBtn = document.getElementById('btn-dashboard');
+      const regBtn = document.getElementById('btn-registration');
+
+      if (type === 'dashboard') {
+        dashForm.classList.remove('hidden');
+        regForm.classList.add('hidden');
+        dashBtn.classList.add('bg-cyan-500');
+        dashBtn.classList.remove('bg-white', 'bg-opacity-20');
+        regBtn.classList.remove('bg-cyan-500');
+        regBtn.classList.add('bg-white', 'bg-opacity-20');
+      } else {
+        dashForm.classList.add('hidden');
+        regForm.classList.remove('hidden');
+        regBtn.classList.add('bg-cyan-500');
+        regBtn.classList.remove('bg-white', 'bg-opacity-20');
+        dashBtn.classList.remove('bg-cyan-500');
+        dashBtn.classList.add('bg-white', 'bg-opacity-20');
+      }
+    }
+
+    function togglePassword() {
+      const passwordInput = document.getElementById("password");
+      const eyeIcon = event.target;
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        eyeIcon.textContent = "🙈";
+      } else {
+        passwordInput.type = "password";
+        eyeIcon.textContent = "👁️";
+      }
+    }
+
+    // Show Dashboard form by default
+    showForm('dashboard');
+  </script>
+</body>
+</html>

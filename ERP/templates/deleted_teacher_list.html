@@ -1,0 +1,416 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+   
+    
+    <!-- Required Scripts and Styles -->
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+ 
+</head>
+<body>
+
+    <div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+   
+        <button class="btn btn-secondary mb-3" data-toggle="modal" data-target="#exportModal">
+            <i class="fas fa-download"></i>
+        </button>
+        <button class="btn mb-3" id="deleteSelected" style="background-color: lawngreen;" onclick="showModal('confirmDeleteModal')" disabled>
+            <i class="fas fa-arrow-90deg-left"></i>(<span id="selectedCount">0</span>)
+        </button>
+        
+        <!-- <button id="toggleSearchBtn" class="btn btn-primary mb-3"> <i class="fas fa-search"></i></button> -->
+       
+        
+
+        <!-- Student Records Table -->
+        <!-- <div class="table-responsive">
+            <table class="table table-bordered" id="studentTable" >
+                <thead class="table-light">
+                    <tr style="font-size: 12px;">
+                        <th><input type="checkbox" id="selectAll">#</th>
+                        <th>Profile Photo</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Phone</th>
+                        <th>Date Of Birth</th>
+                        <th>Teaching Subject</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in tea %}
+                    {% if i.status == 1 %}
+                    <tr style="font-size: 12px;">
+                        <td><input type="checkbox" class="student-checkbox" value="{{ i.id }}"></td>
+                        <td>
+                            {% if i.profile_photo %}
+                                <img src="{{ i.profile_photo.url }}" style="width: 50px; height: 50px; border-radius: 20px;">
+                            {% else %}
+                                No Profile
+                            {% endif %}
+                        </td>
+                        <td>{{ i.first_name }}</td>
+                        <td>{{ i.last_name }}</td>
+                        <td>{{ i.phone }}</td>
+                        <td>{{ i.date_of_birth }}</td>
+                        <td>{{ i.subjects }}</td>
+                        <td>
+                            <a href="{% url 'edit_teacher' i.id %}" class="btn btn-primary btn-custom">Edit</a>
+                            <a href="{% url 'delete_teacher' i.id %}" class="btn btn-danger btn-custom" onclick="return confirm('Are you sure you want to delete this teacher?');">Delete</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div> -->
+
+
+        
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+      
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Deleted Teachers Details</strong>
+                        </div>
+                        <div class="card-body">
+                            <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAll">#</th>
+                                        <th>Profile Photo</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Phone</th>
+                                        <th>Date Of Birth</th>
+                                        <th>Teaching Subject</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in tea %}
+                                    {% if i.status == 1 %}
+                                    <tr style="font-size: 12px;">
+                                        <td><input type="checkbox" class="student-checkbox" value="{{ i.id }}"></td>
+                                        <td>
+                                            {% if i.profile_photo %}
+                                                <img src="{{ i.profile_photo.url }}" style="width: 50px; height: 50px; border-radius: 20px;">
+                                            {% else %}
+                                                No Profile
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ i.first_name }}</td>
+                                        <td>{{ i.last_name }}</td>
+                                        <td>{{ i.phone }}</td>
+                                        <td>{{ i.date_of_birth }}</td>
+                                        <td>{{ i.subjects }}</td>
+                                        <td>
+                                            <a href="{% url 'edit_teacher' i.id %}" class="btn btn-primary btn-custom">Edit</a>
+                                            <a href="{% url 'delete_teacher' i.id %}" class="btn btn-danger btn-custom" onclick="return confirm('Are you sure you want to delete this teacher?');">Delete</a>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+      
+      
+            </div>
+        </div>
+      </div>
+
+
+
+        <!-- <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header  text-white" style="background-color: lawngreen;">
+                        <h5 class="modal-title">Confirm Restore</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to Restore <strong><span id="deleteCount">0</span> students</strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="button" class="btn text-white" style="background-color: lawngreen;" id="confirmDelete">
+                            <i class="fas fa-arrow-90deg-left"></i> Yes, Restore
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        
+<style>
+          
+    .fd {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .fd.show {
+        display: flex;
+    }
+
+    .modal-dialog {
+        max-width: 500px;
+        width: 90%;
+    }
+
+    .modal-dialog-lg {
+        max-width: 800px;
+        width: 90%;
+    }
+
+   
+
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: white;
+    }
+
+   
+   
+    .form-control-file {
+        display: block;
+        width: 100%;
+        padding: 5px;
+    }
+
+  
+</style>
+</head>
+<body>
+
+
+<!-- Confirm Delete Modal -->
+<div class="modal fd" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: lawngreen;">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">
+                    Confirm Restore
+                </h5>
+                <button type="button" class="btn-close" onclick="hideModal('confirmDeleteModal')" aria-label="Close">×</button>
+            </div>
+            <div class="modal-body">
+                <p class="text-dark text-center">
+                    Are you sure you want to Restore  <strong><span id="deleteCount" class="text-danger">0</span> students</strong>?
+                    <br>
+                    <small class="text-muted">This action cannot be undone.</small>
+                </p>
+            </div>
+            <div class="modal-footer" style="background-color: lawngreen;">
+                <button type="button" class="btn btn-outline-light" onclick="hideModal('confirmDeleteModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmDelete" onclick="confirmDelete()">Yes, Restore</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Custom JavaScript for Modal Functionality -->
+<script>
+    function showModal(modalId) {
+        document.getElementById(modalId).classList.add('show');
+    }
+
+    function hideModal(modalId) {
+        document.getElementById(modalId).classList.remove('show');
+    }
+
+    function confirmDelete() {
+        console.log('Delete confirmed');
+        hideModal('confirmDeleteModal');
+        
+    }
+</script>
+
+        
+
+
+        <!-- Export Modal -->
+        <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Export Data</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Select Format:</h6>
+                        <input type="radio" id="pdf" name="file_type" value="pdf" onclick="selectDefaultFields()"> 
+                        <label for="pdf">PDF</label>
+                    
+                        <input type="radio" id="excel" name="file_type" value="excel" class="ml-3"> 
+                        <label for="excel">Excel</label>
+                        <hr>
+                        <h6>Select Fields:</h6>
+                        <div class="d-flex flex-wrap">
+
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="first_name"> first_name</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="last_name"> last_name</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="phone"> phone</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="date_of_birth"> date_of_birth</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="subjects"> subjects</label>
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="downloadFile()">Download</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <script>
+        $(document).ready(function() {
+            // Select All Checkboxes
+            $("#selectAll").click(function() {
+                $(".student-checkbox").prop('checked', $(this).prop('checked'));
+                updateSelectedCount();
+            });
+        
+            // Update Count on Checkbox Click
+            $(".student-checkbox").click(function() {
+                if (!$(this).prop("checked")) {
+                    $("#selectAll").prop("checked", false);
+                }
+                updateSelectedCount();
+            });
+        
+            function updateSelectedCount() {
+                let count = $(".student-checkbox:checked").length;
+                $("#selectedCount").text(count);
+                $("#deleteCount").text(count);
+                $("#deleteSelected").prop("disabled", count === 0);
+            }
+        
+            // Show Delete Confirmation Modal
+            $("#deleteSelected").click(function() {
+                $("#confirmDeleteModal").modal("show");
+            });
+        
+            // Confirm Deletion
+            $("#confirmDelete").click(function() {
+                let selectedIds = $(".student-checkbox:checked").map(function() {
+                    return $(this).val();
+                }).get();
+        
+                $.ajax({
+                    url: "{% url 'restore_teachers' %}",
+                    method: "POST",
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        student_ids: selectedIds
+                    },
+                    success: function(response) {
+                        location.reload();
+                    },
+                    error: function() {
+                        alert("Error deleting students.");
+                    }
+                });
+            });
+        });
+        </script>
+        
+
+    <script>
+        function selectDefaultFields() {
+            let pdfRadio = document.getElementById('pdf');
+            let checkboxes = document.querySelectorAll('.export-field');
+    
+            if (pdfRadio.checked) {
+                checkboxes.forEach(checkbox => checkbox.checked = false);  // Uncheck all first
+                document.querySelector('.export-field[value="profile_photo"]').checked = true;
+                document.querySelector('.export-field[value="enqno"]').checked = true;
+                document.querySelector('.export-field[value="registrationno"]').checked = true;
+            }
+        }
+    </script>
+    <script>
+        function downloadFile() {
+            let fileType = document.querySelector('input[name="file_type"]:checked');
+            if (!fileType) {
+                alert("Please select a file format (PDF or Excel)");
+                return;
+            }
+            
+            let selectedFields = Array.from(document.querySelectorAll('.export-field:checked'))
+                                     .map(field => field.value);
+            
+            if (selectedFields.length === 0) {
+                alert("Please select at least one field to export.");
+                return;
+            }
+            
+            // Redirect to backend with selected fields and format
+            window.location.href = `/export_teachers_data/?format=${fileType.value}&fields=${selectedFields.join(',')}`;
+        }
+    </script>
+   <script>
+    $(document).ready(function() {
+        $("#toggleSearchBtn").click(function() {
+            $("#searchBox").toggle(); // Show/Hide the search box
+            let isVisible = $("#searchBox").is(":visible"); 
+            $(this).text(isVisible ? "Hide Search" : "Show Search");
+        });
+    
+        $("#searchBox").on("keyup", function() {
+            let value = $(this).val().toLowerCase();
+            $("#bootstrap-data-table-export tbody tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+    </script>
+    
+        </div>
+        </div>
+        </div>
+</body>
+</html>
+{% endblock %}

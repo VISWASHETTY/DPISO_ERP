@@ -1,0 +1,29 @@
+{% extends 'non_teaching_staff_base.html' %}
+
+{% block content %}
+<h3 class="mb-4">Add New Driver</h3>
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="name">Driver Name</label>
+        <input type="text" name="name" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="text" name="phone" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="license_number">License Number</label>
+        <input type="text" name="license_number" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="address">Address</label>
+        <textarea name="address" class="form-control" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3">Add Driver</button>
+</form>
+{% endblock %}

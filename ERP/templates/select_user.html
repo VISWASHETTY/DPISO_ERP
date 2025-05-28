@@ -1,0 +1,33 @@
+{% extends 'student_base.html' %}
+{% block content %}
+<style>
+    .badge {
+    font-size: 0.75rem;
+    padding: 0.4em 0.6em;
+    border-radius: 50%;
+}
+
+</style>
+<div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+<div class="container mt-4">
+    <h4>Select a Teacher/Admin to Chat</h4>
+    <ul class="list-group">
+        {% for user in users %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ user.display_name }} ({{ user.role|capfirst }})
+            {% if user.unread_count > 0 %}
+                <span class="badge bg-danger ms-2">{{ user.unread_count }}</span>
+                {% endif %}
+            <a href="{% url 'chat_with_user' user.id %}" class="btn btn-sm btn-primary">Chat</a>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-danger">No users available from your school.</li>
+        {% endfor %}
+    </ul>
+</div>
+</div>
+    </div>
+</div>
+{% endblock %}

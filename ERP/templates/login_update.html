@@ -1,0 +1,84 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+
+
+<div class="content mt-5">
+    <div class="animated fadeIn">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                    <div class="card-header text-center">
+                        <h4 class="mb-0">Update Login</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4 d-flex justify-content-between">
+                            <div><strong>Username:</strong> {{ ob1.studentname }}</div>
+                            <div><strong>Class:</strong> {{ ob1.classs }} {{ ob1.section.name }}</div>
+                        </div>
+                        <form method="POST" action="/update_login/{{ ob.id }}/" class="needs-validation" novalidate>
+                            {% csrf_token %}
+
+                            <!-- Username -->
+                            <div class="form-group">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" name="username" value="{{ ob.username }}" class="form-control" required>
+                                <div class="invalid-feedback">Please enter a username.</div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" name="email" value="{{ ob.email }}" class="form-control" required>
+                                <div class="invalid-feedback">Please enter a valid email.</div>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="form-group">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" name="password" value="{{ ob.password }}" class="form-control" required>
+                                <div class="invalid-feedback">Please enter a password.</div>
+                            </div>
+
+                            <!-- Hidden Role -->
+                            <input type="hidden" name="role" value="student">
+
+                            {% if error %}
+                                <p class="text-danger small mt-2">{{ error }}</p>
+                            {% endif %}
+
+                            <!-- Submit -->
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-success px-4">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Bootstrap validation
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.forEach.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+
+{% endblock %}

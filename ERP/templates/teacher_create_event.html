@@ -1,0 +1,81 @@
+{% extends 'teacher_base.html' %}
+
+{% block content %}
+{% load static %}
+
+<div class="content mt-3">
+    <div class="animated fadeIn">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                    <div class="card-header text-center">
+                        <h4>Create Event</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            
+                            <div class="form-group">
+                                <label for="title" class="form-label">Event Title</label>
+                                <input type="text" name="title" class="form-control" id="title" placeholder="Enter event title" required>
+                                <div class="invalid-feedback">
+                                    Please enter the event title.
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea name="description" class="form-control" id="description" rows="4" placeholder="Enter event description" required></textarea>
+                                <div class="invalid-feedback">
+                                    Please enter a description.
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="event_date" class="form-label">Date & Time</label>
+                                <input type="datetime-local" name="event_date" class="form-control" id="event_date" required>
+                                <div class="invalid-feedback">
+                                    Please select a date and time for the event.
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="venue" class="form-label">Venue</label>
+                                <input type="text" name="venue" class="form-control" id="venue" placeholder="Enter event venue" required>
+                                <div class="invalid-feedback">
+                                    Please enter the event venue.
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success mt-3">Create Event</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+        
+            Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+
+
+{% endblock %}

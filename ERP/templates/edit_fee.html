@@ -1,0 +1,140 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Fee</title>
+  
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4">
+            <h2 class="text-center mb-4">Edit Fee Details</h2>
+            <form method="POST" action="/update_fee_view/{{ fee_record.stdid_id }}/">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label">Amount:</label>
+                    <input type="number" name="amount" value="{{ fee_record.original_amount }}" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Category:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="category" value="admin" {% if fee_record.category == "admin" %}checked{% endif %}>
+                        <label class="form-check-label">Admin Management (50%)</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="category" value="staff" {% if fee_record.category == "staff" %}checked{% endif %}>
+                        <label class="form-check-label">Staff Management (25%)</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="category" value="normal" {% if fee_record.category == "normal" %}checked{% endif %}>
+                        <label class="form-check-label">Normal (10%)</label>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Update Fee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <div class="container p-4">
+		<div class="card shadow-sm p-4" style="overflow: hidden; max-width: 100%;">
+			<h4 class="section-title text-center">💸 FEE Details</h4><br>
+	
+			<!-- Fee Summary -->
+			<div class="row mb-4 text-center">
+				<div class="col-md-3 col-6 mb-2">
+					<div class="detail-item"><strong>Original Amount:</strong> {{ o.original_amount }}</div>
+				</div>
+				<div class="col-md-3 col-6 mb-2">
+					<div class="detail-item"><strong>Discount Percentage:</strong> {{ o.discount_percentage }}</div>
+				</div>
+				<div class="col-md-3 col-6 mb-2">
+					<div class="detail-item"><strong>Discount Amount:</strong> {{ o.discount }}</div>
+				</div>
+				<div class="col-md-3 col-6 mb-2">
+					<div class="detail-item"><strong>Total Amount:</strong> {{ o.total_amount }}</div>
+				</div>
+			</div>
+	
+			<!-- Fee Breakdown Table -->
+			<div class="table-responsive" style="overflow: hidden; max-width: 100%;">
+				<table class="table table-bordered table-sm text-center align-middle" 
+					   style="table-layout: fixed; width: 100%;">
+					<thead class="table">
+						<tr>
+							<th style="width: 8%;">Month</th>
+							<th style="width: 7%;">Mar</th>
+							<th style="width: 7%;">Apr</th>
+							<th style="width: 7%;">May</th>
+							<th style="width: 7%;">Jun</th>
+							<th style="width: 7%;">Jul</th>
+							<th style="width: 7%;">Aug</th>
+							<th style="width: 7%;">Sep</th>
+							<th style="width: 7%;">Oct</th>
+							<th style="width: 7%;">Nov</th>
+							<th style="width: 7%;">Dec</th>
+							<th style="width: 7%;">Jan</th>
+							<th style="width: 7%;">Feb</th>
+							<th style="width: 10%;">Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- Fee Amount Row -->
+						<tr>
+							<td><strong>Fee Amount</strong></td>
+							<td>-</td><td>-</td><td>-</td>
+							<td>{{ o.part1 }}</td>
+							<td>-</td><td>-</td><td>-</td>
+							<td>{{ o.part2 }}</td>
+							<td>-</td><td>-</td>
+							<td>{{ o.part3 }}</td>
+							<td>-</td>
+							<td class="bg-warning"><strong>{{ o.total_amount }}</strong></td>
+						</tr>
+	
+						<!-- Paid Amount Row -->
+						<tr>
+							<td><strong>Paid Amount</strong></td>
+							<td>-</td><td>-</td><td>-</td>
+							<td>{{ paid1 }}</td>
+							<td>-</td><td>-</td><td>-</td>
+							<td>{{ paid2 }}</td>
+							<td>-</td><td>-</td>
+							<td>{{ paid3 }}</td>
+							<td>-</td>
+							<td class="bg-success"><strong>{{ total_paid }}</strong></td>
+						</tr>
+	
+						<!-- Balance Amount Row -->
+						<tr>
+							<td><strong>Balance Amount</strong></td>
+							<td>-</td><td>-</td><td>-</td>
+							<td>{{ balance1 }}</td>
+							<td>-</td><td>-</td><td>-</td>
+							<td>{{ balance2 }}</td>
+							<td>-</td><td>-</td>
+							<td>{{ balance3 }}</td>
+							<td>-</td>
+							<td class="bg-danger"><strong>{{ total_balance }}</strong></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,178 @@
+<style>
+  .modal-dialog-scrollable .modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+</style>
+<!-- Add Lead Modal -->
+<div class="modal fade" id="addLeadModal" tabindex="-1" aria-labelledby="addLeadModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'add_lead' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="addLeadModalLabel">Add New Lead</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+       
+        <div class="modal-body">
+          <!-- Admission Details -->
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label>Admission Class</label>
+              <select name="admission_class" class="form-control" required>
+                <option value="">-- Select Class --</option>
+                {% for i in classes1 %}
+                <option value="{{ i.name }}">{{ i.name }}</option>
+                {% endfor %}
+            </select>
+            </div>
+            <div class="col-md-4">
+              <label>Source</label>
+              <select name="source" class="form-control" required>
+                <option value="">-- Select Source --</option>
+                {% for src in sources %}
+                <option value="{{ src.id }}">{{ src.name }}</option>
+                {% endfor %}
+            </select>
+            </div>
+            <div class="col-md-4">
+              <label>Referred By</label>
+              <input type="text" name="referred_by" class="form-control">
+            </div>
+          </div>
+
+          <!-- Personal Details -->
+          <h5>Personal Details</h5>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label>First Name</label>
+              <input type="text" name="first_name" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label>Last Name</label>
+              <input type="text" name="last_name" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label>Email Address</label>
+              <input type="email" name="email" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label>Mobile No.</label>
+              <input type="text" name="mobile" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+            <label>Gender</label><br>
+            <select name="gender" class="form-control" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            </div>
+            <div class="col-md-4">
+              <label>Date of Birth</label>
+              <input type="date" name="dob" class="form-control">
+            </div>
+          </div>
+
+          <h5><strong>Parents Details:</strong></h5>
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Details</th>
+                <th>Mother</th>
+                <th>Father/Guardian</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Name</td>
+                <td><input type="text" name="mother_name" class="form-control"></td>
+                <td><input type="text" name="father_name" class="form-control"></td>
+              </tr>
+              <tr>
+                <td>Qualification</td>
+                <td><input type="text" name="mother_qualification" class="form-control"></td>
+                <td><input type="text" name="father_qualification" class="form-control"></td>
+              </tr>
+              <tr>
+                <td>Residential Address</td>
+                <td><input type="text" name="mother_res_address" class="form-control"></td>
+                <td><input type="text" name="father_res_address" class="form-control"></td>
+              </tr>
+              <tr>
+                <td>Occupation</td>
+                <td><input type="text" name="mother_occupation" class="form-control"></td>
+                <td><input type="text" name="father_occupation" class="form-control"></td>
+              </tr>
+              <tr>
+                <td>Official Address</td>
+                <td><input type="text" name="mother_official_address" class="form-control"></td>
+                <td><input type="text" name="father_official_address" class="form-control"></td>
+              </tr>
+              <tr>
+                <td>Annual Income</td>
+                <td><input type="text" name="mother_income" class="form-control"></td>
+                <td><input type="text" name="father_income" class="form-control"></td>
+              </tr>
+              <tr>
+                <td>Email Address</td>
+                <td><input type="email" name="mother_email" class="form-control"></td>
+                <td><input type="email" name="father_email" class="form-control"></td>
+              </tr>
+              <tr>
+                <td>Mobile No.</td>
+                <td><input type="text" name="mother_mobile" class="form-control"></td>
+                <td><input type="text" name="father_mobile" class="form-control"></td>
+              </tr>
+            </tbody>
+          </table>
+
+
+          <!-- Religion & Category -->
+          <h5>Religion & Category</h5>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label>Nationality</label>
+              <input type="text" name="nationality" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label>Religion</label>
+              <input type="text" name="religion" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label>Category</label>
+              <input type="text" name="category" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label>Aadhar No.</label>
+              <input type="text" name="aadhar_no" class="form-control">
+            </div>
+          </div>
+
+          <!-- Last School -->
+          <h5>Last School Details (If Any)</h5>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label>Name & Address of School</label>
+              <input type="text" name="last_school_name" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label>Attended Class</label>
+              <input type="text" name="last_attended_class" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label>Last School Affiliated To</label>
+              <input type="text" name="last_school_affiliated_to" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Save Lead</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

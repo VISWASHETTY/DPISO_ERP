@@ -1,0 +1,413 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Student Records</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <style>
+        /* Ensure the card and table stay within bounds */
+        .card {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden; /* Prevent content from spilling out */
+        }
+
+        /* Wrap the table in a scrollable container */
+      
+
+        /* Table styling */
+        .table {
+            width: 100%;
+            min-width: 3000px; /* Minimum width to accommodate all columns */
+            font-size: 12px; /* Smaller font size for readability */
+            white-space: nowrap; /* Prevent text wrapping to keep columns compact */
+        }
+
+        /* Editable cell styling */
+        .editable {
+            cursor: pointer;
+            background-color: #f9f9f9;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .editable:focus {
+            outline: none;
+            background-color: #fff;
+            border: 1px solid #007bff;
+        }
+
+        /* Ensure the container respects the viewport */
+        .container-full {
+            padding: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Optional: Improve table readability */
+        .table th, .table td {
+            padding: 8px; /* Smaller padding for compact display */
+            vertical-align: middle;
+        }
+
+        .table thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f8f9fa;
+            z-index: 1; /* Keep headers above scrolling content */
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="container-full">
+            <div class="content-header">
+                <div class="animated fadeIn">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <strong class="card-title">Student Records</strong>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Wrap table in a scrollable div -->
+                                    <div class="table-responsive">
+                                        <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>S.no</th>
+                                                    <th>Profile</th>
+                                                    <th>Enquiry No</th>
+                                                    <th>Registration No</th>
+                                                    <th>Student Name</th>
+                                                    <th>Mobile Number</th>
+                                                    <th>Fee Amount</th>
+                                                    <th>Discounted Amount</th>
+                                                    <th>Student Type</th>
+                                                    <th>Gender</th>
+                                                    <th>Date of Birth</th>
+                                                    <th>Aadhar No.</th>
+                                                    <th>House</th>
+                                                    <th>Stream</th>
+                                                    <th>Email</th>
+                                                    <th>Previous Year Attendance</th>
+                                                    <th>Mother Tongue</th>
+                                                    <th>Adopted Child</th>
+                                                    <th>Do you Belong to Minority</th>
+                                                    <th>Specify</th>
+                                                    <th>Nationality</th>
+                                                    <th>Medium of Instruction</th>
+                                                    <th>Caste Category</th>
+                                                    <th>Optional Subject</th>
+                                                    <th>Offered Subject</th>
+                                                    <th>PEN No</th>
+                                                    <th>Blood Group</th>
+                                                    <th>Left Vision</th>
+                                                    <th>Right Vision</th>
+                                                    <th>Weight</th>
+                                                    <th>Height</th>
+                                                    <th>Type of Disability</th>
+                                                    <th>Sports Activity</th>
+                                                    <th>Admission Date</th>
+                                                    <th>Bank Name</th>
+                                                    <th>Branch Name</th>
+                                                    <th>A/C No.</th>
+                                                    <th>IFSC Code</th>
+                                                    <th>Father Name</th>
+                                                    <th>Mother Name</th>
+                                                    <th>Guardian Name</th>
+                                                    <th>Father Email</th>
+                                                    <th>Mother Email</th>
+                                                    <th>Guardian Email</th>
+                                                    <th>Father Nationality</th>
+                                                    <th>Mother Nationality</th>
+                                                    <th>Guardian Nationality</th>
+                                                    <th>Father Occupation</th>
+                                                    <th>Mother Occupation</th>
+                                                    <th>Guardian Occupation</th>
+                                                    <th>Father Department</th>
+                                                    <th>Mother Department</th>
+                                                    <th>Guardian Department</th>
+                                                    <th>Father Designation</th>
+                                                    <th>Mother Designation</th>
+                                                    <th>Guardian Designation</th>
+                                                    <th>Father Office</th>
+                                                    <th>Mother Office</th>
+                                                    <th>Guardian Office</th>
+                                                    <th>Father Office Address</th>
+                                                    <th>Mother Office Address</th>
+                                                    <th>Guardian Office Address</th>
+                                                    <th>Father Office Contact No.</th>
+                                                    <th>Mother Office Contact No.</th>
+                                                    <th>Guardian Office Contact No.</th>
+                                                    <th>Father Aadhar No.</th>
+                                                    <th>Mother Aadhar No.</th>
+                                                    <th>Guardian Aadhar No.</th>
+                                                    <th>Father PAN No.</th>
+                                                    <th>Mother PAN No.</th>
+                                                    <th>Guardian PAN No.</th>
+                                                    <th>Father Annual Income</th>
+                                                    <th>Mother Annual Income</th>
+                                                    <th>Guardian Annual Income</th>
+                                                    <th>Father's Mobile</th>
+                                                    <th>Mother's Mobile</th>
+                                                    <th>Guardian's Mobile</th>
+                                                    <th>Father's Mobile2</th>
+                                                    <th>Mother's Mobile2</th>
+                                                    <th>Guardian's Mobile2</th>
+                                                    <th>Father's Religion</th>
+                                                    <th>Mother's Religion</th>
+                                                    <th>Guardian's Religion</th>
+                                                    <th>Father's Caste</th>
+                                                    <th>Mother's Caste</th>
+                                                    <th>Guardian's Caste</th>
+                                                    <th>Father Marital Status</th>
+                                                    <th>Mother Marital Status</th>
+                                                    <th>Guardian Marital Status</th>
+                                                    <th>Guardian's Relation</th>
+                                                    <th>Guardian's Address</th>
+                                                    <th>Guardian's WhatsApp</th>
+                                                    <th>Guardian's Place</th>
+                                                    <th>Guardian's Area</th>
+                                                    <th>Guardian's Location</th>
+                                                    <th>Guardian's State</th>
+                                                    <th>Guardian's City</th>
+                                                    <th>Correspondence Address</th>
+                                                    <th>Correspondence Mobile No.</th>
+                                                    <th>Correspondence WhatsApp</th>
+                                                    <th>Correspondence Place</th>
+                                                    <th>Correspondence Area</th>
+                                                    <th>Correspondence Location</th>
+                                                    <th>Correspondence State</th>
+                                                    <th>Correspondence City</th>
+                                                    <th>Father Qualification</th>
+                                                    <th>Qualification Of Mother</th>
+                                                    <th>Qualification Of Guardian</th>
+                                                    <th>Sibling 1 Name</th>
+                                                    <th>Sibling 1 Age</th>
+                                                    <th>Sibling 1 Gender</th>
+                                                    <th>Sibling 1 School Name</th>
+                                                    <th>Sibling 1 Class</th>
+                                                    <th>Sibling 2 Name</th>
+                                                    <th>Sibling 2 Age</th>
+                                                    <th>Sibling 2 Gender</th>
+                                                    <th>Sibling 2 School Name</th>
+                                                    <th>Sibling 2 Class</th>
+                                                    <th>Admission Form</th>
+                                                    <th>School Leaving Certificate (TC)</th>
+                                                    <th>Bonafide Certificate</th>
+                                                    <th>Birth Certificate</th>
+                                                    <th>Caste Certificate</th>
+                                                    <th>Transport Available</th>
+                                                    <th>Bus No.</th>
+                                                    <th>Driver Name</th>
+                                                    <th>Mobile</th>
+                                                    <th>Route</th>
+                                                    <th>Stoppage</th>
+                                                    <th>Fee</th>
+                                                    <th>Pick Up</th>
+                                                    <th>Drop Off</th>
+                                                    <th>Fee Category</th>
+                                                    <th>Fee Type</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for i, j, k, l, m, n in combined_data %}
+                                                <tr style="font-size: 12px;" data-student-id="{{ i.id }}">
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>
+                                                        {% if i.profile_photo %}
+                                                            <img src="{{ i.profile_photo.url }}" style="width: 50px; height: 50px; border-radius: 20px;">
+                                                        {% else %}
+                                                            No profile
+                                                        {% endif %}
+                                                    </td>
+                                                    <td contenteditable="true" class="editable" data-field="enqno">{{ i.enqno }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="registrationno">{{ i.registrationno }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="studentname">{{ i.studentname }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mbno">{{ i.mbno }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="amount">{{ i.amount }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="discounted_amount">{{ i.discounted_amount }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="studenttype">{{ i.studenttype }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="gender">{{ i.gender }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="dateofbirth">{{ i.dateofbirth }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="aadharno">{{ i.aadharno }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="house">{{ i.house }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="stream">{{ i.stream }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="emil">{{ i.emil }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="previousyearattendance">{{ i.previousyearattendance }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mothertongue">{{ i.mothertongue }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="adoptedchild">{{ i.adoptedchild }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="minority">{{ i.minority }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="specify">{{ i.specify }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="nationality">{{ i.nationality }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mediumofinstruction">{{ i.mediumofinstruction }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="castecategory">{{ i.castecategory }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="optionalsubject">{{ i.optionalsubject }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="offeredsubject">{{ i.offeredsubject }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="penno">{{ i.penno }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="bloodgroup">{{ i.bloodgroup }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="leftvision">{{ i.leftvision }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="rightvision">{{ i.rightvision }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="weight">{{ i.weight }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="height">{{ i.height }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="disability">{{ i.disability }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="sportsactivity">{{ i.sportsactivity }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="admissiondate">{{ i.admissiondate }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="bankname">{{ i.bankname }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="branchname">{{ i.branchname }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="accountno">{{ i.accountno }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="ifsccode">{{ i.ifsccode }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_name">{{ l.father_name }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_name">{{ l.mother_name }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_name">{{ l.guardian_name }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_email">{{ l.father_email }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_email">{{ l.mother_email }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_email">{{ l.guardian_email }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_nationality">{{ l.father_nationality }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_nationality">{{ l.mother_nationality }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_nationality">{{ l.guardian_nationality }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_occupation">{{ l.father_occupation }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_occupation">{{ l.mother_occupation }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_occupation">{{ l.guardian_occupation }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_department">{{ l.father_department }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_department">{{ l.mother_department }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_department">{{ l.guardian_department }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_designation">{{ l.father_designation }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_designation">{{ l.mother_designation }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_designation">{{ l.guardian_designation }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_name_of_office">{{ l.father_name_of_office }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_name_of_office">{{ l.mother_name_of_office }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_name_of_office">{{ l.guardian_name_of_office }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_office_address">{{ l.father_office_address }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_office_address">{{ l.mother_office_address }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_office_address">{{ l.guardian_office_address }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_office_contact_no">{{ l.father_office_contact_no }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_office_contact_no">{{ l.mother_office_contact_no }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_office_contact_no">{{ l.guardian_office_contact_no }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_aadhar_no">{{ l.father_aadhar_no }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_aadhar_no">{{ l.mother_aadhar_no }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_aadhar_no">{{ l.guardian_aadhar_no }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_pan_no">{{ l.father_pan_no }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_pan_no">{{ l.mother_pan_no }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_pan_no">{{ l.guardian_pan_no }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_annual_income">{{ l.father_annual_income }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_annual_income">{{ l.mother_annual_income }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_annual_income">{{ l.guardian_annual_income }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_mobile">{{ l.father_mobile }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_mobile">{{ l.mother_mobile }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_mobile">{{ l.guardian_mobile }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_mobile2">{{ l.father_mobile2 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_mobile2">{{ l.mother_mobile2 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_mobile2">{{ l.guardian_mobile2 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_religion">{{ l.father_religion }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_religion">{{ l.mother_religion }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_religion">{{ l.guardian_religion }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_caste">{{ l.father_caste }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_caste">{{ l.mother_caste }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_caste">{{ l.guardian_caste }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="father_marital_status">{{ l.father_marital_status }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mother_marital_status">{{ l.mother_marital_status }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_marital_status">{{ l.guardian_marital_status }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_relation">{{ l.guardian_relation }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_address">{{ l.guardian_address }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_whatsapp">{{ l.guardian_whatsapp }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_place">{{ l.guardian_place }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_area">{{ l.guardian_area }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_location">{{ l.guardian_location }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_state">{{ l.guardian_state }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="guardian_city">{{ l.guardian_city }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="corres_address">{{ l.corres_address }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="corres_mobile_no">{{ l.corres_mobile_no }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="corres_whatsapp">{{ l.corres_whatsapp }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="corres_place">{{ l.corres_place }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="corres_area">{{ l.corres_area }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="corres_location">{{ l.corres_location }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="corres_state">{{ l.corres_state }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="corres_city">{{ l.corres_city }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="qualificationf1">{{ j.qualificationf1 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="qualificationm1">{{ j.qualificationm1 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="qualificationg1">{{ j.qualificationg1 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="name1">{{ m.name1 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="age1">{{ m.age1 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="gender1">{{ m.gender1 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="school1">{{ m.school1 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="class1">{{ m.class1 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="name2">{{ m.name2 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="age2">{{ m.age2 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="gender2">{{ m.gender2 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="school2">{{ m.school2 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="class2">{{ m.class2 }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="admission_form">{{ m.admission_form }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="school_leaving_certificate">{{ m.school_leaving_certificate }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="bonafide_certificate">{{ m.bonafide_certificate }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="birth_certificate">{{ m.birth_certificate }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="caste_certificate">{{ m.caste_certificate }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="transport_available">{{ n.transport_available }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="bus_no">{{ n.bus_no }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="driver_name">{{ n.driver_name }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="mobile">{{ n.mobile }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="route">{{ n.route }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="stoppage">{{ n.stoppage }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="fee">{{ n.fee }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="pick_up">{{ n.pick_up }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="drop_off">{{ n.drop_off }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="fee_category">{{ n.fee_category }}</td>
+                                                    <td contenteditable="true" class="editable" data-field="fee_type">{{ n.fee_type }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
+
+    <script>
+        $(document).ready(function () {
+            $(".editable").on("blur", function () {
+                var student_id = $(this).closest("tr").data("student-id");
+                var field = $(this).data("field");
+                var new_value = $(this).text().trim();
+
+                $.ajax({
+                    url: "{% url 'update_student_ajax' %}",
+                    method: "POST",
+                    data: {
+                        'student_id': student_id,
+                        'field': field,
+                        'value': new_value,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        console.log("Response:", response);
+                        if (response.status === "success") {
+                            console.log("Data saved successfully!");
+                        } else {
+                            alert("Error: " + response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                        alert("Error saving data.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

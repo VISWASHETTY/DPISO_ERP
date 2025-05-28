@@ -1,0 +1,204 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Subjects</title>
+
+    <script>
+        // Filter sections by class
+        function filterSections() {
+            var classId = document.getElementById("classDropdown").value;
+            var sectionDropdown = document.getElementById("sectionDropdown");
+            
+            for (var i = 0; i < sectionDropdown.options.length; i++) {
+                var option = sectionDropdown.options[i];
+                option.style.display = (option.getAttribute("data-class") == classId || option.value == "") ? "block" : "none";
+            }
+        }
+
+        // Edit subject
+        function editSubject(id, class_id, section_id, name) {
+            document.getElementById('subject-id').value = id;
+            document.getElementById('classDropdown').value = class_id;
+            document.getElementById('sectionDropdown').value = section_id;
+            document.getElementById('subject-name').value = name;
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('subject-id').value = "";
+            document.getElementById('classDropdown').value = "";
+            document.getElementById('sectionDropdown').value = "";
+            document.getElementById('subject-name').value = "";
+        }
+    </script>
+</head>
+<body>
+<div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                        <div class="card-header">
+                            <strong class="card-title">Add Subject</strong>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" id="subject-form" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <input type="hidden" name="subject_id" id="subject-id">
+    
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="classDropdown" class="form-label">Class</label>
+                                            <select name="class_assigned" id="classDropdown" class="form-control" onchange="filterSections()" required>
+                                                <option value="">Select Class</option>
+                                                {% for class in classes %}
+                                                    <option value="{{ class.id }}">{{ class.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Please select a class.
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="subject-name" class="form-label">Subject Name</label>
+                                            <input type="text" name="name" id="subject-name" class="form-control" placeholder="Enter Subject Name" required>
+                                            <div class="invalid-feedback">
+                                                Please enter the subject name.
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-4 d-flex align-items-end">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                            <button type="button" class="btn btn-secondary" onclick="clearForm()">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    
+        function clearForm() {
+            document.getElementById('subject-form').reset();
+            document.getElementById('subject-id').value = '';
+            document.getElementById('subject-form').classList.remove('was-validated');
+        }
+    </script>
+    
+
+    <!-- Subject List -->
+    
+    <!-- <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Class</th>
+                <th>Subject Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject in subjects %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ subject.class_assigned.name }}</td>
+                <td>{{ subject.name }}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editSubject('{{ subject.id }}', '{{ subject.class_assigned.id }}', '{{ subject.section_assigned.id }}', '{{ subject.name }}')">Edit</button>
+                    <a href="?delete_id={{ subject.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table> -->
+
+    
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+      
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Existing Subjects</strong>
+                        </div>
+                        <div class="card-body">
+                            <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Class</th>
+                                        <th>Subject Name</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for subject in subjects %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ subject.class_assigned.name }}</td>
+                                        <td>{{ subject.name }}</td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" onclick="editSubject('{{ subject.id }}', '{{ subject.class_assigned.id }}', '{{ subject.section_assigned.id }}', '{{ subject.name }}')">Edit</button>
+                                            <a href="?delete_id={{ subject.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+      
+      
+            </div>
+        </div>
+      </div>
+
+</div>
+</div>
+</div>
+
+
+
+</body>
+</html>
+{% endblock %}

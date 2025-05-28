@@ -1,0 +1,24 @@
+{% extends 'student_base.html' %}
+
+{% block content %}
+{% load static %}
+<div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+<div class="card p-4 mb-4 mx-auto" style="max-width: 900px;">
+    <h4 class="section-title">🚌 Transport Details</h4>
+    <div class="row">
+        <div class="col-md-3"><div class="detail-item"><strong>Transport:</strong> {{ n.transport_available }}</div></div>
+        <div class="col-md-3"><div class="detail-item"><strong>Bus No:</strong> {{ n.bus_no }}</div></div>
+        <div class="col-md-3"><div class="detail-item"><strong>Driver:</strong> {{ n.driver_name }}</div></div>
+        <div class="col-md-3"><div class="detail-item"><strong>Driver Mobile:</strong> {{ n.mobile }}</div></div>
+        <div class="col-md-3"><div class="detail-item"><strong>Route:</strong> {{ n.route }}</div></div>
+        <div class="col-md-3"><div class="detail-item"><strong>Fee:</strong> {{ n.fee }}</div></div>
+        <div class="col-md-3"><div class="detail-item"><strong>Pick Up:</strong> {{ n.pick_up }}</div></div>
+        <div class="col-md-3"><div class="detail-item"><strong>Drop:</strong> {{ n.drop_off }}</div></div>
+    </div>
+</div>
+</div>
+    </div>
+</div>
+{% endblock %}

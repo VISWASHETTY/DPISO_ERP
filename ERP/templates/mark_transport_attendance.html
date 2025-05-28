@@ -1,0 +1,49 @@
+{% extends 'non_teaching_staff_base.html' %}
+
+{% block content %}
+<form method="get" class="row mb-4">
+    <div class="col-md-4">
+    <label>Transport:</label>
+    <select name="transport" onchange="this.form.submit()" class="form-select">
+        <option value="">Select</option>
+        {% for t in transports %}
+            <option value="{{ t.vechile_number }}" {% if selected_transport == t.vechile_number %}selected{% endif %}>{{ t.vechile_number }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="col-md-4">
+    <label>Date:</label>
+    <input type="date" name="date" value="{{ selected_date }}" onchange="this.form.submit()" class="form-control">
+</div>
+</form>
+
+<form method="post">
+    {% csrf_token %}
+    <table class="table">
+        <thead>
+            <tr><th>S.no</th><th>Name</th><th>Attendance</th></tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ student.stdid.studentname }}</td>
+                <td>
+                    <select name="attendance_{{ student.stdid.id }}">
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                    </select>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="2" class="text-center">No students found for this transport.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if students %}
+        <button type="submit" class="btn btn-success">Save Attendance</button>
+    {% endif %}
+</form>
+
+  {% endblock %}

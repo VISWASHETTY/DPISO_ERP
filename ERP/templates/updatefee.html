@@ -1,0 +1,133 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Student Data</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+</head>
+
+<body>
+
+
+        <!-- Table wrapped in .table-responsive for horizontal scroll -->
+        <!-- <div class="table-responsive">
+            <table class="table table-bordered ">
+                <thead class="thead-light">
+                    <tr style="font-size: 13px;">
+                        <th>Profile</th>
+                        <th>Admission No</th>
+                        <th>Class</th>
+                        <th>Section</th>
+                        <th>Student Name</th>
+                        <th>Gender</th>
+                        <th>Date of Birth</th>
+                        <th>Father Name</th>
+                        <th>Mother Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i, j, k, l, m, n in combined_data %}
+                    <tr style="font-size: 13px;">
+                        {% if i.profile_photo %}
+                        <td><img src="{{ i.profile_photo.url }}" style="width: 50px; height: 50px; border-radius: 20px;"></td>
+                        {% else  %}
+                        <td>no profile</td>
+                        {%  endif %}
+                        <td >{{ i.registrationno }}</td>
+                        <td>{{ i.classs }}</td>
+                        <td>{{ i.section.name }}</td>
+                        <td>{{ i.studentname }}</td>
+                        <td>{{ i.gender }}</td>
+                        <td>{{ i.dateofbirth }}</td>
+                        <td>{{ l.father_name }}</td>
+                        <td>{{ l.mother_name }}</td>
+                        <td>
+                            <a href="/edit_fee_view/{{i.id}}/" class="btn btn-custom"><i class="fas fa-edit"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div> -->
+
+    
+<div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+      
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Modify Student Fee's</strong>
+                        </div>
+                        <div class="card-body">
+                            <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Profile</th>
+                                        <th>Student Deatails</th>
+                                      
+                                        <th>Gender</th>
+                                        <th>Date of Birth</th>
+                                        <th>Father Name</th>
+                                        <th>Mother Name</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i, j, k, l, m, n in combined_data %}
+                                    <tr style="font-size: 13px;">
+                                        {% if i.profile_photo %}
+                                        <td><img src="{{ i.profile_photo.url }}" style="width: 50px; height: 50px; border-radius: 20px;"></td>
+                                        {% else  %}
+                                        <td>no profile</td>
+                                        {%  endif %}
+                                        <td >{{ i.studentname }}-
+                                            {{ i.registrationno }}-
+                                            {{ i.classs }}-{{ i.section.name }}
+                                        </td>
+                                       
+                                        <td>{{ i.gender }}</td>
+                                        <td>{{ i.dateofbirth }}</td>
+                                        <td>{{ l.father_name }}</td>
+                                        <td>{{ l.mother_name }}</td>
+                                        <td>
+                                            <a href="/edit_fee_view/{{i.id}}/" class="btn btn-custom"><i class="fa fa-pencil-square-o"></i></a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+      
+      
+            </div>
+        </div>
+      </div>
+ 
+</div>
+</div>
+</div>
+</body>
+
+</html>
+
+{% endblock %}

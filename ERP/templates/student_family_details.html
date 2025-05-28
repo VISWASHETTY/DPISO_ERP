@@ -1,0 +1,73 @@
+{% extends 'student_base.html' %}
+ 
+   {% block content %}
+
+   {% load static %}
+<div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+    <h2 class="text-center mb-5 text-primary">📚 Student Family Records</h2>
+
+    
+
+    <!-- Education & Family Details -->
+    <div class="card p-4 mb-4 mx-auto" style="max-width: 900px;">
+        <h4 class="section-title">👪 Family Details</h4>
+        <div class="row">
+            
+            <div class="col-md-4">
+                <h5 class="text-primary mb-3">👨 Father</h5>
+                <div class="detail-item"><strong>Name:</strong> {{ l.father_name }}</div>
+                <div class="detail-item"><strong>Occupation:</strong> {{ l.father_occupation }}</div>
+                <div class="detail-item"><strong>Email:</strong> {{ l.father_email }}</div>
+                <div class="detail-item"><strong>Mobile:</strong> {{ l.father_mobile }}</div>
+            </div>
+            <div class="col-md-4">
+                <h5 class="text-primary mb-3">👩 Mother</h5>
+                <div class="detail-item"><strong>Name:</strong> {{ l.mother_name }}</div>
+                <div class="detail-item"><strong>Occupation:</strong> {{ l.mother_occupation }}</div>
+                <div class="detail-item"><strong>Email:</strong> {{ l.mother_email }}</div>
+                <div class="detail-item"><strong>Mobile:</strong> {{ l.mother_mobile }}</div>
+            </div>
+            <div class="col-md-4">
+                <h5 class="text-primary mb-3">🧑‍🤝‍🧑 Guardian</h5>
+                <div class="detail-item"><strong>Name:</strong> {{ l.guardian_name }}</div>
+                <div class="detail-item"><strong>Occupation:</strong> {{ l.guardian_occupation }}</div>
+                <div class="detail-item"><strong>Email:</strong> {{ l.guardian_email }}</div>
+                <div class="detail-item"><strong>Mobile:</strong> {{ l.guardian_mobile }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Education & Family Details -->
+    <div class="card p-4 mb-4 mx-auto" style="max-width: 900px;">
+        <h4 class="section-title">📖 Family Education Details</h4>
+        <div class="row">
+            <div class="col-md-4">
+                <h5 class="text-primary mb-3">🎓 Father Education</h5>
+                <div class="detail-item"><strong>Qualification:</strong> {{ j.qualificationf1 }}</div>
+                <div class="detail-item"><strong>Specialization:</strong> {{ j.specializationf1 }}</div>
+                <div class="detail-item"><strong>Institute:</strong> {{ j.institute_namef1 }}</div>
+            </div>
+            <div class="col-md-4">
+                <h5 class="text-primary mb-3">🎓 Mother Education</h5>
+                <div class="detail-item"><strong>Qualification:</strong> {{ j.qualificationm1 }}</div>
+                <div class="detail-item"><strong>Specialization:</strong> {{ j.specializationm1 }}</div>
+                <div class="detail-item"><strong>Institute:</strong> {{ j.institute_namem1 }}</div>
+            </div>
+            <div class="col-md-4">
+                <h5 class="text-primary mb-3">🎓 Guardian Education</h5>
+                <div class="detail-item"><strong>Qualification:</strong> {{ j.qualificationg1 }}</div>
+                <div class="detail-item"><strong>Specialization:</strong> {{ j.specializationg1 }}</div>
+                <div class="detail-item"><strong>Institute:</strong> {{ j.institute_nameg1 }}</div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+
+
+    {% endblock %}
+
+

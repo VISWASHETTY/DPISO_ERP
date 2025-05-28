@@ -1,0 +1,31 @@
+{% extends 'non_teaching_staff_base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Add Transport Route</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="name" class="form-label"><i class="fas fa-road"></i> Route Name</label>
+            <input type="text" name="name" id="name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="start_point" class="form-label"><i class="fas fa-play"></i> Start Point</label>
+            <input type="text" name="start_point" id="start_point" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="end_point" class="form-label"><i class="fas fa-stop"></i> End Point</label>
+            <input type="text" name="end_point" id="end_point" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="stops" class="form-label"><i class="fas fa-map-marker-alt"></i> Stops</label>
+            <textarea name="stops" id="stops" class="form-control" rows="3" placeholder="Enter stops separated by commas (e.g., Stop1, Stop2, Stop3)" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Route</button>
+    </form>
+</div>
+{% endblock %}

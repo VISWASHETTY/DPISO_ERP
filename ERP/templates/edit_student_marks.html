@@ -1,0 +1,33 @@
+{% extends "teacher_base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Edit Marks for {{ student_name }} - {{ exam_name }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mark in marks %}
+                <tr>
+                    <td>{{ mark.subject.name }}</td>
+                    <td>
+                        <input type="number" name="mark_{{ mark.id }}" value="{{ mark.marks }}" class="form-control" min="0" max="100" required>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <a href="{% url 'view_student_marks' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

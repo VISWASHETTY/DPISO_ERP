@@ -1,0 +1,54 @@
+{% extends 'non_teaching_staff_base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Students Not Using Transport</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #searchInput {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+    <h2 class="text-danger mb-3">Students Not Using Transport</h2>
+
+    <input type="text" id="searchInput" class="form-control" placeholder="Search students...">
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-danger">
+            <tr>
+                <th>Student Name</th>
+                <th>Class & Section</th>
+            </tr>
+        </thead>
+        <tbody id="studentTable">
+            {% for student in students %}
+                <tr>
+                    <td>{{ student.stdid.studentname }}</td>
+                    <td>{{ student.stdid.classs }} {{ student.stdid.section.name }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="3">All students are using transport.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const rows = document.querySelectorAll('#studentTable tr');
+
+    searchInput.addEventListener('keyup', function () {
+        const query = this.value.toLowerCase();
+        rows.forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(query) ? '' : 'none';
+        });
+    });
+</script>
+</body>
+</html>
+{% endblock %}

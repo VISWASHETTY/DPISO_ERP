@@ -1,0 +1,1048 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Admission Form</title>
+   
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        
+        .form-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: transform 0.3s ease;
+        }
+
+        .form-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-weight: 700;
+            position: relative;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+            bottom: 0;
+            left: 0;
+            border-radius: 3px;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        }
+
+        label {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-submit {
+            background: var(--success);
+            border: none;
+            padding: 12px 40px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: darken(var(--success), 10%);
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(28, 200, 138, 0.4);
+        }
+
+        .radio-group .form-check {
+            margin-right: 15px;
+            padding-left: 25px;
+        }
+
+        .input-group-icon {
+            position: relative;
+        }
+
+        .input-group-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+        }
+
+        .input-group-icon .form-control {
+            padding-left: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="container-full">
+            <div class="content-header">
+        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            {% csrf_token %}
+            
+            <!-- Login Credentials -->
+            <div class="form-section">
+                <h3 class="section-title">Login Credentials</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-user"></i> Username</label>
+                        <input type="text" name="username" class="form-control" placeholder="Enter Username" >
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" name="email" class="form-control" placeholder="Enter Email" >
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Enter Password" >
+                    </div>
+                    <input type="hidden" name="role" value="student">
+                </div>
+            </div>
+
+            <!-- Student Information -->
+            <div class="form-section">
+                <h3 class="section-title">Student Information</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-id-card"></i> Registration No.</label>
+                        <input type="text" name="registrationno" class="form-control" value="IDPS-{{ next_admission_id }}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-image"></i> Profile Photo</label>
+                        <input type="file" name="profile_photo" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-question"></i> Enquiry No.</label>
+                        <input type="text" name="enqno" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-calendar"></i> Session No.</label>
+                        <input type="text" name="session" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-chalkboard"></i> Select Class</label>
+                        <select name="classs" id="classs" class="form-select" required>
+                            <option value="">-- Select Class --</option>
+                            {% for class_obj in fees %}
+                                <option value="{{ class_obj.class_assigned.id }}">{{ class_obj.class_assigned.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-layer-group"></i> Select Section</label>
+                        <select name="section" id="section" class="form-select" required>
+                            <option value="">-- Select Section --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-money-bill"></i> Fee Amount</label>
+                        <input type="text" id="amount" name="amount" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-percentage"></i> Discount Category</label>
+                        <div class="radio-group">
+                            <div class="form-check form-check-inline">
+                                <input type="radio" name="category" value="admin" class="form-check-input" id="adminDiscount">
+                                <label class="form-check-label" for="adminDiscount">Admin (50%)</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" name="category" value="staff" class="form-check-input" id="staffDiscount">
+                                <label class="form-check-label" for="staffDiscount">Staff (25%)</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" name="category" value="normal" class="form-check-input" id="normalDiscount">
+                                <label class="form-check-label" for="normalDiscount">Normal (10%)</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-calculator"></i> Outstanding Amount (After Discount)</label>
+                        <input type="text" id="totalAmountField" name="total_amount" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-id-badge"></i> SRN No.</label>
+                        <input type="text" name="srnno" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-file-alt"></i> Form No.</label>
+                        <input type="text" name="formno" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-user-graduate"></i> Student Type</label>
+                        <select name="studenttype" class="form-select">
+                            <option value="">--</option>
+                            <option value="HOSTEL">HOSTEL</option>
+                            <option value="DAY SCHOLAR">DAY SCHOLAR</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-user"></i> Student Name</label>
+                        <input type="text" name="studentname" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-venus-mars"></i> Gender</label>
+                        <input type="text" name="gender" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-birthday-cake"></i> Date of Birth</label>
+                        <input type="date" name="dateofbirth" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-id-card-alt"></i> Aadhar No.</label>
+                        <input type="text" name="aadharno" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-home"></i> House</label>
+                        <select name="house" class="form-select">
+                            <option value="">--------------</option>
+                            <option value="1">N/A</option>
+                            <option value="5">AGNI</option>
+                            <option value="6">NEER</option>
+                            <option value="7">VAAYU</option>
+                            <option value="8">PRITHVI</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-stream"></i> Stream</label>
+                        <select name="stream" class="form-select">
+                            <option value="">--</option>
+                            <option value="1">N/A</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" name="emil" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-clipboard-check"></i> Previous Year Attendance</label>
+                        <textarea name="previousyearattendance" class="form-control"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-language"></i> Mother Tongue</label>
+                        <input type="text" name="mothertongue" value="HINDI" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-child"></i> Adopted Child</label>
+                        <select name="adoptedchild" class="form-select">
+                            <option value="">--</option>
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-users"></i> Minority</label>
+                        <select name="minority" class="form-select">
+                            <option value="">--</option>
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-comment"></i> Specify</label>
+                        <textarea name="specify" class="form-control"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-flag"></i> Nationality</label>
+                        <input type="text" name="nationality" value="INDIAN" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-book"></i> Medium of Instruction</label>
+                        <input type="text" name="mediumofinstruction" value="ENGLISH" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-users-cog"></i> Caste Category</label>
+                        <select name="castecategory" class="form-select">
+                            <option value="">--</option>
+                            <option value="2">SC</option>
+                            <option value="1">OC</option>
+                            <option value="4">BC</option>
+                            <option value="3">ST</option>
+                            <option value="8">CASTE</option>
+                            <option value="9">OBC</option>
+                            <option value="10">OC REDDY</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-book-open"></i> Optional Subject</label>
+                        <select name="optionalsubject" multiple class="form-select">
+                            <option value="1">Testing</option>
+                            <option value="2">Demo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-book-reader"></i> Offered Subject</label>
+                        <select name="offeredsubject" multiple class="form-select">
+                            <option value="1">Hindi</option>
+                            <option value="2">Demo</option>
+                            <option value="3">ENGLISH</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-pen"></i> Pen No.</label>
+                        <input type="text" name="penno" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Status -->
+            <div class="form-section">
+                <h3 class="section-title">Health Status</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-tint"></i> Blood Group</label>
+                        <select name="bloodgroup" class="form-select">
+                            <option value="">-- Group --</option>
+                            <option value="1">O+</option>
+                            <option value="2">O-</option>
+                            <option value="3">A</option>
+                            <option value="4">A-</option>
+                            <option value="5">B+</option>
+                            <option value="6">B-</option>
+                            <option value="7">AB+</option>
+                            <option value="8">AB-</option>
+                            <option value="9">Not Available</option>
+                            <option value="10">A+</option>
+                            <option value="11">BOMBAY BLOOD GROUP</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-eye"></i> Left Vision</label>
+                        <input type="text" name="leftvision" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-eye"></i> Right Vision</label>
+                        <input type="text" name="rightvision" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-weight"></i> Weight</label>
+                        <input type="number" step="0.01" name="weight" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-ruler-vertical"></i> Height</label>
+                        <input type="number" step="0.01" name="height" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-weight"></i> Weight 1</label>
+                        <input type="number" step="0.01" name="weight1" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-ruler-vertical"></i> Height 1</label>
+                        <input type="number" step="0.01" name="height1" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-wheelchair"></i> Type of Disability</label>
+                        <input type="text" name="disability" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-running"></i> Sports Activity</label>
+                        <select name="sportsactivity" class="form-select">
+                            <option value="">-------------Select--------------</option>
+                            <option value="Krate">Krate</option>
+                            <option value="Gym">Gym</option>
+                            <option value="Music">Music</option>
+                            <option value="Dance">Dance</option>
+                            <option value="Skating">Skating</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-calendar-check"></i> Admission Date</label>
+                        <input type="date" name="admissiondate" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bank Details -->
+            <div class="form-section">
+                <h3 class="section-title">Bank Details</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-university"></i> Bank Name</label>
+                        <input type="text" name="bankname" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-code-branch"></i> Branch Name</label>
+                        <input type="text" name="branchname" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-piggy-bank"></i> A/C No.</label>
+                        <input type="text" name="accountno" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-barcode"></i> IFSC Code</label>
+                        <input type="text" name="ifsccode" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Family Profile -->
+            <div class="form-section">
+                <h3 class="section-title">Family Profile</h3>
+                <div class="row g-4">
+                    <!-- Father Profile -->
+                    <div class="col-md-4">
+                        <h5 class=" mb-3">Father Profile</h5>
+                        <div class="row g-3">
+                            <div class="col-12"><input type="text" name="father_name" class="form-control" placeholder="Father Name"></div>
+                            <div class="col-12"><input type="email" name="father_email" class="form-control" placeholder="Father Email"></div>
+                            <div class="col-12"><input type="text" name="father_nationality" class="form-control" placeholder="Nationality"></div>
+                            <div class="col-12"><input type="text" name="father_occupation" class="form-control" placeholder="Occupation"></div>
+                            <div class="col-12"><input type="text" name="father_department" class="form-control" placeholder="Department"></div>
+                            <div class="col-12"><input type="text" name="father_designation" class="form-control" placeholder="Designation"></div>
+                            <div class="col-12"><input type="text" name="father_name_of_office" class="form-control" placeholder="Name of Office"></div>
+                            <div class="col-12"><input type="text" name="father_office_address" class="form-control" placeholder="Office Address"></div>
+                            <div class="col-12"><input type="text" name="father_office_contact_no" class="form-control" placeholder="Office Contact No."></div>
+                            <div class="col-12"><input type="text" name="father_aadhar_no" class="form-control" placeholder="Aadhar No."></div>
+                            <div class="col-12"><input type="text" name="father_pan_no" class="form-control" placeholder="PAN No."></div>
+                            <div class="col-12"><input type="text" name="father_annual_income" class="form-control" placeholder="Annual Income"></div>
+                            <div class="col-12"><input type="text" name="father_mobile" class="form-control" placeholder="Mobile"></div>
+                            <div class="col-12"><input type="text" name="father_mobile2" class="form-control" placeholder="Mobile 2"></div>
+                            <div class="col-12"><input type="text" name="father_religion" class="form-control" placeholder="Religion"></div>
+                            <div class="col-12"><input type="text" name="father_caste" class="form-control" placeholder="Caste"></div>
+                            <div class="col-12"><input type="text" name="father_marital_status" class="form-control" placeholder="Marital Status"></div>
+                        </div>
+                    </div>
+                    <!-- Mother Profile -->
+                    <div class="col-md-4">
+                        <h5 class=" mb-3">Mother Profile</h5>
+                        <div class="row g-3">
+                            <div class="col-12"><input type="text" name="mother_name" class="form-control" placeholder="Mother Name"></div>
+                            <div class="col-12"><input type="email" name="mother_email" class="form-control" placeholder="Mother Email"></div>
+                            <div class="col-12"><input type="text" name="mother_nationality" class="form-control" placeholder="Nationality"></div>
+                            <div class="col-12"><input type="text" name="mother_occupation" class="form-control" placeholder="Occupation"></div>
+                            <div class="col-12"><input type="text" name="mother_department" class="form-control" placeholder="Department"></div>
+                            <div class="col-12"><input type="text" name="mother_designation" class="form-control" placeholder="Designation"></div>
+                            <div class="col-12"><input type="text" name="mother_name_of_office" class="form-control" placeholder="Name of Office"></div>
+                            <div class="col-12"><input type="text" name="mother_office_address" class="form-control" placeholder="Office Address"></div>
+                            <div class="col-12"><input type="text" name="mother_office_contact_no" class="form-control" placeholder="Office Contact No."></div>
+                            <div class="col-12"><input type="text" name="mother_aadhar_no" class="form-control" placeholder="Aadhar No."></div>
+                            <div class="col-12"><input type="text" name="mother_pan_no" class="form-control" placeholder="PAN No."></div>
+                            <div class="col-12"><input type="text" name="mother_annual_income" class="form-control" placeholder="Annual Income"></div>
+                            <div class="col-12"><input type="text" name="mother_mobile" class="form-control" placeholder="Mobile"></div>
+                            <div class="col-12"><input type="text" name="mother_mobile2" class="form-control" placeholder="Mobile 2"></div>
+                            <div class="col-12"><input type="text" name="mother_religion" class="form-control" placeholder="Religion"></div>
+                            <div class="col-12"><input type="text" name="mother_caste" class="form-control" placeholder="Caste"></div>
+                            <div class="col-12"><input type="text" name="mother_marital_status" class="form-control" placeholder="Marital Status"></div>
+                        </div>
+                    </div>
+                    <!-- Guardian Profile -->
+                    <div class="col-md-4">
+                        <h5 class=" mb-3">Guardian Profile</h5>
+                        <div class="row g-3">
+                            <div class="col-12"><input type="text" name="guardian_name" class="form-control" placeholder="Guardian Name"></div>
+                            <div class="col-12"><input type="email" name="guardian_email" class="form-control" placeholder="Guardian Email"></div>
+                            <div class="col-12"><input type="text" name="guardian_nationality" class="form-control" placeholder="Nationality"></div>
+                            <div class="col-12"><input type="text" name="guardian_occupation" class="form-control" placeholder="Occupation"></div>
+                            <div class="col-12"><input type="text" name="guardian_department" class="form-control" placeholder="Department"></div>
+                            <div class="col-12"><input type="text" name="guardian_designation" class="form-control" placeholder="Designation"></div>
+                            <div class="col-12"><input type="text" name="guardian_name_of_office" class="form-control" placeholder="Name of Office"></div>
+                            <div class="col-12"><input type="text" name="guardian_office_address" class="form-control" placeholder="Office Address"></div>
+                            <div class="col-12"><input type="text" name="guardian_office_contact_no" class="form-control" placeholder="Office Contact No."></div>
+                            <div class="col-12"><input type="text" name="guardian_aadhar_no" class="form-control" placeholder="Aadhar No."></div>
+                            <div class="col-12"><input type="text" name="guardian_pan_no" class="form-control" placeholder="PAN No."></div>
+                            <div class="col-12"><input type="text" name="guardian_annual_income" class="form-control" placeholder="Annual Income"></div>
+                            <div class="col-12"><input type="text" name="guardian_mobile" class="form-control" placeholder="Mobile"></div>
+                            <div class="col-12"><input type="text" name="guardian_mobile2" class="form-control" placeholder="Mobile 2"></div>
+                            <div class="col-12"><input type="text" name="guardian_religion" class="form-control" placeholder="Religion"></div>
+                            <div class="col-12"><input type="text" name="guardian_caste" class="form-control" placeholder="Caste"></div>
+                            <div class="col-12"><input type="text" name="guardian_marital_status" class="form-control" placeholder="Marital Status"></div>
+                            <div class="col-12"><input type="text" name="guardian_relation" class="form-control" placeholder="Relation"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guardian Additional Details -->
+            <div class="form-section">
+                <h3 class="section-title">Guardian Additional Details</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map-marker-alt"></i> Address</label>
+                        <input type="text" name="guardian_address" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fab fa-whatsapp"></i> WhatsApp</label>
+                        <input type="text" name="guardian_whatsapp" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map-pin"></i> Place</label>
+                        <input type="text" name="guardian_place" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map"></i> Area</label>
+                        <input type="text" name="guardian_area" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-location-arrow"></i> Location</label>
+                        <input type="text" name="guardian_location" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-globe"></i> State</label>
+                        <input type="text" name="guardian_state" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-city"></i> City</label>
+                        <input type="text" name="guardian_city" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Correspondence Address -->
+            <div class="form-section">
+                <h3 class="section-title">Correspondence Address</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map-marker-alt"></i> Address</label>
+                        <input type="text" name="corres_address" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-phone"></i> Mobile No.</label>
+                        <input type="text" name="corres_mobile_no" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fab fa-whatsapp"></i> WhatsApp</label>
+                        <input type="text" name="corres_whatsapp" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map-pin"></i> Place</label>
+                        <input type="text" name="corres_place" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map"></i> Area</label>
+                        <input type="text" name="corres_area" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-location-arrow"></i> Location</label>
+                        <input type="text" name="corres_location" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-globe"></i> State</label>
+                        <input type="text" name="corres_state" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label><i class="fas fa-city"></i> City</label>
+                        <input type="text" name="corres_city" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Qualifications -->
+            <div class="form-section">
+                <h3 class="section-title">Qualifications</h3>
+                <!-- Father Qualifications -->
+                <h5 class="text-primary mb-3">Father's Qualifications</h5>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-2"><input type="text" name="qualificationf1" class="form-control" placeholder="Highest School Qual"></div>
+                    <div class="col-md-2"><input type="text" name="specializationf1" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namef1" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statef1" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityf1" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationf2" class="form-control" placeholder="Graduate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationf2" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namef2" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statef2" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityf2" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationf3" class="form-control" placeholder="Post-Graduate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationf3" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namef3" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statef3" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityf3" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationf4" class="form-control" placeholder="Doctorate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationf4" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namef4" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statef4" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityf4" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationf5" class="form-control" placeholder="Others"></div>
+                    <div class="col-md-2"><input type="text" name="specializationf5" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namef5" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statef5" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityf5" class="form-control" placeholder="City"></div>
+                </div>
+                <!-- Mother Qualifications -->
+                <h5 class="text-primary mb-3">Mother's Qualifications</h5>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-2"><input type="text" name="qualificationm1" class="form-control" placeholder="Highest School Qual"></div>
+                    <div class="col-md-2"><input type="text" name="specializationm1" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namem1" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statem1" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="citym1" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationm2" class="form-control" placeholder="Graduate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationm2" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namem2" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statem2" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="citym2" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationm3" class="form-control" placeholder="Post-Graduate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationm3" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namem3" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statem3" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="citym3" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationm4" class="form-control" placeholder="Doctorate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationm4" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namem4" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statem4" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="citym4" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationm5" class="form-control" placeholder="Others"></div>
+                    <div class="col-md-2"><input type="text" name="specializationm5" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_namem5" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="statem5" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="citym5" class="form-control" placeholder="City"></div>
+                </div>
+                <!-- Guardian Qualifications -->
+                <h5 class="text-primary mb-3">Guardian's Qualifications</h5>
+                <div class="row g-4">
+                    <div class="col-md-2"><input type="text" name="qualificationg1" class="form-control" placeholder="Highest School Qual"></div>
+                    <div class="col-md-2"><input type="text" name="specializationg1" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_nameg1" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="stateg1" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityg1" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationg2" class="form-control" placeholder="Graduate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationg2" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_nameg2" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="stateg2" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityg2" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationg3" class="form-control" placeholder="Post-Graduate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationg3" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_nameg3" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="stateg3" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityg3" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationg4" class="form-control" placeholder="Doctorate"></div>
+                    <div class="col-md-2"><input type="text" name="specializationg4" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_nameg4" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="stateg4" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityg4" class="form-control" placeholder="City"></div>
+                    <div class="col-md-2"><input type="text" name="qualificationg5" class="form-control" placeholder="Others"></div>
+                    <div class="col-md-2"><input type="text" name="specializationg5" class="form-control" placeholder="Specialization"></div>
+                    <div class="col-md-3"><input type="text" name="institute_nameg5" class="form-control" placeholder="Institute Name"></div>
+                    <div class="col-md-2"><input type="text" name="stateg5" class="form-control" placeholder="State"></div>
+                    <div class="col-md-2"><input type="text" name="cityg5" class="form-control" placeholder="City"></div>
+                </div>
+            </div>
+
+            <!-- Sibling Information -->
+            <div class="form-section">
+                <h3 class="section-title">Sibling Information</h3>
+                <div class="row g-4">
+                    <!-- Sibling 1 -->
+                    <div class="col-md-2"><input type="text" name="name1" class="form-control" placeholder="Name"></div>
+                    <div class="col-md-2"><input type="number" name="age1" class="form-control" placeholder="Age"></div>
+                    <div class="col-md-2">
+                        <select name="gender1" class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" name="school1" class="form-control" placeholder="Current School"></div>
+                    <div class="col-md-2"><input type="text" name="class1" class="form-control" placeholder="Current Class"></div>
+                    <!-- Sibling 2 -->
+                    <div class="col-md-2"><input type="text" name="name2" class="form-control" placeholder="Name"></div>
+                    <div class="col-md-2"><input type="number" name="age2" class="form-control" placeholder="Age"></div>
+                    <div class="col-md-2">
+                        <select name="gender2" class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" name="school2" class="form-control" placeholder="Current School"></div>
+                    <div class="col-md-2"><input type="text" name="class2" class="form-control" placeholder="Current Class"></div>
+                    <!-- Sibling 3 -->
+                    <div class="col-md-2"><input type="text" name="name3" class="form-control" placeholder="Name"></div>
+                    <div class="col-md-2"><input type="number" name="age3" class="form-control" placeholder="Age"></div>
+                    <div class="col-md-2">
+                        <select name="gender3" class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" name="school3" class="form-control" placeholder="Current School"></div>
+                    <div class="col-md-2"><input type="text" name="class3" class="form-control" placeholder="Current Class"></div>
+                    <!-- Sibling 4 -->
+                    <div class="col-md-2"><input type="text" name="name4" class="form-control" placeholder="Name"></div>
+                    <div class="col-md-2"><input type="number" name="age4" class="form-control" placeholder="Age"></div>
+                    <div class="col-md-2">
+                        <select name="gender4" class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" name="school4" class="form-control" placeholder="Current School"></div>
+                    <div class="col-md-2"><input type="text" name="class4" class="form-control" placeholder="Current Class"></div>
+                    <!-- Sibling 5 -->
+                    <div class="col-md-2"><input type="text" name="name5" class="form-control" placeholder="Name"></div>
+                    <div class="col-md-2"><input type="number" name="age5" class="form-control" placeholder="Age"></div>
+                    <div class="col-md-2">
+                        <select name="gender5" class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" name="school5" class="form-control" placeholder="Current School"></div>
+                    <div class="col-md-2"><input type="text" name="class5" class="form-control" placeholder="Current Class"></div>
+                </div>
+            </div>
+
+            <!-- Document Submission -->
+            <div class="form-section">
+                <h3 class="section-title">Document Submission</h3>
+                <div class="row g-4">
+                    <div class="col-12">
+                        <label><i class="fas fa-file-alt"></i> Admission Form</label>
+                        <div class="radio-group">
+                            <div class="form-check form-check-inline"><input type="radio" name="admission_form" value="yes" class="form-check-input"> Yes</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="admission_form" value="no" class="form-check-input"> No</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="admission_form" value="partial" class="form-check-input"> Partial</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="admission_form" value="na" class="form-check-input"> N/A</div>
+                        </div>
+                        <input type="text" name="admission_form_remarks" class="form-control" placeholder="Remarks">
+                    </div>
+                    <div class="col-12">
+                        <label><i class="fas fa-file-alt"></i> School Leaving Certificate (TC)</label>
+                        <div class="radio-group">
+                            <div class="form-check form-check-inline"><input type="radio" name="school_leaving_certificate" value="yes" class="form-check-input"> Yes</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="school_leaving_certificate" value="no" class="form-check-input"> No</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="school_leaving_certificate" value="partial" class="form-check-input"> Partial</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="school_leaving_certificate" value="na" class="form-check-input"> N/A</div>
+                        </div>
+                        <input type="text" name="school_leaving_certificate_remarks" class="form-control" placeholder="Remarks">
+                    </div>
+                    <div class="col-12">
+                        <label><i class="fas fa-file-alt"></i> Bonafide Certificate</label>
+                        <div class="radio-group">
+                            <div class="form-check form-check-inline"><input type="radio" name="bonafide_certificate" value="yes" class="form-check-input"> Yes</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="bonafide_certificate" value="no" class="form-check-input"> No</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="bonafide_certificate" value="partial" class="form-check-input"> Partial</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="bonafide_certificate" value="na" class="form-check-input"> N/A</div>
+                        </div>
+                        <input type="text" name="bonafide_certificate_remarks" class="form-control" placeholder="Remarks">
+                    </div>
+                    <div class="col-12">
+                        <label><i class="fas fa-file-alt"></i> Birth Certificate</label>
+                        <div class="radio-group">
+                            <div class="form-check form-check-inline"><input type="radio" name="birth_certificate" value="yes" class="form-check-input"> Yes</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="birth_certificate" value="no" class="form-check-input"> No</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="birth_certificate" value="partial" class="form-check-input"> Partial</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="birth_certificate" value="na" class="form-check-input"> N/A</div>
+                        </div>
+                        <input type="text" name="birth_certificate_remarks" class="form-control" placeholder="Remarks">
+                    </div>
+                    <div class="col-12">
+                        <label><i class="fas fa-file-alt"></i> Caste Certificate</label>
+                        <div class="radio-group">
+                            <div class="form-check form-check-inline"><input type="radio" name="caste_certificate" value="yes" class="form-check-input"> Yes</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="caste_certificate" value="no" class="form-check-input"> No</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="caste_certificate" value="partial" class="form-check-input"> Partial</div>
+                            <div class="form-check form-check-inline"><input type="radio" name="caste_certificate" value="na" class="form-check-input"> N/A</div>
+                        </div>
+                        <input type="text" name="caste_certificate_remarks" class="form-control" placeholder="Remarks">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Previous Schooling -->
+            <div class="form-section">
+                <h3 class="section-title">Previous Schooling</h3>
+                <div class="row g-4">
+                    <!-- School 1 -->
+                    <div class="col-md-3"><input type="text" name="schoolnameandaddress[]" class="form-control" placeholder="School Name & Address"></div>
+                    <div class="col-md-2"><input type="number" name="classname[]" class="form-control" placeholder="Class"></div>
+                    <div class="col-md-2"><input type="text" name="session[]" class="form-control" placeholder="Session"></div>
+                    <div class="col-md-2"><input type="text" name="curriculum[]" class="form-control" placeholder="Curriculum"></div>
+                    <div class="col-md-2"><input type="text" name="subjects[]" class="form-control" placeholder="Subjects"></div>
+                    <!-- School 2 -->
+                    <div class="col-md-3"><input type="text" name="schoolnameandaddress[]" class="form-control" placeholder="School Name & Address"></div>
+                    <div class="col-md-2"><input type="number" name="classname[]" class="form-control" placeholder="Class"></div>
+                    <div class="col-md-2"><input type="text" name="session[]" class="form-control" placeholder="Session"></div>
+                    <div class="col-md-2"><input type="text" name="curriculum[]" class="form-control" placeholder="Curriculum"></div>
+                    <div class="col-md-2"><input type="text" name="subjects[]" class="form-control" placeholder="Subjects"></div>
+                    <!-- School 3 -->
+                    <div class="col-md-3"><input type="text" name="schoolnameandaddress[]" class="form-control" placeholder="School Name & Address"></div>
+                    <div class="col-md-2"><input type="number" name="classname[]" class="form-control" placeholder="Class"></div>
+                    <div class="col-md-2"><input type="text" name="session[]" class="form-control" placeholder="Session"></div>
+                    <div class="col-md-2"><input type="text" name="curriculum[]" class="form-control" placeholder="Curriculum"></div>
+                    <div class="col-md-2"><input type="text" name="subjects[]" class="form-control" placeholder="Subjects"></div>
+                </div>
+            </div>
+
+            <!-- Transport Details -->
+            <div class="form-section">
+                <h3 class="section-title">Transport Details</h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label><i class="fas fa-bus"></i> Transport Available</label>
+                        <select name="transportAvailable" id="transportAvailable" class="form-select" onchange="toggleTransportFields()">
+                            <option value="yes">Yes</option>
+                            <option value="no" selected>No</option>
+                        </select>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-bus-alt"></i> Bus No.</label>
+                        <select id="busNoDropdown" name="busNo" class="form-select transport-field" readonly>
+                            <option value="">-- Select Bus Number --</option>
+                            {% if bus_numbers %}
+                                {% for number in bus_numbers %}
+                                    <option value="{{ number }}">{{ number }}</option>
+                                {% endfor %}
+                            {% else %}
+                                <option value="--">No Buses Available</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-user-tie"></i> Driver Name</label>
+                        <input type="text" name="driverName" id="driverName" class="form-control transport-field" disabled>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-phone"></i> Mobile</label>
+                        <input type="number" name="mobile" id="mobile" class="form-control transport-field" disabled>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-route"></i> Route</label>
+                        <select name="route" class="form-select transport-field" readonly>
+                            <option value="">-- Select Route --</option>
+                            {% if routes %}
+                                {% for route in routes %}
+                                    <option value="{{ route.id }}">{{ route.name }} ({{ route.start_point }} → {{ route.end_point }})</option>
+                                {% endfor %}
+                            {% else %}
+                                <option value="">No Routes Available</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-map-signs"></i> Stoppage</label>
+                        <select name="stoppage" class="form-select transport-field" disabled>
+                            <option value="Stop1">Stop 1</option>
+                            <option value="Stop2">Stop 2</option>
+                            <option value="Stop3">Stop 3</option>
+                        </select>
+                    </div>
+            
+                    <div class="col-md-4">
+                    <label for="distance">Distance:</label>
+                    <select id="distance" name="fee1" class="form-control transport-field">
+                        <option value="">-- Select Distance --</option>
+                        {% for item in trans %}
+                            <option value="{{ item.id }}" data-fee="{{ item.fee }}">{{ item.distance }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="fee11">Fee (₹):</label>
+                    <input type="text" id="fee11" class="form-control transport-field" readonly>
+                </div>
+
+                <script>
+                    $(document).ready(function(){
+                        $('#distance').change(function(){
+                            var selectedOption = $(this).find(':selected');
+                            var fee = selectedOption.data('fee');  // ✅ fixed here
+                            $('#fee11').val(fee ? '₹' + fee : '');
+                        });
+                    });
+                </script>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-clock"></i> Pick Up</label>
+                        <input type="text" name="pickUp" class="form-control transport-field" disabled>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-clock"></i> Drop Off</label>
+                        <input type="text" name="dropOff" class="form-control transport-field" disabled>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-tags"></i> Fee Category</label>
+                        <select name="feeCategory" class="form-select transport-field" disabled>
+                            <option value="staffWard">STAFF WARD</option>
+                            <option value="staffWard2">STAFF WARD2</option>
+                        </select>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <label><i class="fas fa-calendar-alt"></i> Fee Type</label>
+                        <select name="feeType" class="form-select transport-field" disabled>
+                            <option value="monthly">MONTHLY</option>
+                            <option value="quarterly">QUARTERLY</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                function toggleTransportFields() {
+                    const isTransportAvailable = document.getElementById('transportAvailable').value === 'yes';
+                    const transportFields = document.querySelectorAll('.transport-field');
+            
+                    transportFields.forEach(field => {
+                        field.disabled = !isTransportAvailable;
+                    });
+                }
+            
+                // Trigger once on page load
+                document.addEventListener('DOMContentLoaded', toggleTransportFields);
+            </script>
+            
+
+            <div class="text-center mt-5">
+                <button type="submit" class="btn btn-submit"><i class="fas fa-paper-plane"></i> Submit Application</button>
+            </div>
+        </form>
+    </div>
+
+        </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+    <script>
+        $(document).ready(function () {
+            $("#classs").change(function () {
+                var classId = $(this).val();
+                if (classId) {
+                    $.ajax({
+                        url: "{% url 'get_sections_and_fee' %}",
+                        type: "GET",
+                        data: { class_id: classId },
+                        success: function (data) {
+                            var sectionDropdown = $("#section");
+                            sectionDropdown.empty();
+                            sectionDropdown.append('<option value="">-- Select Section --</option>');
+                            $.each(data.sections, function (index, section) {
+                                sectionDropdown.append('<option value="' + section.id + '">' + section.name + '</option>');
+                            });
+                        }
+                    });
+
+                    $.ajax({
+                        url: "{% url 'get_fee_amount' %}",
+                        type: "GET",
+                        data: { class_id: classId },
+                        success: function (data) {
+                            $("#amount").val(data.amount);
+                            calculateDiscount();
+                        }
+                    });
+                }
+            });
+
+            $('input[name="category"]').change(function() {
+                calculateDiscount();
+            });
+
+            function calculateDiscount() {
+                let amount = parseFloat($("#amount").val()) || 0;
+                let discount = 0;
+                let category = $('input[name="category"]:checked').val();
+                
+                if (category === 'admin') discount = 0.50;
+                else if (category === 'staff') discount = 0.25;
+                else if (category === 'normal') discount = 0.10;
+
+                let discountedAmount = amount * (1 - discount);
+                $("#totalAmountField").val(discountedAmount.toFixed(2));
+            }
+        });
+
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })();
+    </script>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $('#busNoDropdown').on('change', function () {
+    const busNo = $(this).val();
+
+    if (busNo) {
+      $.ajax({
+        url: '{% url "get_driver_details" %}',
+        data: {
+          'bus_no': busNo
+        },
+        dataType: 'json',
+        success: function (data) {
+          $('#driverName').val(data.driver_name);
+          $('#mobile').val(data.mobile);
+
+          // Set the route dropdown value
+          if (data.route_id) {
+            $('select[name="route"]').val(data.route_id);
+          } else {
+            $('select[name="route"]').val('');
+          }
+        }
+      });
+    } else {
+      $('#driverName').val('');
+      $('#mobile').val('');
+      $('select[name="route"]').val('');
+    }
+  });
+</script>
+
+    
+    
+    {% include 'floatingmenu.html' %}
+</body>
+</html>
+{% endblock %}

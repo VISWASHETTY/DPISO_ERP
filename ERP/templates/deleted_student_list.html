@@ -1,0 +1,477 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Student Records</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+   
+    
+    <!-- Required Scripts and Styles -->
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+   
+</head>
+<body>
+
+    <div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+  
+        <h2 class="text-center mb-4">Student Records</h2>
+        
+        <!-- Export Button -->
+        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#exportModal">
+            <i class="fas fa-download"></i>
+        </button>
+     
+        <button class="btn mb-3" id="deleteSelected" style="background-color: lawngreen;" onclick="showModal('confirmDeleteModal')" disabled>
+            <i class="fas fa-arrow-90deg-left"></i>(<span id="selectedCount">0</span>)
+        </button>
+        
+<!--      
+      
+        <div class="table-responsive">
+            <table class="table table-bordered" id="studentTable" >
+                <thead class="table-light"  >
+                    <tr style="font-size: 12px;">
+                        <th><input type="checkbox" id="selectAll"></th>
+                        <th>Profile</th>
+                        <th>Enquiry No</th>
+                        <th >Registration No</th>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                        <th>Section</th>
+                       
+                        <th>Actions</th>
+                    
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i, j, k, l, m, n in combined_data %}
+                    {% if i.status == 1 %}
+                    <tr style="font-size: 12px;">
+                        <td><input type="checkbox" class="student-checkbox" value="{{ i.id }}"></td>
+                        <td>
+                            {% if i.profile_photo %}
+                                <img src="{{ i.profile_photo.url }}" style="width: 50px; height: 50px; border-radius: 20px;">
+                            {% else %}
+                                No profile
+                            {% endif %}
+                        </td>
+                        <td>{{ i.enqno }}</td>
+                        <td>{{ i.registrationno }}</td>
+                        <td>{{ i.studentname }}</td>
+                        <td>{{ i.classs }}</td>
+                        <td>{{ i.section }}</td>
+                       
+                        <td>
+                            <a href="/std_edit/{{ i.id }}/" class="btn btn-custom"><i class="fas fa-edit"></i></a>
+                        </td>
+                       
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div> -->
+
+
+
+        
+
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+      
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Data Table</strong>
+                        </div>
+                        <div class="card-body">
+                            <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAll"></th>
+                                        <th>Profile</th>
+                                        <th>Enquiry No</th>
+                                        <th >Registration No</th>
+                                        <th>Student Name</th>
+                                        <th>Class</th>
+                                        <th>Section</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i, j, k, l, m, n in combined_data %}
+                                    {% if i.status == 1 %}
+                                    <tr style="font-size: 12px;">
+                                        <td><input type="checkbox" class="student-checkbox" value="{{ i.id }}"></td>
+                                        <td>
+                                            {% if i.profile_photo %}
+                                                <img src="{{ i.profile_photo.url }}" style="width: 50px; height: 50px; border-radius: 20px;">
+                                            {% else %}
+                                                No profile
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ i.enqno }}</td>
+                                        <td>{{ i.registrationno }}</td>
+                                        <td>{{ i.studentname }}</td>
+                                        <td>{{ i.classs }}</td>
+                                        <td>{{ i.section }}</td>
+                                       
+                                        <td>
+                                            <a href="/std_edit/{{ i.id }}/" class="btn btn-custom"><i class="fas fa-edit"></i></a>
+                                        </td>
+                                       
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+      
+      
+            </div>
+        </div>
+      </div>
+
+
+       
+<!-- <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header  text-white" style="background-color: lawngreen;">
+                <h5 class="modal-title">Confirm Restore</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to Restore <strong><span id="deleteCount">0</span> students</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="button" class="btn text-white" style="background-color: lawngreen;" id="confirmDelete">
+                    <i class="fas fa-arrow-90deg-left"></i> Yes, Restore
+                </button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+<style>
+          
+    .fd {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .fd.show {
+        display: flex;
+    }
+
+    .modal-dialog {
+        max-width: 500px;
+        width: 90%;
+    }
+
+    .modal-dialog-lg {
+        max-width: 800px;
+        width: 90%;
+    }
+
+   
+
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: white;
+    }
+
+   
+   
+    .form-control-file {
+        display: block;
+        width: 100%;
+        padding: 5px;
+    }
+
+  
+</style>
+</head>
+<body>
+
+
+<!-- Confirm Delete Modal -->
+<div class="modal fd" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: lawngreen;">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">
+                    Confirm Restore
+                </h5>
+                <button type="button" class="btn-close" onclick="hideModal('confirmDeleteModal')" aria-label="Close">×</button>
+            </div>
+            <div class="modal-body">
+                <p class="text-dark text-center">
+                    Are you sure you want to Restore  <strong><span id="deleteCount" class="text-danger">0</span> students</strong>?
+                    <br>
+                    <small class="text-muted">This action cannot be undone.</small>
+                </p>
+            </div>
+            <div class="modal-footer" style="background-color: lawngreen;">
+                <button type="button" class="btn btn-outline-light" onclick="hideModal('confirmDeleteModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmDelete" onclick="confirmDelete()">Yes, Restore</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Custom JavaScript for Modal Functionality -->
+<script>
+    function showModal(modalId) {
+        document.getElementById(modalId).classList.add('show');
+    }
+
+    function hideModal(modalId) {
+        document.getElementById(modalId).classList.remove('show');
+    }
+
+    function confirmDelete() {
+        console.log('Delete confirmed');
+        hideModal('confirmDeleteModal');
+        
+    }
+</script>
+
+
+        <!-- Export Modal -->
+        <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Export Data</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Select Format:</h6>
+                        <input type="radio" id="pdf" name="file_type" value="pdf" onclick="selectDefaultFields()"> 
+                        <label for="pdf">PDF</label>
+                    
+                        <input type="radio" id="excel" name="file_type" value="excel" class="ml-3"> 
+                        <label for="excel">Excel</label>
+                        <hr>
+                        <h6>Select Fields:</h6>
+                        <div class="d-flex flex-wrap">
+
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="enqno"> Enquiry No</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="registrationno"> Registration No</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="studentname"> Student Name</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="classs"> Class</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="section"> Section</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="amount"> Amount</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="discounted_amount"> Discounted Amount</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="studenttype"> Student Type</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="gender"> Gender</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="dateofbirth"> Date of Birth</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="aadharno"> Aadhar No</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="house"> House</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="stream"> Stream</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="emil"> Email</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="previousyearattendance"> Previous Year Attendance</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="mothertongue"> Mother Tongue</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="adoptedchild"> Adopted Child</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="minority"> Minority</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="specify"> Specify</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="nationality"> Nationality</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="mediumofinstruction"> Medium of Instruction</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="castecategory"> Caste Category</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="optionalsubject"> Optional Subject</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="offeredsubject"> Offered Subject</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="penno"> Pen No</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="bloodgroup"> Blood Group</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="leftvision"> Left Vision</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="rightvision"> Right Vision</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="weight"> Weight</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="height"> Height</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="disability"> Disability</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="sportsactivity"> Sports Activity</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="admissiondate"> Admission Date</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="bankname"> Bank Name</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="branchname"> Branch Name</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="accountno"> Account No</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="ifsccode"> IFSC Code</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="father_name"> Father Name</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="mother_name"> Mother Name</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="guardian_name"> Guardian Name</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="father_email"> Father Email</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="mother_email"> Mother Email</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="guardian_email"> Guardian Email</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="father_nationality"> Father Nationality</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="mother_nationality"> Mother Nationality</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="guardian_nationality"> Guardian Nationality</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="father_occupation"> Father Occupation</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="mother_occupation"> Mother Occupation</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="guardian_occupation"> Guardian Occupation</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="father_department"> Father Department</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="mother_department"> Mother Department</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="guardian_department"> Guardian Department</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="father_designation"> Father Designation</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="mother_designation"> Mother Designation</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="guardian_designation"> Guardian Designation</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="father_mobile"> Father Mobile</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="mother_mobile"> Mother Mobile</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="guardian_mobile"> Guardian Mobile</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="father_pan_no"> Father PAN No</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="mother_pan_no"> Mother PAN No</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="guardian_pan_no"> Guardian PAN No</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="transport_available"> Transport Available</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="bus_no"> Bus No</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="driver_name"> Driver Name</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="mobile"> Driver Mobile</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="route"> Route</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="stoppage"> Stoppage</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="fee"> Transport Fee</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="pick_up"> Pick Up</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="drop_off"> Drop Off</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="fee_category"> Fee Category</label>
+                            <label class="mr-3"><input type="checkbox" class="export-field" value="fee_type"> Fee Type</label>
+                            
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="downloadFile()">Download</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+    <script>
+        $(document).ready(function() {
+            // Select All Checkboxes
+            $("#selectAll").click(function() {
+                $(".student-checkbox").prop('checked', $(this).prop('checked'));
+                updateSelectedCount();
+            });
+        
+            // Update Count on Checkbox Click
+            $(".student-checkbox").click(function() {
+                if (!$(this).prop("checked")) {
+                    $("#selectAll").prop("checked", false);
+                }
+                updateSelectedCount();
+            });
+        
+            function updateSelectedCount() {
+                let count = $(".student-checkbox:checked").length;
+                $("#selectedCount").text(count);
+                $("#deleteCount").text(count);
+                $("#deleteSelected").prop("disabled", count === 0);
+            }
+        
+            // Show Delete Confirmation Modal
+            $("#deleteSelected").click(function() {
+                $("#confirmDeleteModal").modal("show");
+            });
+        
+            // Confirm Deletion
+            $("#confirmDelete").click(function() {
+                let selectedIds = $(".student-checkbox:checked").map(function() {
+                    return $(this).val();
+                }).get();
+        
+                $.ajax({
+                    url: "{% url 'restore_students' %}",
+                    method: "POST",
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        student_ids: selectedIds
+                    },
+                    success: function(response) {
+                        location.reload();
+                    },
+                    error: function() {
+                        alert("Error deleting students.");
+                    }
+                });
+            });
+        });
+        </script>
+        
+
+    <script>
+        function selectDefaultFields() {
+            let pdfRadio = document.getElementById('pdf');
+            let checkboxes = document.querySelectorAll('.export-field');
+    
+            if (pdfRadio.checked) {
+                checkboxes.forEach(checkbox => checkbox.checked = false);  // Uncheck all first
+                document.querySelector('.export-field[value="profile_photo"]').checked = true;
+                document.querySelector('.export-field[value="enqno"]').checked = true;
+                document.querySelector('.export-field[value="registrationno"]').checked = true;
+            }
+        }
+    </script>
+    <script>
+        function downloadFile() {
+            let fileType = document.querySelector('input[name="file_type"]:checked');
+            if (!fileType) {
+                alert("Please select a file format (PDF or Excel)");
+                return;
+            }
+            
+            let selectedFields = Array.from(document.querySelectorAll('.export-field:checked'))
+                                     .map(field => field.value);
+            
+            if (selectedFields.length === 0) {
+                alert("Please select at least one field to export.");
+                return;
+            }
+            
+            // Redirect to backend with selected fields and format
+            window.location.href = `/export-data/?format=${fileType.value}&fields=${selectedFields.join(',')}`;
+        }
+    </script>
+  
+    
+        
+</body>
+</html>
+{% endblock %}

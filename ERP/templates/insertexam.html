@@ -1,0 +1,169 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Management</title>
+ 
+    <script>
+        // Edit Exam
+        function editExam(id, name) {
+            document.getElementById('exam-id').value = id;
+            document.getElementById('exam-name').value = name;
+        }
+
+        // Clear Form
+        function clearForm() {
+            document.getElementById('exam-id').value = "";
+            document.getElementById('exam-name').value = "";
+        }
+    </script>
+</head>
+<body>
+
+
+    
+<div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+    <!-- Add/Edit Form -->
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                        <div class="card-header">
+                            <strong class="card-title">Exam Form</strong>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" id="exam-form" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <input type="hidden" name="exam_id" id="exam-id">
+    
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="exam-name" class="form-label">Exam Name</label>
+                                            <input type="text" name="examname" id="exam-name" class="form-control" placeholder="Enter Exam Name" required>
+                                            <div class="invalid-feedback">
+                                                Please enter the exam name.
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-6 d-flex align-items-end">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                            <button type="button" class="btn btn-secondary" onclick="clearForm()">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    
+        function clearForm() {
+            document.getElementById('exam-form').reset();
+            document.getElementById('exam-id').value = '';
+            document.getElementById('exam-form').classList.remove('was-validated');
+        }
+    </script>
+    
+
+    <!-- <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>S.no</th>
+                <th>Exam Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for exam in exams %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ exam.examname }}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editExam('{{ exam.id }}', '{{ exam.examname }}')">Edit</button>
+                    <a href="?delete_id={{ exam.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this exam?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table> -->
+
+    
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+      
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Existing Exams</strong>
+                        </div>
+                        <div class="card-body">
+                            <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S.no</th>
+                                        <th>Exam Name</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for exam in exams %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ exam.examname }}</td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" onclick="editExam('{{ exam.id }}', '{{ exam.examname }}')">Edit</button>
+                                            <a href="?delete_id={{ exam.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this exam?')">Delete</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+      
+      
+            </div>
+        </div>
+      </div>
+
+</div>
+</div>
+</div>
+</body>
+</html>
+{% endblock %}

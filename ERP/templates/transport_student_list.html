@@ -1,0 +1,63 @@
+{% extends 'non_teaching_staff_base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h3>Student Transport Report</h3>
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label>Transport</label>
+            <select name="transport" class="form-select">
+                <option value="">-- All Transports --</option>
+                {% for transport in transports %}
+                    <option value="{{ transport.vechile_number }}" {% if selected_transport == transport.vechile_number %}selected{% endif %}>{{ transport.vechile_number }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="{% url 'export_transport_pdf' %}?transport={{ selected_transport }}&class={{ selected_class }}&section={{ selected_section }}" class="btn btn-danger ms-2">Export PDF</a>
+            <a href="{% url 'export_transport_excel' %}?transport={{ selected_transport }}&class={{ selected_class }}&section={{ selected_section }}" class="btn btn-success ms-2">Export Excel</a>
+        </div>
+    </form>
+
+    {% if students %}
+    <div class="mt-3">
+        <strong>Total Students:</strong> {{ total_students }}
+    </div>
+{% endif %}
+
+
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Student Name</th>
+                <th>Admission No</th>
+                <th>Class</th>
+                <th>Section</th>
+                <th>Bus No</th>
+                <th>Route</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if students %}
+                {% for student in students %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ student.stdid.studentname }}</td>
+                        <td>{{ student.stdid.registrationno }}</td>
+                        <td>{{ student.stdid.classs }}</td>
+                        <td>{{ student.stdid.section.name }}</td>
+                        <td>{{ student.bus_no }}</td>
+                        <td>{{ student.route }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-center text-danger">No student records found for the selected filter.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    
+</div>
+{% endblock %}

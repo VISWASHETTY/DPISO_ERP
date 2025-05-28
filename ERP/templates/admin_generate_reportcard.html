@@ -1,0 +1,502 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Report Cards</title>
+</head>
+<body>
+    <div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+<div class="container mt-5">
+    <h3 class="mb-4">Generate Report Cards</h3>
+
+    <form id="reportForm" method="post">
+        {% csrf_token %}
+        <div class="row mb-3">
+            <!-- Class Dropdown -->
+            <div class="col-md-4">
+                <label for="class_name" class="form-label">Class</label>
+                <select name="class_name" id="class_name" class="form-control" onchange="loadSections(this.value)">
+                    <option value="">Select Class</option>
+                    {% for class in classes %}
+                        <option value="{{ class.id }}" {% if selected_class == class.id|stringformat:"s" %}selected{% endif %}>
+                            {{ class.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Section Dropdown -->
+            <div class="col-md-4">
+                <label for="section" class="form-label">Section</label>
+                <select name="section" id="section" class="form-control">
+                    <option value="">Select Section</option>
+                    {% for section in sections %}
+                        <option value="{{ section.id }}" {% if selected_section == section.id|stringformat:"s" %}selected{% endif %}>
+                            {{ section.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Exam Dropdown -->
+            <div class="col-md-4">
+                <label for="examSelect" class="form-label">Exam</label>
+                <select id="examSelect" name="exam_id" class="form-control" required>
+                    <option value="">-- Select Exam --</option>
+                    {% for exam in exams %}
+                        <option value="{{ exam.id }}" {% if selected_exam == exam.id|stringformat:"s" %}selected{% endif %}>
+                            {{ exam.examname }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <button type="submit" class="btn btn-primary">Generate</button>
+        </div>
+    </form>
+
+
+    {% if report_data %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Report Card</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            .border-custom {
+                border: 7px solid #006400;
+                height: 750px;
+    
+            }
+            .header-text {
+                color: #006400;
+            }
+            .table-header {
+                background-color: #f0f0f0;
+                text-align: center;
+            }
+            .table-cell {
+                border: 1px solid #000;
+                text-align: center;
+            }
+            .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 20px;
+            font-weight: bold;
+            color: #141d25; 
+        }
+        @media print {
+                .page-break {
+                    page-break-after: always;
+                }
+            }
+            @page {
+                size: A4;
+                margin: 20mm;
+            }
+            
+        </style>
+    </head>
+    <body class="p-4 ">
+        {% for data in report_data %}
+        <div class="page">
+        <div class="border-custom p-4" style="background-color: white;">
+            <div class="mb-4">
+                <img src="{% static 'img/Report_card_header.PNG' %}" width="990" height="100">
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <p><strong>NAME OF THE STUDENT:</strong> {{ data.student.studentname }}</p>
+                    <p><strong>FATHER'S NAME:</strong> {{ data.student.workshifts2.first.father_name }}</p>
+                    <p><strong>CLASS & SECTION:</strong> {{ data.student.classs.name }} - {{ data.student.section.name }}</p>
+                    <p><strong>DATE OF BIRTH:</strong> {{ data.student.dateofbirth|date:"d M, Y" }}</p>
+                    <p><strong>RESIDENTIAL ADDRESS:</strong> {{ data.student.address }}</p>
+                </div>
+                <div>
+                    <p><strong>ADMISSION NO:</strong> {{ data.student.registrationno }} </p>
+                    <p><strong>MOTHER'S NAME:</strong> {{ data.student.workshifts2.first.mother_name }}</p>
+                    <p><strong>AADHAR NO:</strong> {{ data.student.aadharno }}</p>
+                    <p><strong>HOUSE:</strong> {{ data.student.house }}</p>
+                    <p><strong>TELEPHONE NO:</strong> {{ data.student.workshifts2.first.father_mobile }}</p>
+                </div>
+            </div>
+            <table class="w-full mb-4 border-collapse border border-black">
+                <thead class="table-header">
+                    <tr>
+                        <th class="table-cell ">ATTENDANCE</th>
+                        <th class="table-cell "></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="table-cell ">TOTAL NO OF WORKING DAYS</td>
+                        <td class="table-cell  text-center">82</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell ">NUMBER OF DAYS PRESENT</td>
+                        <td class="table-cell  text-center">80</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="w-full mb-4 border-collapse border border-black">
+                <thead class="table-header">
+                    <tr>
+                        <th class="table-cell ">Health Status</th>
+                        <th class="table-cell "></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="table-cell ">Height(cm)</td>
+                        <td class="table-cell  text-center">82</td>
+                    </tr>
+                    <tr>
+                        <td class="table-cell ">Weight(cm)</td>
+                        <td class="table-cell  text-center">80</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div><br>
+    
+    <div class="page">
+        <div class="page-break">
+            <div class="border-custom p-4" style="background-color: white;">
+            <table class="w-full mb-4 border-collapse border border-black">
+                <thead class="table-header">
+                    <tr>
+                        <th class="table-cell ">S.No.</th>
+                        <th class="table-cell ">SCHOLASTIC</th>
+                        <th class="table-cell ">PA (05)</th>
+                        <th class="table-cell ">SE (05)</th>
+                        <th class="table-cell ">MA (05)</th>
+                        <th class="table-cell ">NB (05)</th>
+                        <th class="table-cell ">TERM (80)</th>
+                        <th class="table-cell ">TOTAL (100)</th>
+                        <th class="table-cell ">GRADE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in data.report_data %}
+                    <tr>
+                        <td class="table-cell text-center">{{ subject.sno }}</td>
+                        <td class="table-cell">{{ subject.subject }}</td>
+                        <td class="table-cell text-center">{{ subject.pa }}</td>
+                        <td class="table-cell text-center">{{ subject.se }}</td>
+                        <td class="table-cell text-center">{{ subject.ma }}</td>
+                        <td class="table-cell text-center">{{ subject.nb }}</td>
+                        <td class="table-cell text-center">{{ subject.term }}</td>
+                        <td class="table-cell text-center">{{ subject.total }}</td>
+                        <td class="table-cell text-center">{{ subject.grade }}</td>
+                    </tr>
+                    {% endfor %}
+            
+                    <tr class="table-header">
+                        <td class="table-cell text-center font-bold" colspan="7">TOTAL MARKS</td>
+                        <td class="table-cell text-center font-bold">{{ data.total_obtained }}</td>
+                        <td class="table-cell text-center font-bold">
+                            {% if percentage >= 91 %} A1
+                            {% elif percentage >= 81 %} A2
+                            {% elif percentage >= 71 %} B1
+                            {% elif percentage >= 61 %} B2
+                            {% elif percentage >= 51 %} C1
+                            {% elif percentage >= 41 %} C2
+                            {% else %} D
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr class="table-header">
+                        <td class="table-cell text-center font-bold" colspan="7">TOTAL %</td>
+                        <td class="table-cell text-center font-bold">{{ data.percentage }}</td>
+                        <td class="table-cell text-center font-bold">100</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div><br>
+    
+    <div class="page">
+    <div class="page-break">
+    <div class="border-custom p-4" style="background-color: white;">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <table class="w-full mb-4 border-collapse border border-black">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell">S.No.</th>
+                                <th class="table-cell">SUBJECT</th>
+                                <th class="table-cell">GRADE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for extra in extra_subjects %}
+                            <tr>
+                                <td class="table-cell text-center">{{ forloop.counter }}</td>
+                                <td class="table-cell">{{ extra.subject }}</td>  <!-- Use extra.subject -->
+                                <td class="table-cell text-center">{{ extra.grade }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center">No extra subject grades available</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+        
+                    <table class="w-full mb-4 border-collapse border border-black">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell">CO-SCHOLASTIC AREAS & DISCIPLINE GRADING SCALE</th>
+                                <th class="table-cell">GRADE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th class="table-cell">GRADE</th>
+                                <th class="table-cell text-center">GRADE POINT</th>
+                            </tr>
+                            {% for grade in co_scholastic_grades %}
+                            <tr>
+                                <td class="table-cell">{{ grade.grade }}</td>
+                                <td class="table-cell">{{ grade.grade_point }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center">No grades available</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <!-- <table class="w-full mb-4 border-collapse border border-black">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell ">ATTENDANCE</th>
+                                <th class="table-cell "></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="table-cell ">TOTAL NO OF WORKING DAYS</td>
+                                <td class="table-cell  text-center">82</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">NUMBER OF DAYS PRESENT</td>
+                                <td class="table-cell  text-center">80</td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                    <table class="w-full mb-4 border-collapse border border-black">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell ">SCHOLASTIC AREAS GRADING SYSTEM</th>
+                                <th class="table-cell ">GRADE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="table-cell ">A1</td>
+                                <td class="table-cell  text-center">91-100</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">A2</td>
+                                <td class="table-cell  text-center">81-90</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">B1</td>
+                                <td class="table-cell  text-center">71-80</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">B2</td>
+                                <td class="table-cell  text-center">61-70</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">C1</td>
+                                <td class="table-cell  text-center">51-60</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">C2</td>
+                                <td class="table-cell  text-center">41-50</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">D</td>
+                                <td class="table-cell  text-center">33-40</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">E1</td>
+                                <td class="table-cell  text-center">21-32</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">E2</td>
+                                <td class="table-cell  text-center">00-20</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    
+                    <table class="w-full mb-4 border-collapse border border-black">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" class="table-cell  border border-black">
+                                    <strong>DISCIPLINE:(GRADES A-C) on 3 point grading scale</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell  border border-black w-1/2">
+                                    <strong>Grade</strong>
+                                </td>
+                                <td class="table-cell  border border-black w-1/2 text-center">
+                                    <p>{{ discipline_grade.grade }}</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+    
+                    <table class="w-full mb-4 border-collapse border border-black">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" class="table-cell  border border-black">
+                                    <strong>REMARKS:</strong> {{ remark.remark }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell  border border-black w-1/2">
+                                    <strong>SIGNATURE</strong>
+                                </td>
+                                <td class="table-cell  border border-black w-1/2 text-left">
+                                    <strong><p class="signature"> {{ signature.teacher_signature }}</p>Class Teacher</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="table-cell  border border-black w-1/2 text-center">
+                                    <strong>REPORT CARD GENERATED ON: {{ signature.report_date|date:"d/m/Y" }}</strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <table class="w-full mb-4 border-collapse border border-black">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell ">CO SCHOLASTIC AREAS</th>
+                                <th class="table-cell ">GRADE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="table-cell ">WORK EDUCATION</td>
+                                <td class="table-cell  text-center">A</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">ART EDUCATION</td>
+                                <td class="table-cell  text-center">A</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">HEALTH & PHYSICAL EDUCATION</td>
+                                <td class="table-cell  text-center">A</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">SWIMMING</td>
+                                <td class="table-cell  text-center">A</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">MUSIC</td>
+                                <td class="table-cell  text-center">A</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell ">DANCE</td>
+                                <td class="table-cell  text-center">A</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        
+        <table class="w-full border-collapse border border-black">
+            <tr>
+                <td class="table-cell  text-center"><b>Key</b></td>
+            </tr>
+            <tr>
+                <td class="text-center"><b>PA</b> - PERIODIC ASSESSMENT,&nbsp;&nbsp; <b>SE</b> - SUBJECT ENRICHMENT ACTIVITY,&nbsp;&nbsp; <b>MA</b> - MULTIPLE ASSESSMENT,&nbsp;&nbsp; <b>NB</b> - NOTE BOOK SUBMISSION,&nbsp;&nbsp; <b>AB</b> - ABSENT</td>
+            </tr>
+        </table>
+    </div>
+    </div>
+    </div><br>
+    
+    <div class="page">
+        <div class="page-break">
+          <div class="border-custom p-4 d-flex justify-content-center align-items-center" style="background-color: white; min-height: 600px;">
+            {% if class_photo %}
+              <img src="{{ class_photo.photo.url }}" alt="Class Photo"
+                   class="img-fluid"
+                   style="max-height: 600px; border: 2px solid #ccc; padding: 5px;">
+            {% else %}
+              <p>No class photo available for this class, section, and exam.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </body>
+    </html>
+    {% else %}
+    <p>No students found for the selected class and section.</p>
+{% endif %}
+</div>
+
+<script>
+    function loadSections(classId) {
+        const sectionSelect = document.getElementById("section");
+        sectionSelect.innerHTML = '<option value="">Select Section</option>';
+
+        if (classId) {
+            fetch(`/get_sections3/?class_id=${classId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sections.length > 0) {
+                        data.sections.forEach(section => {
+                            const option = document.createElement("option");
+                            option.value = section.id;
+                            option.textContent = section.name;
+                            sectionSelect.appendChild(option);
+                        });
+                    } else {
+                        const noOption = document.createElement("option");
+                        noOption.textContent = "No sections available";
+                        sectionSelect.appendChild(noOption);
+                    }
+                })
+                .catch(error => console.error("Error loading sections:", error));
+        }
+    }
+</script>
+</div>
+</div>
+</div>
+</body>
+</html>
+{% endblock %}

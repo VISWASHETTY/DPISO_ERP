@@ -1,0 +1,128 @@
+
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+
+
+    <div class="animated fadeIn">
+        
+                <div class="card" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                    <div class="card-header">
+                        <strong class="card-title">Make Class Teacher</strong>
+                    </div>
+                    <div class="card-body">
+                        <form id="registration-form" class="needs-validation" novalidate>
+
+                            <div class="row">
+                            
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="position" class="form-label">Select Teacher</label>
+                                        <select class="form-control" name="teacher" id="position" required>
+                                            <option value="" disabled selected>Select your Teacher</option>
+                                            {% for teacher in teachers %}
+                                            <option value="{{ teacher.id }}">{{ teacher.first_name }} {{ teacher.last_name }}</option>
+                                             {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Please select a Teacher.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="position" class="form-label">Select Class</label>
+                                        <select class="form-control" id="classDropdown" name="class_assigned"  required>
+                                            <option value="" disabled selected>Select your Class</option>
+                                            {% for class in classes %}
+                                                <option value="{{ class.id }}">{{ class.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Please select a Class.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                            
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="position" class="form-label">Select Section</label>
+                                        <select class="form-control" id="sectionDropdown" name="section" required>
+                                            <option value="" disabled selected>Select your Section</option>
+                                            {% for section in sections %}
+                                            <option value="{{ section.id }}" data-class="{{ section.class_assigned.id }}">{{ section.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Please select a Section.
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                           
+                            <button type="submit" class="btn btn-primary mt-3">Register</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+       
+</div>
+</div>
+</div>
+
+
+<script>
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+           
+            var forms = document.getElementsByClassName('needs-validation');
+        
+            Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const classDropdown = document.getElementById("classDropdown");
+        const sectionDropdown = document.getElementById("sectionDropdown");
+
+        classDropdown.addEventListener("change", function () {
+            const selectedClassId = this.value;
+
+            // Show only sections that belong to the selected class
+            Array.from(sectionDropdown.options).forEach(option => {
+                if (option.dataset.class === selectedClassId || option.value === "") {
+                    option.hidden = false;
+                } else {
+                    option.hidden = true;
+                }
+            });
+
+            // Reset selection
+            sectionDropdown.value = "";
+        });
+    });
+</script>
+
+{% endblock %}

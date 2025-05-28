@@ -1,0 +1,207 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<!-- Linking External CSS -->
+<style>
+    /* Container and Layout */
+.container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f3f4f6;
+    padding: 20px;
+}
+
+.form-wrapper {
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 40px;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Title */
+.form-title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Form Group */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+/* Image Preview */
+.image-preview {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.image-preview img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Visibility Options */
+.visibility-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.visibility-options div {
+    display: flex;
+    align-items: center;
+}
+
+.visibility-options input {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+}
+
+/* Buttons */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 14px;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s;
+    text-align: center;
+}
+
+.btn-cancel {
+    background: #6b7280;
+}
+
+.btn-cancel:hover {
+    background: #4b5563;
+}
+
+.btn-submit {
+    background: #3b82f6;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    background: #2563eb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-wrapper {
+        padding: 30px;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+</style>
+<div class="container">
+    <div class="form-wrapper">
+        <h2 class="form-title">Edit Circular</h2>
+
+        <form method="POST" enctype="multipart/form-data" class="form">
+            {% csrf_token %}
+
+            <!-- Title -->
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title" value="{{ circular.title }}" required>
+            </div>
+
+            <!-- Content -->
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea name="content" id="content" rows="5" required>{{ circular.content }}</textarea>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="form-group">
+                <label for="circular_image">Circular Image</label>
+
+                {% if circular.circular_image %}
+                <div class="image-preview">
+                    <img src="{{ circular.circular_image.url }}" alt="Circular Image">
+                </div>
+                {% endif %}
+
+                <input type="file" name="circular_image" id="circular_image">
+            </div>
+
+            <!-- Visibility Options -->
+            <div class="form-group visibility-options">
+                <div>
+                    <input type="checkbox" name="sent_to_students" id="sent_to_students"
+                           {% if circular.sent_to_students %}checked{% endif %}>
+                    <label for="sent_to_students">Visible to Students</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" name="sent_to_teachers" id="sent_to_teachers"
+                           {% if circular.sent_to_teachers %}checked{% endif %}>
+                    <label for="sent_to_teachers">Visible to Teachers</label>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="form-actions">
+                <a href="{% url 'circular_list' %}" class="btn btn-cancel">Cancel</a>
+                <button type="submit" class="btn btn-submit">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

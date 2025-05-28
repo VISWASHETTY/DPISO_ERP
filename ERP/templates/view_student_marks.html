@@ -1,0 +1,161 @@
+{% extends 'teacher_base.html' %}
+
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marksheet</title>
+   
+</head>
+<body>
+
+    <div class="container1">
+    
+        <!-- Filter Section -->
+        <form method="GET" action="" class="filter-bar">
+            <!-- <div>
+                <label for="class">Class:</label>
+                <select name="class" id="class">
+                    <option value="">All</option>
+                    {% for c in classes %}
+                    <option value="{{ c.student__classs__id }}" {% if selected_class == c.student__classs__id|stringformat:"s" %}selected{% endif %}>
+                        {{ c.student__classs__name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+    
+            <div>
+                <label for="section">Section:</label>
+                <select name="section" id="section">
+                    <option value="">All</option>
+                    {% for s in sections %}
+                    <option value="{{ s.student__section__id }}" {% if selected_section == s.student__section__id|stringformat:"s" %}selected{% endif %}>
+                        {{ s.student__section__name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div> -->
+    
+            <div>
+                <label for="exam">Exam:</label>
+                <select name="exam" id="exam">
+                    <option value="">All</option>
+                    {% for e in exams %}
+                    <option value="{{ e.exam__id }}" {% if selected_exam == e.exam__id|stringformat:"s" %}selected{% endif %}>
+                        {{ e.exam__examname }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+    
+            <button type="submit" class="mt-2">Filter</button>
+        </form>
+
+<!-- <div class="container">
+    <div class="search-bar">
+        <input type="text" placeholder="Search by name, mobile, username...">
+        <button><i class="fas fa-search"></i></button>
+    </div> -->
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+      
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Marks Table</strong>
+                        </div>
+                        <div class="card-body">
+                            <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Student</th>
+                                        <th>Class</th>
+                                        <th>Obt. Marks</th>
+                                        <th>Max. Marks</th>
+                                        <th>Rank</th>
+                                        <th>Performance</th>
+                                        <th>Exam</th>
+                                        <!-- <th>Created By</th>
+                                        <th>Created At</th> -->
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for mark in marks %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>
+                                            <strong>Name:</strong> {{ mark.student__studentname }}<br>
+                                            <strong>Mobile No.:</strong> {{ mark.student__mbno }}<br>
+                                            <strong>Admission No:</strong> {{ mark.student__registrationno }}
+                                        </td>
+                                        <td>{{ mark.student__classs__name }} - {{ mark.student__section__name }}</td>
+                                        <td>{{ mark.obtained_marks }}</td>
+                                        <td>{{ mark.total_marks }}</td>  <!-- You can replace with max marks if available -->
+                                        <td>--</td>  <!-- Add logic for rank calculation -->
+                                        <td>
+                                            <strong>Percentage:</strong> {{ mark.percentage }}% <br>
+                                            <strong>Result:</strong> {% if mark.percentage >= 35 %} Pass {% else %} Fail {% endif %}<br>
+                                            <strong>Performance:</strong> {% if mark.percentage >= 75 %}
+                                                Excellent
+                                            {% elif mark.marks >= 50 %}
+                                                Satisfactory
+                                            {% else %}
+                                                Poor
+                                            {% endif %}
+                                        </td>
+                                        <!-- <td>
+                                            <div class="toggle {% if mark.marks >= 35 %}active{% endif %}"></div>
+                                        </td> -->
+                                        <td>{{ mark.exam__examname }}</td>
+                                        <!-- <td>{{ mark.teacher__first_name }} {{ mark.teacher__last_name }}</td>
+                                        <td>{{ mark.created_at|date:"d M, Y h:i A" }}</td> -->
+                                        <td class="actions">
+                                            <a href="{% url 'view_report_card' mark.student__id mark.exam__id %}">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+
+                                            <a href="{% url 'edit_student_marks' mark.student__id mark.exam__id %}">
+                                                <i class="fa fa-pencil-square-o"></i>
+                                            </a>
+
+                                            <a href="{% url 'download_report_card' mark.student__id mark.exam__id %}">
+                                                <i class="fa fa-download"></i>
+                                            </a>
+                            
+                                            <form action="{% url 'delete_student_marks' mark.mark_id %}" method="POST" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" 
+                                                    onclick="return confirm('Are you sure you want to delete this record?')" 
+                                                    style="background: none; border: none; cursor: pointer; color: #dc3545; font-size: 18px;">
+                                                <i class="fa fa-trash-o"></i>  <!-- Trash icon -->
+                                            </button>
+                                        </form>
+                                        </td>
+                                    </tr>
+                                   
+                                    {% endfor %}
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+</div>
+
+</body>
+</html>
+
+
+{% endblock %}

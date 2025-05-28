@@ -1,0 +1,187 @@
+{% load static %}
+
+<!-- Floating Menu CSS -->
+<style>
+  .floating-plus-btn {
+    position: fixed;
+    bottom: 80px;
+    right: 80px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #ffd700, #ffeb3b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1000;
+  }
+
+  .floating-plus-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5);
+  }
+
+  .floating-plus-btn.active {
+    transform: rotate(45deg);
+  }
+
+  .icon-menu {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    top: -80px;
+    left: -80px;
+    display: none;
+    pointer-events: none;
+  }
+
+  .floating-plus-btn.active .icon-menu {
+    display: block;
+  }
+
+  .icon-item {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background: #ffffff;
+    border: 3px solid #ffd700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transform: scale(0);
+    pointer-events: auto;
+  }
+
+  .floating-plus-btn.active .icon-item {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .icon-item:hover {
+    transform: scale(1.2);
+    background: #ffd700;
+    color: #ffffff;
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.6);
+  }
+
+  .icon-item i {
+    font-size: 1.2rem;
+  }
+
+  .icon-item .hover-text {
+    position: absolute;
+    left: -120px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(90deg, #2b2b2b, #3e3e3e);
+    color: #ffd700;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .icon-item:hover .hover-text {
+    opacity: 1;
+    visibility: visible;
+    left: -130px;
+  }
+
+  .floating-plus-btn.active .icon-item:nth-child(1) { left: 87px; top: 0; transition-delay: 0.05s; }
+  .floating-plus-btn.active .icon-item:nth-child(2) { left: 151px; top: 30px; transition-delay: 0.1s; }
+  .floating-plus-btn.active .icon-item:nth-child(3) { left: 171px; top: 87px; transition-delay: 0.15s; }
+  .floating-plus-btn.active .icon-item:nth-child(4) { left: 151px; top: 145px; transition-delay: 0.2s; }
+  .floating-plus-btn.active .icon-item:nth-child(5) { left: 87px; top: 165px; transition-delay: 0.25s; }
+  .floating-plus-btn.active .icon-item:nth-child(6) { left: 30px; top: 145px; transition-delay: 0.3s; }
+  .floating-plus-btn.active .icon-item:nth-child(7) { left: 10px; top: 87px; transition-delay: 0.35s; }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  .floating-plus-btn {
+    animation: pulse 2s infinite;
+  }
+</style>
+
+<!-- Floating Plus Button HTML -->
+<div class="floating-plus-btn" id="plusButton">
+  <i class="fas fa-plus text-2xl text-white"></i>
+  <div class="icon-menu">
+    <a href="{% url 'admin_login' %}" class="icon-item">
+      <i class="fas fa-home"></i>
+      <span class="hover-text">Dashbaord</span>
+    </a>
+    <a href="{% url 'insert_student_admission' %}" class="icon-item">
+      <i class="fas fa-users"></i>
+      <span class="hover-text">Add Student</span>
+    </a>
+    <a href="{% url 'assign_teacher' %}" class="icon-item">
+      <i class="fas fa-chalkboard-teacher"></i>
+      <span class="hover-text">Add Teacher</span>
+    </a>
+    <a href="{% url 'add_class' %}" class="icon-item">
+      <i class="fas fa-school"></i>
+      <span class="hover-text">Add Class</span>
+    </a>
+    <a href="{% url 'add_section' %}" class="icon-item">
+      <i class="fas fa-layer-group"></i>
+      <span class="hover-text">Add Section</span>
+    </a>
+    <a href="{% url 'add_subject' %}" class="icon-item">
+      <i class="fas fa-money-bill"></i>
+      <span class="hover-text">Add Subject</span>
+    </a>
+    <a href="{% url 'student_list' %}" class="icon-item">
+      <i class="fas fa-cog"></i>
+      <span class="hover-text">Attendence</span>
+    </a>
+  </div>
+</div>
+
+<!-- JavaScript for Toggle Functionality -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const plusButton = document.getElementById('plusButton');
+    const iconMenu = plusButton.querySelector('.icon-menu');
+    const iconLinks = iconMenu.querySelectorAll('.icon-item');
+
+    // Toggle menu on plus button click
+    plusButton.addEventListener('click', function(e) {
+      // Only toggle if the click is on the plus button itself, not an icon
+      if (e.target === plusButton || e.target === plusButton.querySelector('i')) {
+        e.preventDefault(); // Prevent default only for plus button toggle
+        this.classList.toggle('active');
+      }
+    });
+
+    // Allow icon clicks to navigate without closing menu prematurely
+    iconLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        // Navigation will happen naturally via the <a> tag href
+        // No need to prevent default here
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+      if (!plusButton.contains(event.target)) {
+        plusButton.classList.remove('active');
+      }
+    });
+  });
+</script>

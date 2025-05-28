@@ -1,0 +1,111 @@
+{% extends 'student_base.html' %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+<div class="content mt-3">
+    <div class="animated fadeIn">
+        <div class="row">
+  
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong class="card-title">Fee Table</strong>
+                    </div><br><br>
+
+        <!-- Fee Summary -->
+        <div class="row mb-4 text-center">
+            <div class="col-md-3 col-6 mb-2">
+                <div class="detail-item"><strong>Original Amount:</strong> {{ o.original_amount }}</div>
+            </div>
+            <div class="col-md-3 col-6 mb-2">
+                <div class="detail-item"><strong>Discount Percentage:</strong> {{ o.discount_percentage }}</div>
+            </div>
+            <div class="col-md-3 col-6 mb-2">
+                <div class="detail-item"><strong>Discount Amount:</strong> {{ o.discount }}</div>
+            </div>
+            <div class="col-md-3 col-6 mb-2">
+                <div class="detail-item"><strong>Total Amount:</strong> {{ o.total_amount }}</div>
+            </div>
+        </div>
+
+        
+                            <div class="card-body">
+                                <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 8%;">Month</th>
+                                            <th style="width: 7%;">Mar</th>
+                                            <th style="width: 7%;">Apr</th>
+                                            <th style="width: 7%;">May</th>
+                                            <th style="width: 7%;">Jun</th>
+                                            <th style="width: 7%;">Jul</th>
+                                            <th style="width: 7%;">Aug</th>
+                                            <th style="width: 7%;">Sep</th>
+                                            <th style="width: 7%;">Oct</th>
+                                            <th style="width: 7%;">Nov</th>
+                                            <th style="width: 7%;">Dec</th>
+                                            <th style="width: 7%;">Jan</th>
+                                            <th style="width: 7%;">Feb</th>
+                                            <th style="width: 10%;">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Fee Amount</strong></td>
+                                            <td>-</td><td>-</td><td>-</td>
+                                            <td>{{ o.part1 }}</td>
+                                            <td>-</td><td>-</td><td>-</td>
+                                            <td>{{ o.part2 }}</td>
+                                            <td>-</td><td>-</td>
+                                            <td>{{ o.part3 }}</td>
+                                            <td>-</td>
+                                            <td class="bg-warning"><strong>{{ o.total_amount }}</strong></td>
+                                        </tr>
+                    
+                                        <!-- Paid Amount Row -->
+                                        <tr>
+                                            <td><strong>Paid Amount</strong></td>
+                                            <td>-</td><td>-</td><td>-</td>
+                                            <td>{{ paid1 }}</td>
+                                            <td>-</td><td>-</td><td>-</td>
+                                            <td>{{ paid2 }}</td>
+                                            <td>-</td><td>-</td>
+                                            <td>{{ paid3 }}</td>
+                                            <td>-</td>
+                                            <td class="bg-success"><strong>{{ total_paid }}</strong></td>
+                                        </tr>
+                    
+                                        <!-- Balance Amount Row -->
+                                        <tr>
+                                            <td><strong>Balance Amount</strong></td>
+                                            <td>-</td><td>-</td><td>-</td>
+                                            <td>{{ balance1 }}</td>
+                                            <td>-</td><td>-</td><td>-</td>
+                                            <td>{{ balance2 }}</td>
+                                            <td>-</td><td>-</td>
+                                            <td>{{ balance3 }}</td>
+                                            <td>-</td>
+                                            <td class="bg-danger"><strong>{{ total_balance }}</strong></td>
+                                        </tr>
+                                      
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+<!-- Payment Button -->
+<div class="col-12 text-center">
+    <a href="{% url 'student_fee_view' o.id %}" class="btn btn-primary">💰 Pay Now</a>
+</div>
+
+</div>
+    </div>
+</div>
+
+{% endblock %}

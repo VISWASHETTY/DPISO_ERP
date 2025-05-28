@@ -1,0 +1,192 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Lead</title>
+</head>
+<body>
+<div class="content-wrapper">
+<div class="container-full">
+    <!-- Header with buttons -->
+    <div class="content-header d-flex justify-content-between align-items-center mb-3">
+        <h2>Edit Lead</h2>
+        <div class="d-flex gap-2">
+            <!-- Update Button -->
+            <button type="submit" form="updateForm" class="btn btn-primary">Update Lead</button>
+
+            <!-- Delete Button -->
+            <form method="post" action="" onsubmit="return confirm('Are you sure you want to delete this lead?');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+
+            <!-- Back Button -->
+            <a href="{% url 'leads_list' %}" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+
+    <form method="post" id="updateForm">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="update">
+        <div class="modal-body">
+          <!-- Admission Details -->
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label>Admission Class</label>
+              <select name="admission_class" class="form-control">
+                <option value="">-- Select Class --</option>
+                {% for i in classes1 %}
+                    <option value="{{ i.name }}" {% if i.name == lead.admission_class %}selected{% endif %}>{{ i.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label>Source</label>
+              <select name="source" class="form-control" >
+                <option value="">-- Select Source --</option>
+                {% for src in aaaa %}
+                <option value="{{ src.id }}" {% if src.name == lead.status %}selected{% endif %}>{{ src.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label>Referred By</label>
+              <input type="text" name="referred_by" class="form-control" value="{{ lead.referred_by }}">
+            </div>
+          </div>
+
+          <!-- Personal Details -->
+          <h5>Personal Details</h5>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label>First Name</label>
+              <input type="text" name="first_name" class="form-control" value="{{ lead.first_name }}">
+            </div>
+            <div class="col-md-4">
+              <label>Last Name</label>
+              <input type="text" name="last_name" class="form-control" value="{{ lead.last_name }}">
+            </div>
+            <div class="col-md-4">
+              <label>Email Address</label>
+              <input type="email" name="email" class="form-control" value="{{ lead.email }}">
+            </div>
+            <div class="col-md-4">
+              <label>Mobile No.</label>
+              <input type="text" name="mobile" class="form-control" value="{{ lead.mobile }}">
+            </div>
+            <div class="col-md-4">
+              <label>Gender</label>
+              <select name="gender" class="form-control">
+                <option value="Male" {% if lead.gender == "Male" %}selected{% endif %}>Male</option>
+                <option value="Female" {% if lead.gender == "Female" %}selected{% endif %}>Female</option>
+                <option value="Other" {% if lead.gender == "Other" %}selected{% endif %}>Other</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label>Date of Birth</label>
+              <input type="date" name="dob" class="form-control" value="{{ lead.dob|date:'Y-m-d' }}">
+            </div>
+          </div>
+
+          <!-- Parents Details -->
+          <h5><strong>Parents Details:</strong></h5>
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Details</th>
+                <th>Mother</th>
+                <th>Father/Guardian</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Name</td>
+                <td><input type="text" name="mother_name" class="form-control" value="{{ lead.mother_name }}"></td>
+                <td><input type="text" name="father_name" class="form-control" value="{{ lead.father_name }}"></td>
+              </tr>
+              <tr>
+                <td>Qualification</td>
+                <td><input type="text" name="mother_qualification" class="form-control" value="{{ lead.mother_qualification }}"></td>
+                <td><input type="text" name="father_qualification" class="form-control" value="{{ lead.father_qualification }}"></td>
+              </tr>
+              <tr>
+                <td>Residential Address</td>
+                <td><input type="text" name="mother_res_address" class="form-control" value="{{ lead.mother_res_address }}"></td>
+                <td><input type="text" name="father_res_address" class="form-control" value="{{ lead.father_res_address }}"></td>
+              </tr>
+              <tr>
+                <td>Occupation</td>
+                <td><input type="text" name="mother_occupation" class="form-control" value="{{ lead.mother_occupation }}"></td>
+                <td><input type="text" name="father_occupation" class="form-control" value="{{ lead.father_occupation }}"></td>
+              </tr>
+              <tr>
+                <td>Official Address</td>
+                <td><input type="text" name="mother_official_address" class="form-control" value="{{ lead.mother_official_address }}"></td>
+                <td><input type="text" name="father_official_address" class="form-control" value="{{ lead.father_official_address }}"></td>
+              </tr>
+              <tr>
+                <td>Annual Income</td>
+                <td><input type="text" name="mother_income" class="form-control" value="{{ lead.mother_income }}"></td>
+                <td><input type="text" name="father_income" class="form-control" value="{{ lead.father_income }}"></td>
+              </tr>
+              <tr>
+                <td>Email Address</td>
+                <td><input type="email" name="mother_email" class="form-control" value="{{ lead.mother_email }}"></td>
+                <td><input type="email" name="father_email" class="form-control" value="{{ lead.father_email }}"></td>
+              </tr>
+              <tr>
+                <td>Mobile No.</td>
+                <td><input type="text" name="mother_mobile" class="form-control" value="{{ lead.mother_mobile }}"></td>
+                <td><input type="text" name="father_mobile" class="form-control" value="{{ lead.father_mobile }}"></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Religion & Category -->
+          <h5>Religion & Category</h5>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label>Nationality</label>
+              <input type="text" name="nationality" class="form-control" value="{{ lead.nationality }}">
+            </div>
+            <div class="col-md-4">
+              <label>Religion</label>
+              <input type="text" name="religion" class="form-control" value="{{ lead.religion }}">
+            </div>
+            <div class="col-md-4">
+              <label>Category</label>
+              <input type="text" name="category" class="form-control" value="{{ lead.category }}">
+            </div>
+            <div class="col-md-4">
+              <label>Aadhar No.</label>
+              <input type="text" name="aadhar_no" class="form-control" value="{{ lead.aadhar_no }}">
+            </div>
+          </div>
+
+          <!-- Last School -->
+          <h5>Last School Details (If Any)</h5>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label>Name & Address of School</label>
+              <input type="text" name="last_school_name" class="form-control" value="{{ lead.last_school_name }}">
+            </div>
+            <div class="col-md-4">
+              <label>Attended Class</label>
+              <input type="text" name="last_attended_class" class="form-control" value="{{ lead.last_attended_class }}">
+            </div>
+            <div class="col-md-4">
+              <label>Last School Affiliated To</label>
+              <input type="text" name="last_school_affiliated_to" class="form-control" value="{{ lead.last_school_affiliated_to }}">
+            </div>
+          </div>
+        </div>
+    </form>
+</div>
+</div>
+</body>
+</html>
+{% endblock %}

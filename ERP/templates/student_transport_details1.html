@@ -1,0 +1,115 @@
+{% extends 'student_base.html' %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+<div class="container mt-5">
+
+    {% if absent_today %}
+    <div class="alert alert-warning d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <div>You were marked <strong>Absent</strong> in transport today.</div>
+    </div>
+    {% endif %}
+
+    {% if transport %}
+    <div class="card border-0 shadow-lg p-4 mb-5">
+        <h4 class="mb-4 text-primary text-center">
+            <i class="bi bi-bus-front-fill me-2"></i>My Transport Details
+        </h4>
+
+        <div class="row mb-3">
+            <div class="col-md-6 mb-3">
+                <div class="bg-light rounded-3 p-3 h-100">
+                    <h6 class="text-muted mb-1">Vechile Name</h6>
+                    <p class="mb-0 fw-semibold">{{ transport.vechile_name }}</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="bg-light rounded-3 p-3 h-100">
+                    <h6 class="text-muted mb-1">Vechile Number</h6>
+                    <p class="mb-0 fw-semibold">{{ transport.vechile_number }}</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="bg-light rounded-3 p-3 h-100">
+                    <h6 class="text-muted mb-1">Route</h6>
+                    <p class="mb-0 fw-semibold">{{ transport.route.name }}</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="bg-light rounded-3 p-3 h-100">
+                    <h6 class="text-muted mb-1">Start Point</h6>
+                    <p class="mb-0 fw-semibold">{{ transport.route.start_point }}</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="bg-light rounded-3 p-3 h-100">
+                    <h6 class="text-muted mb-1">End Point</h6>
+                    <p class="mb-0 fw-semibold">{{ transport.route.end_point }}</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="bg-light rounded-3 p-3 h-100">
+                    <h6 class="text-muted mb-1">Stops</h6>
+                    <p class="mb-0 fw-semibold">{{ transport.route.stops }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="bg-light rounded-3 p-3 h-100">
+                    <h6 class="text-muted mb-1">Driver Name</h6>
+                    {% if driver %}
+                        <p class="mb-0 fw-semibold">{{ driver.name }}</p>
+                    {% else %}
+                        <p class="mb-0 text-danger">Not Assigned</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="bg-light rounded-3 p-3 h-100">
+                    <h6 class="text-muted mb-1">Driver Contact</h6>
+                    {% if driver %}
+                        <p class="mb-0 fw-semibold">{{ driver.phone }}</p>
+                    {% else %}
+                        <p class="mb-0 text-muted">N/A</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="bg-light rounded-3 p-3 h-100">
+                    <h6 class="text-muted mb-1">Driver License</h6>
+                    {% if driver %}
+                        <p class="mb-0 fw-semibold">{{ driver.license_number }}</p>
+                    {% else %}
+                        <p class="mb-0 text-muted">N/A</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="bg-light rounded-3 p-3 h-100">
+                    <h6 class="text-muted mb-1">Driver Addresst</h6>
+                    {% if driver %}
+                        <p class="mb-0 fw-semibold">{{ driver.address }}</p>
+                    {% else %}
+                        <p class="mb-0 text-muted">N/A</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-danger text-center" role="alert">
+        <i class="bi bi-exclamation-circle-fill me-2"></i>
+        You are not assigned to any transport.
+    </div>
+    {% endif %}
+
+</div>
+</div>
+    </div>
+</div>
+{% endblock %}

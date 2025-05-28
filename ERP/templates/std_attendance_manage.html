@@ -1,0 +1,90 @@
+{% extends 'teacher_base.html' %}
+
+{% block content %}
+
+{% load static %}
+<div class="container mt-4">
+    <h2 class="mb-3">Student Attendance Records</h2>
+
+    <!-- Date Input for Filtering -->
+    <div class="container mt-4">
+                        <form id="attendanceForm" method="GET">
+                            <div class="mb-3">
+                                <label for="dateInput" class="form-label">Select Date:</label>
+                                <input type="date" id="dateInput" name="date" class="form-control" required>
+                                <div class="invalid-feedback">
+                                    Please select a valid date.
+                                </div>
+                            </div>
+    
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary" onclick="return validateForm()">Search</button>
+                            </div>
+                        </form>
+    </div>
+    
+    <script>
+        // Custom form validation for client-side checks
+        function validateForm() {
+            var dateInput = document.getElementById("dateInput");
+            if (!dateInput.value) {
+                dateInput.classList.add("is-invalid");
+                return false;
+            }
+            return true;
+        }
+    
+        // Basic JavaScript to remove the invalid feedback once user selects a valid date
+        document.getElementById("dateInput").addEventListener("input", function () {
+            if (this.value) {
+                this.classList.remove("is-invalid");
+            }
+        });
+    </script>
+    
+
+    <!-- Display Attendance Table -->
+    {% if attendance_records %}
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+      
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Attendance</strong>
+                        </div>
+                        <div class="card-body">
+                            <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for record in attendance_records %}
+            <tr>
+                <td>{{ record.student.studentname }}</td>
+                <td>{{ record.status }}</td>
+                <td>{{ record.date }}</td>
+            </tr>
+            {% endfor %}
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+      
+      
+            </div>
+        </div>
+      </div>
+    {% elif request.GET.date %}
+    <p class="text-center mt-4">No attendance records found for the selected date.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

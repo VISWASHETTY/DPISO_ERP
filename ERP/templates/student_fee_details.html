@@ -1,0 +1,217 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+    <!-- Filter Form -->
+    <form method="GET" class="mb-4">
+        <div class="row g-3">
+            
+            <!-- Class Dropdown -->
+            <div class="col-md-3">
+                <label for="class" class="form-label">Class</label>
+                <select name="class" id="class" class="form-control" onchange="loadSections(this.value)">
+                    <option value="">Select Class</option>
+                    {% for class in classes %}
+                    <option value="{{ class.id }}" {% if selected_class == class.id|stringformat:"s" %}selected{% endif %}>
+                        {{ class.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Section Dropdown -->
+            <div class="col-md-3">
+                <label for="section" class="form-label">Section</label>
+                <select name="section" id="section" class="form-control">
+                    <option value="">Select Section</option>
+                    {% for section in sections %}
+                    <option value="{{ section.id }}" {% if selected_section == section.id|stringformat:"s" %}selected{% endif %}>
+                        {{ section.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Student Name Filter -->
+            <div class="col-md-3">
+                <label for="studentname" class="form-label">Student Name</label>
+                <input type="text" name="studentname" id="studentname" class="form-control" 
+                       placeholder="Enter Student Name">
+            </div>
+
+            <!-- Registration Number Filter -->
+            <div class="col-md-3">
+                <label for="registrationno" class="form-label">Registration No</label>
+                <input type="text" name="registrationno" id="registrationno" class="form-control" 
+                       placeholder="Enter Registration No">
+            </div>
+
+            <div class="col-12 text-center ">
+                <button type="submit" class="btn btn-primary mt-2">Filter</button>
+            </div>
+        </div>
+    </form>
+    
+
+    <!-- Display Fee Data -->
+    <!-- <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover shadow-sm">
+            <thead class="thead-dark">
+                <tr class="text-center">
+                    <th>S.no</th>
+                    <th>Admission No</th>
+                    <th>Student Name</th>
+                    <th>Class</th>
+                    <th>Section</th>
+                    <th>Original Fee</th>
+                    <th>Discount</th>
+                    <th>Discount %</th>
+                    <th>Fee After Discount</th>
+                    <th>Part 1</th>
+                    <th>Part 2</th>
+                    <th>Part 3</th>
+                    <th>Paid Amount</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if fee_details %}
+                    {% for fee in fee_details %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ fee.stdid.registrationno }}</td>
+                        <td>{{ fee.stdid.studentname }}</td>
+                        <td>{{ fee.stdid.classs }}</td>
+                        <td>{{ fee.stdid.section.name }}</td>
+                        <td>₹{{ fee.original_amount }}</td>
+                        <td>₹{{ fee.discount }}</td>
+                        <td>{{ fee.discount_percentage }}</td>
+                        <td>₹{{ fee.total_amount }}</td>
+                        <td>₹{{ fee.part1 }}</td>
+                        <td>₹{{ fee.part2 }}</td>
+                        <td>₹{{ fee.part3 }}</td>
+                        
+               
+                        <td>₹{{ fee.paid_amount }}</td>
+                        <td>₹{{ fee.balance }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="12" class="text-center text-danger">No fee details found</td>
+                </tr>
+                {% endif %}
+            </tbody>
+            
+            
+        </table>
+    </div> -->
+
+
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+      
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Students's Fee's Details</strong>
+                        </div>
+                        <div class="card-body">
+                            <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S.no</th>
+                                       
+                                        <th>Student Details</th>
+                                        
+                                        <th>Original Fee</th>
+                                        <th>Discount</th>
+                                        <th>Discount %</th>
+                                        <th>Fee After Discount</th>
+                                        <th>Terms</th>
+                                        
+                                        <th>Paid Amount</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if fee_details %}
+                                        {% for fee in fee_details %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                           
+                                            <td>{{ fee.stdid.registrationno }}-{{ fee.stdid.studentname }}
+                                                {{ fee.stdid.classs }}-{{ fee.stdid.section.name }}
+
+                                            </td>
+                                           
+                                            <td>₹{{ fee.original_amount }}</td>
+                                            <td>₹{{ fee.discount }}</td>
+                                            <td>{{ fee.discount_percentage }}</td>
+                                            <td>₹{{ fee.total_amount }}</td>
+                                            <td>Term1-₹{{ fee.part1 }}<br>
+                                                Term2-₹{{ fee.part2 }}<br>
+                                                Term3-₹{{ fee.part3 }}
+                                            </td>
+                                           
+                                            <td>₹{{ fee.paid_amount1 }}0</td>
+                                            <td>₹{{ fee.total_amount }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="12" class="text-center text-danger">No fee details found</td>
+                                    </tr>
+                                    {% endif %}
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+      
+      
+            </div>
+        </div>
+      </div>
+</div>
+</div>
+</div>
+
+
+<script>
+    // AJAX function to load sections dynamically based on the selected class
+    function loadSections(classId) {
+        const sectionSelect = document.getElementById("section");
+        sectionSelect.innerHTML = '<option value="">Select Section</option>';
+
+        if (classId) {
+            fetch(`/get_sections2/?class_id=${classId}`)  // Ensure the URL matches the `urls.py`
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sections.length > 0) {
+                        data.sections.forEach(section => {
+                            const option = document.createElement("option");
+                            option.value = section.id;
+                            option.textContent = section.name;
+                            sectionSelect.appendChild(option);
+                        });
+                    } else {
+                        const noOption = document.createElement("option");
+                        noOption.textContent = "No sections available";
+                        sectionSelect.appendChild(noOption);
+                    }
+                })
+                .catch(error => console.error("Error loading sections:", error));
+        }
+    }
+</script>
+
+{% endblock %}

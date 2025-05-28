@@ -1,0 +1,47 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- templates/transport_fee_form.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transport Fee</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Set Transport Fee</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="distance" class="form-label">Distance</label>
+                    <select name="distance" id="distance" class="form-select" required>
+                        <option value="">Select Distance</option>
+                        <option value="below_5">Below 5km</option>
+                        <option value="above_5">Above 5km</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="fee" class="form-label">Fee (₹)</label>
+                    <input type="number" name="fee" id="fee" class="form-control" step="0.01" required>
+                </div>
+                <button type="submit" class="btn btn-success">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+    </div>
+</body>
+</html>
+{% endblock %}

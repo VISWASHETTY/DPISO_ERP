@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Email OTP Login</title>
+</head>
+<body>
+  <h2>Email OTP Login</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <p style="color: {% if message.tags == 'error' %}red{% else %}green{% endif %};">
+        {{ message }}
+      </p>
+    {% endfor %}
+  {% endif %}
+
+  {% if login_success %}
+    <h3 style="color: green;">Welcome! Login Successful 🎉</h3>
+  {% else %}
+    <form method="POST">
+      {% csrf_token %}
+      
+      {% if not email_sent %}
+        <label>Email:</label>
+        <input type="email" name="email" placeholder="Enter email" required>
+        <button type="submit" name="send_otp">Send OTP</button>
+      {% else %}
+        <p>Email: <b>{{ email }}</b></p>
+        <label>Enter OTP:</label>
+        <input type="text" name="otp" placeholder="Enter OTP" required>
+        <button type="submit" name="verify_otp">Verify OTP</button>
+      {% endif %}
+    </form>
+  {% endif %}
+</body>
+</html>

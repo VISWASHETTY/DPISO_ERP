@@ -1,0 +1,37 @@
+{% extends 'student_base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Exam</title>
+</head>
+<body>
+    <div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+    <div class="container mt-5">
+        <h2>Select Exam</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="exam" class="form-label">Choose Exam</label>
+                <select name="exam" id="exam" class="form-control">
+                    <option value="" disabled selected>Select an exam</option>
+                    {% for exam in exams %}
+                        <option value="{{ exam.id }}">{{ exam.examname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    </div>
+    </div>
+</div>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+{% load static %}
+
+<div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+<div class="content mt-3">
+    <div class="animated fadeIn">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 8px;">
+            <div class="card-header">
+              <strong class="card-title">Create Event</strong>
+            </div>
+            <div class="card-body">
+              <form method="POST" class="needs-validation" novalidate>
+                {% csrf_token %}
+  
+                <div class="row g-3">
+                  <div class="col-md-12">
+                    <label class="form-label">Event Title:</label>
+                    <input type="text" name="title" class="form-control" placeholder="Enter event title" required>
+                    <div class="invalid-feedback">Please enter the event title.</div>
+                  </div>
+  
+                  <div class="col-md-12">
+                    <label class="form-label">Description:</label>
+                    <textarea name="description" rows="4" class="form-control" placeholder="Enter event description"></textarea>
+                  </div>
+  
+                  <div class="col-md-6">
+                    <label class="form-label">Date & Time:</label>
+                    <input type="datetime-local" name="event_date" class="form-control" required>
+                    <div class="invalid-feedback">Please select a date and time.</div>
+                  </div>
+  
+                  <div class="col-md-6">
+                    <label class="form-label">Venue:</label>
+                    <input type="text" name="venue" class="form-control" placeholder="Enter venue" required>
+                    <div class="invalid-feedback">Venue is required.</div>
+                  </div>
+                </div>
+  
+                <div class="text-center mt-4">
+                  <button type="submit" class="btn btn-success px-4">Create Event</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  <script>
+    // Bootstrap form validation script
+    (function () {
+      'use strict';
+      window.addEventListener('load', function () {
+        var forms = document.getElementsByClassName('needs-validation');
+        Array.prototype.forEach.call(forms, function (form) {
+          form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      }, false);
+    })();
+  </script>
+  
+
+{% endblock %}

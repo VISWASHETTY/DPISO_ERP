@@ -1,0 +1,314 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+{% load static %}
+
+
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- SweetAlert2 for nice popups -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+
+<style>
+    /* No Scrollbar for Calendar */
+    #calendar {
+        overflow: hidden !important;
+        padding: 10px;
+        border-radius: 10px;
+        background: #ffffff;
+    }
+
+    /* Calendar Dark Mode */
+    #calendar.dark-mode {
+        background: #1e1e1e;
+    }
+
+    .dark-mode .fc-daygrid-day {
+        background-color: #2c2c2c;
+        color: #ffffff;
+    }
+
+    .dark-mode .fc-day-today {
+        background-color: #333333 !important;
+    }
+
+    .dark-mode .fc-event {
+        background-color: #3a3a3a !important;
+        border: 1px solid #555555 !important;
+    }
+
+    .dark-mode .fc-col-header-cell {
+        background-color: #1e1e1e !important;
+        color: white !important;
+    }
+
+    .dark-mode .fc-scrollgrid {
+        border-color: #444444;
+    }
+
+    /* Multiline Titles */
+    .fc-event-title {
+        white-space: pre-line;
+    }
+</style>
+
+
+<div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+    <!-- Dark Mode Toggle -->
+    <div class="text-end mb-3">
+        <button id="darkModeToggle" class="btn btn-outline-secondary">
+            <i id="darkModeIcon" class="bi bi-moon-fill"></i> 
+        </button>
+    </div>
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                        <div class="card-header">
+                            <strong class="card-title">Student Attendance Records</strong>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" id="class-form" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <input type="hidden" name="class_id" id="class-id">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="class-name" class="form-label">Class Name</label>
+                                            <!-- <input type="text" name="name" id="class-name" class="form-control" placeholder="Enter Class Name" required> -->
+                                             <select id="classDropdown" name="class_id" class="form-control">
+                                                <option value="">Select Class</option>
+                                                {% for class in classes %}
+                                                    <option value="{{ class.id }}">{{ class.name }}</option>
+                                                {% endfor %}
+                                             </select>
+                                            <div class="invalid-feedback">
+                                                Please Select the class name.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="class-name" class="form-label">Select Section</label>
+                                            <!-- <input type="text" name="name" id="class-name" class="form-control" placeholder="Enter Class Name" required> -->
+                                             <select id="sectionDropdown" name="section_id" class="form-control">
+                                                <option value="">Select Section</option>
+                                             </select>
+                                            <div class="invalid-feedback">
+                                                Please Select the Section name.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary mt-4">Load Attendance</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <button type="button" id="resetFilters" class="btn btn-danger mt-4">Reset</button>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    
+    <script>
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    
+        function clearForm() {
+            document.getElementById('class-form').reset();
+            document.getElementById('class-id').value = '';
+            document.getElementById('class-form').classList.remove('was-validated');
+        }
+    </script>
+
+
+
+    <!-- Calendar -->
+    <div id="calendar" style="display: none;"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var isDarkMode = false;
+    
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: [],
+            dayCellDidMount: function(info) {
+                if (info.date.getDay() === 0) { // Sunday
+                    info.el.style.backgroundColor = '#ffcccc';
+                    var holidayLabel = document.createElement('div');
+                    holidayLabel.style.color = 'red';
+                    holidayLabel.style.fontSize = '0.7rem';
+                    holidayLabel.style.textAlign = 'center';
+                    holidayLabel.innerHTML = '<b>Holiday</b>';
+                    info.el.appendChild(holidayLabel);
+                }
+            },
+            eventContent: function(arg) {
+                var lines = arg.event.title.split("\\n");
+                var innerHtml = "";
+                lines.forEach(function(line) {
+                    innerHtml += "<div>" + line + "</div>";
+                });
+                return { html: innerHtml };
+            }
+        });
+    
+        // Load Attendance
+        $('#class-form').on('submit', function(e){
+            e.preventDefault();
+            var classId = $('#classDropdown').val();
+            var sectionId = $('#sectionDropdown').val();
+    
+            if (classId && sectionId) {
+                $.ajax({
+                    url: "{% url 'get_attendance_summary' %}",
+                    data: {
+                        class_id: classId,
+                        section_id: sectionId
+                    },
+                    success: function(response) {
+                        if (response.length === 0) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'No Attendance Found',
+                                text: 'No records for selected Class and Section!'
+                            });
+                            $('#calendar').hide();
+                            calendar.removeAllEvents();
+                            return;
+                        }
+                        
+                        var events = [];
+                        $.each(response, function(index, item) {
+                            // Add separate events for Present, Absent, and Pending
+                            if (item.present > 0) {
+                                events.push({
+                                    title: "Present: " + item.present,
+                                    start: item.date,
+                                    color: "green" // Present in green
+                                });
+                            }
+    
+                            if (item.absent > 0) {
+                                events.push({
+                                    title: "Absent: " + item.absent,
+                                    start: item.date,
+                                    color: "red" // Absent in red
+                                });
+                            }
+    
+                            if (item.pending > 0) {
+                                events.push({
+                                    title: "Pending: " + item.pending,
+                                    start: item.date,
+                                    color: "orange" // Pending in orange
+                                });
+                            }
+                        });
+    
+                        calendar.removeAllEvents();
+                        calendar.addEventSource(events);
+    
+                        $('#calendar').fadeIn(); // Show calendar
+                        calendar.render();
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Selection Required',
+                    text: 'Please select both Class and Section.'
+                });
+            }
+        });
+    
+
+        $('#classDropdown').change(function() {
+            var classId = $(this).val();
+            if (classId) {
+                $.ajax({
+                    url: "{% url 'get_sections1' %}",
+                    data: { class_id: classId },
+                    dataType: 'json',
+                    success: function(data) {
+                        var sectionDropdown = $('#sectionDropdown');
+                        sectionDropdown.empty().append('<option value="">Select Section</option>');
+                        $.each(data, function(index, section) {
+                            sectionDropdown.append('<option value="' + section.id + '">' + section.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#sectionDropdown').empty().append('<option value="">Select Section</option>');
+            }
+        });
+    
+        // Reset Filters
+        $('#resetFilters').click(function() {
+            $('#classDropdown').val('');
+            $('#sectionDropdown').empty().append('<option value="">Select Section</option>');
+            $('#calendar').hide();
+            calendar.removeAllEvents();
+        });
+    
+        // Dark Mode toggle only for calendar
+        $('#darkModeToggle').click(function() {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                $('#calendar').addClass('dark-mode');
+                $('#darkModeIcon').removeClass('bi-moon-fill').addClass('bi-sun-fill');
+            } else {
+                $('#calendar').removeClass('dark-mode');
+                $('#darkModeIcon').removeClass('bi-sun-fill').addClass('bi-moon-fill');
+            }
+        });
+    
+    });
+    </script>
+    
+    
+
+{% endblock %}

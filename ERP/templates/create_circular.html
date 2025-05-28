@@ -1,0 +1,87 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+<div class="content mt-3">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 8px;">
+                    <div class="card-header">
+                        <strong class="card-title">Create Circular</strong>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            {% csrf_token %}
+
+                            <div class="form-group mb-3">
+                                <label for="title">Title:</label>
+                                <input type="text" name="title" class="form-control" required placeholder="Enter Title">
+                                <div class="invalid-feedback">
+                                    Please enter a title.
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="content">Content:</label>
+                                <textarea name="content" rows="4" class="form-control" required placeholder="Enter Circular Content"></textarea>
+                                <div class="invalid-feedback">
+                                    Please enter the content.
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="circular_image">Upload Image:</label>
+                                <input type="file" name="circular_image" class="form-control">
+                            </div>
+
+                            <div class="form-group row mb-4">
+                                <div class="col-md-6 form-check">
+                                    <input class="form-check-input" type="checkbox" name="sent_to_students" id="students">
+                                    <label class="form-check-label" for="students">Visible to Students</label>
+                                </div>
+                                <div class="col-md-6 form-check">
+                                    <input class="form-check-input" type="checkbox" name="sent_to_teachers" id="teachers">
+                                    <label class="form-check-label" for="teachers">Visible to Teachers</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn btn-success px-4">Create Circular</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.forEach.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+
+
+{% endblock %}

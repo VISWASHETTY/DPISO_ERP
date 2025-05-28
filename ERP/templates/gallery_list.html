@@ -1,0 +1,30 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+{% load static %}
+<div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+<h2 class="text-center">Gallery Albums</h2>
+    <div class="row">
+        {% for album in albums %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ album.title }}</h5>
+                        <p class="text-muted">Created by: {{ album.created_by }}</p>
+                        <a href="{% url 'upload_image' album.id %}" class="btn btn-primary">Upload Images</a>
+                        <a href="{% url 'gallery_detail' album.id %}" class="btn btn-primary">View Album</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'create_album' %}" class="btn btn-success mt-3">Create New Album</a>
+</div>
+</div>
+</div>
+{% endblock %}

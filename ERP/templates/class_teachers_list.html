@@ -1,0 +1,110 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+{% load static %}
+
+        
+<!-- 
+        <table class="table table-bordered table-striped">
+            <thead class="table">
+                <tr>
+                    <th>Teacher</th>
+                    <th>Assigned Classes</th>
+                    <th>Assigned Sections</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for teacher in teachers %}
+                <tr>
+                    <td>
+                        {{ teacher.first_name }} {{ teacher.last_name }}
+                    </td>
+                    <td>
+                        {% for assigned_class in teacher.assignedfdegfregterclasses.all %}
+                            <span class="badge bg-primary">{{ assigned_class.class_assigned.name }}</span>
+                        {% empty %}
+                            <span class="text-danger">No Classes Assigned</span>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for assigned_class in teacher.assignedfdegfregterclasses.all %}
+                            <span class="badge bg-success">{{ assigned_class.section.name }}</span>
+                        {% empty %}
+                            <span class="text-danger">No Sections Assigned</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center text-danger">No teachers assigned to any class yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table> -->
+
+        
+
+<div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+      
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Class Teacher's List</strong>
+                        </div>
+                        <div class="card-body">
+                            <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Teacher</th>
+                                        <th>Assigned Classes</th>
+                                        <th>Assigned Sections</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for teacher in teachers %}
+                                    <tr>
+                                        <td>
+                                            {{ teacher.first_name }} {{ teacher.last_name }}
+                                        </td>
+                                        <td>
+                                            {% for assigned_class in teacher.assignedfdegfregterclasses.all %}
+                                                <span class="badge bg-primary">{{ assigned_class.class_assigned.name }}</span>
+                                            {% empty %}
+                                                <span class="text-danger">No Classes Assigned</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% for assigned_class in teacher.assignedfdegfregterclasses.all %}
+                                                <span class="badge bg-success">{{ assigned_class.section.name }}</span>
+                                            {% empty %}
+                                                <span class="text-danger">No Sections Assigned</span>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                    
+                                    {% endfor %}
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+      
+      
+            </div>
+        </div>
+      </div>
+      </div>
+      </div>
+      </div>
+
+
+   
+
+{% endblock %}

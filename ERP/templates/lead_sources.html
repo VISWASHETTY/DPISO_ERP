@@ -1,0 +1,124 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Lead Sources</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f7fc;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        .table thead {
+            background-color: #f8f9fa;
+        }
+        .form-control, .btn {
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+    <div class="container mt-4">
+        <h4 class="fw-bold">My Lead Sources</h4>
+
+        <div class="row">
+            <!-- Add Source Form -->
+            <div class="col-md-4 mb-3">
+                <div class="card p-3">
+                    <h5 class="fw-semibold">Add source</h5>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="sourceName" class="form-label">Source Name *</label>
+                            <input type="text" class="form-control" id="sourceName" name="source_name" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary px-4">Save</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- All Sources Table -->
+            <div class="col-md-8">
+                <div class="card p-3">
+                    <h5 class="fw-semibold">All sources</h5>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            Show 
+                            <select class="form-select d-inline-block w-auto" aria-label="Entries">
+                                <option selected>20</option>
+                                <option value="10">10</option>
+                                <option value="50">50</option>
+                            </select> 
+                            entries
+                        </div>
+                        <div>
+                            <input type="search" class="form-control" placeholder="Search" style="width: 200px;">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <thead class="text-center">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Created At</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for source in sources %}
+                                <tr>
+                                    <td class="text-center">{{ forloop.revcounter }}</td>
+                                    <td>{{ source.name }}</td>
+                                    <td>{{ source.created_at|date:"d-m-Y h:ia" }}</td>
+                                    <td class="text-center">
+                                        <a href="{% url 'edit_source' source.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                        <a href="{% url 'delete_source' source.id %}" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">No sources found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <div>Showing 1 to {{ sources|length }} of {{ sources|length }} entries</div>
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item disabled"><a class="page-link">Previous</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+    <!-- Bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</body>
+</html>
+{% endblock %}

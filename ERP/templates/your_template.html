@@ -1,0 +1,36 @@
+<select id="classDropdown" class="form-control">
+    <option value="">Select Class</option>
+    {% for class in classes %}
+    <option value="{{ class.id }}">{{ class.name }}</option>
+    {% endfor %}
+</select>
+
+<select id="sectionDropdown" class="form-control">
+    <option value="">Select Section</option>
+</select>
+
+<!-- jQuery for AJAX -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#classDropdown').change(function() {
+            var classId = $(this).val();  // Get selected class ID
+            if (classId) {
+                $.ajax({
+                    url: "{% url 'get_sections' %}",  // URL of the Django view
+                    data: { class_id: classId },
+                    dataType: 'json',
+                    success: function(data) {
+                        var sectionDropdown = $('#sectionDropdown');
+                        sectionDropdown.empty().append('<option value="">Select Section</option>');
+                        $.each(data, function(index, section) {
+                            sectionDropdown.append('<option value="' + section.id + '">' + section.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#sectionDropdown').empty().append('<option value="">Select Section</option>');
+            }
+        });
+    });
+</script>

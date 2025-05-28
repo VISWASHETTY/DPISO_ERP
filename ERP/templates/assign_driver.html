@@ -1,0 +1,26 @@
+{% extends 'non_teaching_staff_base.html' %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label>Select Transport</label>
+        <select name="transport_id" class="form-control" required>
+            {% for transport in transports %}
+                <option value="{{ transport.id }}">{{ transport.vechile_name }} - {{ transport.vechile_number }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Select Driver</label>
+        <select name="driver_id" class="form-control" required>
+            {% for driver in drivers %}
+                <option value="{{ driver.id }}">{{ driver.name }} - {{ driver.license_number }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Assign Driver</button>
+</form>
+{% endblock %}

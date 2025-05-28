@@ -1,0 +1,95 @@
+
+{% load static %}
+
+<style>
+    body {
+        font-family: Georgia, 'Times New Roman', Times, serif !important;
+    }
+    .receipt-container {
+        width: 800px;
+        margin: auto;
+        border: 2px solid #000;
+        padding: 20px;
+    }
+    .header {
+        text-align: center;
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
+    }
+    .header h1 {
+        color: green;
+        margin: 5px 0;
+    }
+    .details-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: small;
+        color: #000;
+    }
+    .details-table td {
+        padding: 5px;
+    }
+    .fee-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: small;
+        color: #000;
+    }
+    .fee-table th, .fee-table td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+    .fee-table th {
+        background-color: #ddd;
+    }
+    .signature {
+        text-align: right;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+</style>
+
+<div class="receipt-container">
+    <div class="header">
+        <img src="{% static 'img/Recipt 1.jpg' %}" width="760" height="100">
+        <h2>FEE Payment Receipt</h2>
+    </div>
+
+    <table class="details-table">
+        <tr>
+            <td><strong>Adm. No.:</strong> {{ admissionno }}</td>
+            <td><strong>Date:</strong> {% now "Y-m-d" %}</td>
+        </tr>
+        <tr>
+            <td><strong>Student Name:</strong> {{ fullname }}</td>
+        </tr>
+        <tr>
+            <td><strong>Father's Name:</strong> {{ fathername }}</td>
+            <td><strong>Mobile No:</strong> {{ mobilenumber }}</td>
+        </tr>
+        <tr>
+            <td><strong>Class & Section:</strong> {{ std_class }}</td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+
+    <table class="fee-table">
+        <tr>
+            <th>Sr. No.</th>
+            <th>Grand Total (INR)</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>{{ amount1 }}</td>
+        </tr>
+    </table>
+
+    <div class="signature">Accountant Signature</div>
+</div>
+
+            <a href="{% url 'studentfee_download_receipt' %}?admissionno={{ admissionno }}&mobilenumber={{ mobilenumber }}&fullname={{ fullname }}&parentname={{ fathername }}&std_class={{ std_name }}&amount1={{ amount1 }}" class="btn btn-secondary mt-3 btn-block">Download Receipt</a>
+
+

@@ -1,0 +1,34 @@
+{% extends 'non_teaching_staff_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Add Transport</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Vehicle Name</label>
+      <input type="text" name="vechile_name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Vehicle Number</label>
+      <input type="text" name="vechile_number" class="form-control" required>
+    </div>
+    <div class="md-3">
+        <label for="route"><i class="fas fa-route"></i> Select Route</label>
+            <select name="route" class="form-select">
+                <option value="">-- Select Route --</option>
+                {% for route in routes %}
+                    <option value="{{ route.id }}">{{ route.name }}</option>
+                {% endfor %}
+            </select>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Date of Purchase</label>
+      <input type="date" name="date_of_purchase" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Vehicle</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<div class="content-wrapper">
+  <div class="container-full p-4">
+    <div class="card shadow rounded-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Class Timetable Management</h4>
+      </div>
+      <div class="card-body">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label for="class_id" class="form-label">Select Class</label>
+              <select name="class_id" id="class_id" class="form-select">
+                <option value="">-- Select Class --</option>
+                {% for c in classes %}
+                  <option value="{{ c.id }}">{{ c.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="section_id" class="form-label">Select Section</label>
+              <select name="section_id" id="section_id" class="form-select">
+                <option value="">-- Select Section --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive" id="timetable_table">
+            <table class="table table-bordered table-hover align-middle text-center">
+              <thead class="table-light">
+                <tr>
+                  <th>Day / Period</th>
+                  {% for i in periods %}
+                    <th>Period {{ i }}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for day in days %}
+                  <tr>
+                    <th class="text-start bg-light">{{ day }}</th>
+                    {% for i in periods %}
+                      <td>
+                        <div class="mb-2">
+                          <select name="{{ day }}_period_{{ i }}_subject" id="subject_id" class="form-select form-select-sm subject-select" data-day="{{ day }}" data-period="{{ i }}">
+                            <option value="">-- Subject --</option>
+                            <!-- {% for s in subjects %}
+                              <option value="{{ s.id }}">{{ s.name }}</option>
+                            {% endfor %} -->
+                          </select>
+                        </div>
+                        <div>
+                          <select name="{{ day }}_period_{{ i }}_teacher" class="form-select form-select-sm teacher-select" data-day="{{ day }}" data-period="{{ i }}">
+                            <option value="">-- Teacher --</option>
+                            <!-- {% for t in teachers %}
+                              <option value="{{ t.id }}">{{ t.first_name }} {{ t.last_name }}</option>
+                            {% endfor %} -->
+                          </select>
+                        </div>
+                      </td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="text-end mt-4">
+            <button type="submit" class="btn btn-success px-4"> Save TimeTable </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $('#class_id').on('change', function () {
+    let classId = $(this).val();
+    $.ajax({
+      url: "{% url 'get_sections3' %}",
+      data: { 'class_id': classId },
+      success: function (data) {
+        $('#section_id').empty();
+        $('#section_id').append(`<option value="">-- Select Section --</option>`);
+        data.sections.forEach(function (section) {
+          $('#section_id').append(`<option value="${section.id}">${section.name}</option>`);
+        });
+      }
+    });
+  });
+
+  $('#class_id').on('change', function () {
+  let classId = $(this).val();
+
+  $.ajax({
+    url: "{% url 'get_subjects' %}",
+    data: { 'class_id': classId },
+    success: function (data) {
+      $('.subject-select').each(function () {
+        $(this).empty();
+        $(this).append(`<option value="">-- Select Subject --</option>`);
+        data.subjects.forEach(function (subject) {
+          $(this).append(`<option value="${subject.id}">${subject.name}</option>`);
+        }.bind(this)); // bind 'this' to the current select
+      });
+    }
+  });
+});
+
+$(document).on('change', '.subject-select', function () {
+    const subjectId = $(this).val();
+    const day = $(this).data('day');
+    const period = $(this).data('period');
+
+    // Find matching teacher dropdown
+    const teacherDropdown = $(`.teacher-select[data-day="${day}"][data-period="${period}"]`);
+
+    if (subjectId) {
+        $.ajax({
+            url: "{% url 'get_teachers_by_subject' %}",
+            data: { subject_id: subjectId },
+            success: function (data) {
+                teacherDropdown.empty();
+                teacherDropdown.append('<option value="">-- Teacher --</option>');
+                data.teachers.forEach(function (teacher) {
+                    teacherDropdown.append(`<option value="${teacher.id}">${teacher.first_name} ${teacher.last_name}</option>`);
+                });
+            }
+        });
+    } else {
+        teacherDropdown.empty().append('<option value="">-- Teacher --</option>');
+    }
+});
+
+
+  $('#class_id, #section_id').on('change', function () {
+    let classId = $('#class_id').val();
+    let sectionId = $('#section_id').val();
+
+    if (classId && sectionId) {
+      $.ajax({
+        url: "{% url 'get_timetable_data' %}",
+        data: { 'class_id': classId, 'section_id': sectionId },
+        success: function (response) {
+          let entries = response.entries;
+
+          Object.keys(entries).forEach(function (key) {
+            const subjectId = entries[key].subject_id;
+            const teacherId = entries[key].teacher_id;
+
+            const subjectSelect = $(`select[name='${key}_subject']`);
+            const teacherSelect = $(`select[name='${key}_teacher']`);
+
+            if (subjectSelect.length && teacherSelect.length) {
+              subjectSelect.val(subjectId);
+              teacherSelect.val(teacherId);
+            }
+          });
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

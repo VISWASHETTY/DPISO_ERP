@@ -1,0 +1,33 @@
+{% extends 'non_teaching_staff_base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Edit Transport</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label>Vehicle Name</label>
+      <input type="text" name="vechile_name" class="form-control" value="{{ transport.vechile_name }}" required>
+    </div>
+    <div class="form-group">
+      <label>Vehicle Number</label>
+      <input type="text" name="vechile_number" class="form-control" value="{{ transport.vechile_number }}" required>
+    </div>
+    <div class="form-group">
+    <label for="route"><i class="fas fa-route"></i> Select Route</label>
+    <select name="route" class="form-select">
+        <option value="">-- Select Route --</option>
+        {% for route in routes %}
+            <option value="{{ route.id }}">{{ route.name }}</option>
+        {% endfor %}
+    </select>
+    </div>
+    <div class="form-group">
+      <label>Date of Purchase</label>
+      <input type="date" name="date_of_purchase" class="form-control" value="{{ transport.date_of_purchase|date:'Y-m-d' }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Update</button>
+    <a href="{% url 'transport_list' %}" class="btn btn-secondary mt-3">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,1559 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Student Dashboard</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<!-- Bootstrap 4.0-->
+	<link rel="stylesheet" href="{% static 'assets/vendor_components/bootstrap/dist/css/bootstrap.css' %}">
+		
+	<!-- daterange picker -->	
+	<link rel="stylesheet" href="{% static 'assets/vendor_components/bootstrap-daterangepicker/daterangepicker.css' %}">
+	
+	<!-- theme style -->
+	<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+	
+	<!-- CrmX Admin skins -->
+	<link rel="stylesheet" href="{% static 'css/skin_color.css' %}">
+
+    <link rel="stylesheet" href="{% static 'vendors/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}">
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+	 
+	 <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body{
+            font-size: smaller;
+        }
+			a{
+			text-decoration: none !important;
+		}
+        .birthday-container {
+            background: linear-gradient(135deg, #ffffff, #e1f5fe);
+            border-radius: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            padding: 3rem;
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+           
+        }
+        .birthday-header {
+            font-weight: 700;
+            
+            color: #d81b60;
+            margin-bottom: 0.5rem;
+            animation: zoomIn 1s ease-in;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 2rem;
+            animation: fadeIn 1.5s ease-in;
+        }
+        .carousel-inner {
+            padding: 1rem;
+        }
+        .name-card {
+			background: linear-gradient(135deg, #e0f7fa, #ffffff);
+            color: #080808;
+            padding: 1.5rem;
+            border-radius: 15px;
+            font-size: 1.6rem;
+            font-weight: 600;
+           
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: scale(0.7);
+            transition: all 0.6s ease;
+            min-height: 130px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .name-card.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .name-card span {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-top: 0.5rem;
+        }
+        .name-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 10%, transparent 10%);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        .no-birthdays {
+            font-size: 1.6rem;
+            color: #666;
+            font-family: 'Poppins', sans-serif;
+            padding: 2rem;
+            background: #f5f5f5;
+            border-radius: 15px;
+            margin: 1rem 0;
+        }
+        .message {
+            color: #333;
+            animation: slideUp 1s ease-in;
+        }
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #ffd700;
+            border-radius: 50%;
+            opacity: 0;
+            animation: confettiFall 2.5s infinite;
+        }
+        @keyframes confettiFall {
+            0% { transform: translate(0, -100%) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(var(--x), 100%) rotate(360deg); opacity: 0; }
+        }
+        @keyframes shine {
+            0% { transform: rotate(45deg) translateX(-100%); }
+            50% { transform: rotate(45deg) translateX(100%); }
+            100% { transform: rotate(45deg) translateX(-100%); }
+        }
+        .btn-wish {
+            background: #d81b60;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin: 0.5rem;
+        }
+        .btn-wish:hover {
+            background: #b0003a;
+            transform: scale(1.1);
+        }
+        .btn-snapshot {
+            background: #2196f3;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin: 0.5rem;
+        }
+        .btn-snapshot:hover {
+            background: #1976d2;
+            transform: scale(1.1);
+        }
+        .btn-snapshot:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .carousel-control-prev, .carousel-control-next {
+            width: 8%;
+            opacity: 0.8;
+        }
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            background-color: #91cef7;
+            border-radius: 50%;
+            padding: 1rem;
+        }
+        @keyframes zoomIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    .bd{
+			color: white;
+		}
+
+		.leave-container {
+            background: linear-gradient(135deg, #ffffff, #e3f2fd);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            padding: 2.5rem;
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #b0bec5;
+        }
+        .leave-header {
+            font-weight: 700;
+            font-family: 'Roboto', sans-serif;
+            color: #1565c0;
+            margin-bottom: 0.5rem;
+            animation: slideInLeft 1s ease-in;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #555;
+            font-family: 'Open Sans', sans-serif;
+            margin-bottom: 2rem;
+            animation: fadeIn 1.5s ease-in;
+        }
+        .carousel-inner {
+            padding: 1rem;
+        }
+        .request-card {
+            background: #fafafa;
+            color: #333;
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            font-weight: 500;
+            font-family: 'Open Sans', sans-serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            border: 1px solid #e0e0e0;
+        }
+        .request-card.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .request-card span {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-top: 0.3rem;
+            color: #666;
+        }
+        .request-card .reason {
+            font-size: 1rem;
+            font-style: italic;
+            margin-top: 0.5rem;
+            color: #888;
+        }
+        .request-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: gloss 3s infinite;
+        }
+        .no-requests {
+            font-size: 1.5rem;
+            color: #666;
+            font-family: 'Open Sans', sans-serif;
+            padding: 2rem;
+            background: #f5f5f5;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        .message {
+            font-size: 1.2rem;
+            color: #333;
+            line-height: 1.6;
+            font-family: 'Open Sans', sans-serif;
+            margin: 1.5rem 0;
+            animation: fadeIn 1s ease-in;
+        }
+        .sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #bbdefb;
+            border-radius: 50%;
+            opacity: 0;
+            animation: sparkle 2s infinite;
+        }
+        @keyframes sparkle {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+        @keyframes gloss {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+        .btn-action {
+            background: #1565c0;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            color: #fff;
+            font-family: 'Open Sans', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin: 0.5rem;
+        }
+        .btn-action:hover {
+            background: #0d47a1;
+            transform: scale(1.05);
+        }
+        .btn-snapshot {
+            background: #43a047;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            color: #fff;
+            font-family: 'Open Sans', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin: 0.5rem;
+        }
+        .btn-snapshot:hover {
+            background: #2e7d32;
+            transform: scale(1.05);
+        }
+        .btn-snapshot:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .carousel-control-prev, .carousel-control-next {
+            width: 8%;
+            opacity: 0.7;
+        }
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            background-color: #1565c0;
+            border-radius: 50%;
+            padding: 1rem;
+        }
+        @keyframes slideInLeft {
+            0% { opacity: 0; transform: translateX(-50px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+		.aaa {
+            background: #e7f3ff;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .icon-circle {
+            background: #007bff;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+        .card-title {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .card-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #007bff;
+        }
+      
+        @media (max-width: 768px) {
+            .col-3 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+        @media (max-width: 576px) {
+            .col-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+		.date-display {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .today-label {
+            color: black;
+        }
+        .date-info {
+            color: #007bff;
+        }
+        #donutChart{
+            size: 10cap;
+        }
+		
+    </style>
+
+  </head>
+
+<body class="hold-transition light-skin sidebar-mini theme-classic fixed">
+	
+<div class="wrapper">
+
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="index.html" class="logo">
+      <!-- mini logo -->
+	  <!-- <div class="logo-mini">
+		  <span class="light-logo"><img src="../images/logo-dark.png" alt="logo"></span>
+		  <span class="dark-logo"><img src="../images/logo-dark.png" alt="logo"></span>
+	  </div> -->
+      <!-- logo-->
+      <!-- <div class="logo-lg">
+		  <span class="light-logo"><img src="../images/logo-dark-text.png" alt="logo"></span>
+	  	  <span class="dark-logo"><img src="../images/logo-dark-text.png" alt="logo"></span>
+	  </div> -->
+    </a>
+    <!-- Header Navbar -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+	  <div class="ml-20">
+		  <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+			
+			<i class="bi bi-border-width"></i>
+		  </a>
+		  
+		  <a href="#" data-provide="fullscreen" class="sidebar-toggle" title="Full Screen">
+           <i class="bi bi-fullscreen"></i>
+		  </a> 
+		
+	  </div>
+		
+      <div class="navbar-custom-menu r-side">
+        <ul class="nav navbar-nav">
+		  <!-- full Screen -->
+	      <li class="search-bar">		  
+			  <div class="lookup lookup-circle lookup-right">
+			     <input type="text" name="s">
+			  </div>
+		  </li>			
+		  <!-- Messages -->
+		  <li class="dropdown messages-menu">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Messages">
+			  
+<i class="bi bi-envelope-fill"></i>
+			</a>
+			<ul class="dropdown-menu animated bounceIn">
+
+			  <li class="header">
+				<div class="p-20">
+					<div class="flexbox">
+						<div>
+							<h4 class="mb-0 mt-0">Messages</h4>
+						</div>
+						<div>
+							<a href="#" class="text-danger">Clear All</a>
+						</div>
+					</div>
+				</div>
+			  </li>
+			  <li>
+				<!-- inner menu: contains the actual data -->
+				<ul class="menu sm-scrol">
+				  <li><!-- start message -->
+					<a href="#">
+					  <div class="pull-left">
+						<img src="../images/user2-160x160.jpg" class="rounded-circle" alt="User Image">
+					  </div>
+					  <div class="mail-contnet">
+						 <h4>
+						  Lorem Ipsum
+						  <small><i class="fa fa-clock-o"></i> 15 mins</small>
+						 </h4>
+						 <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
+					  </div>
+					</a>
+				  </li>
+				  <!-- end message -->
+				  <li>
+					<a href="#">
+					  <div class="pull-left">
+						<img src="../images/user3-128x128.jpg" class="rounded-circle" alt="User Image">
+					  </div>
+					  <div class="mail-contnet">
+						 <h4>
+						  Nullam tempor
+						  <small><i class="fa fa-clock-o"></i> 4 hours</small>
+						 </h4>
+						 <span>Curabitur facilisis erat quis metus congue viverra.</span>
+					  </div>
+					</a>
+				  </li>
+				  <li>
+					<a href="#">
+					  <div class="pull-left">
+						<img src="../images/user4-128x128.jpg" class="rounded-circle" alt="User Image">
+					  </div>
+					  <div class="mail-contnet">
+						 <h4>
+						  Proin venenatis
+						  <small><i class="fa fa-clock-o"></i> Today</small>
+						 </h4>
+						 <span>Vestibulum nec ligula nec quam sodales rutrum sed luctus.</span>
+					  </div>
+					</a>
+				  </li>
+				  <li>
+					<a href="#">
+					  <div class="pull-left">
+						<img src="../images/user3-128x128.jpg" class="rounded-circle" alt="User Image">
+					  </div>
+					  <div class="mail-contnet">
+						 <h4>
+						  Praesent suscipit
+						<small><i class="fa fa-clock-o"></i> Yesterday</small>
+						 </h4>
+						 <span>Curabitur quis risus aliquet, luctus arcu nec, venenatis neque.</span>
+					  </div>
+					</a>
+				  </li>
+				  <li>
+					<a href="#">
+					  <div class="pull-left">
+						<img src="../images/user4-128x128.jpg" class="rounded-circle" alt="User Image">
+					  </div>
+					  <div class="mail-contnet">
+						 <h4>
+						  Donec tempor
+						  <small><i class="fa fa-clock-o"></i> 2 days</small>
+						 </h4>
+						 <span>Praesent vitae tellus eget nibh lacinia pretium.</span>
+					  </div>
+
+					</a>
+				  </li>
+				</ul>
+			  </li>
+			  <li class="footer">				  
+				  <a href="#">See all e-Mails</a>
+			  </li>
+			</ul>
+		  </li>
+		  <!-- Notifications -->
+		  <li class="dropdown notifications-menu">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Notifications">
+		
+<i class="bi bi-bell-fill"></i>
+			</a>
+			<ul class="dropdown-menu animated bounceIn">
+
+			  <li class="header">
+				<div class="p-20">
+					<div class="flexbox">
+						<div>
+							<h4 class="mb-0 mt-0">Notifications</h4>
+						</div>
+						<div>
+							<a href="#" class="text-danger">Clear All</a>
+						</div>
+					</div>
+				</div>
+			  </li>
+
+			  <li>
+				<!-- inner menu: contains the actual data -->
+				<ul class="menu sm-scrol">
+                    {% if unread_count > 0 %}
+                                    <span class="count bg-danger">{{ unread_count }}</span>
+                                {% endif %}
+                                {% if notifications %}
+                                    <p class="red">You have {{ unread_count }} notification{{ unread_count|pluralize }}</p>
+                                    {% for note in notifications %}
+                                        <a class="dropdown-item media bg-flat-color-{{ forloop.counter|add:1 }}" href="#">
+                                            <i class="fa fa-info-circle"></i>
+                                            <p style="color: black;">{{ note.message }}</p>
+                                            <small class="text-muted">{{ note.created_at|timesince }} ago</small>
+                                        </a>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="dropdown-item">No new notifications</p>
+                                {% endif %}
+				  <!-- <li>
+					<a href="#">
+					  <i class="fa fa-users text-info"></i> Curabitur id eros quis nunc suscipit blandit.
+					</a>
+				  </li>
+				  <li>
+					<a href="#">
+					  <i class="fa fa-warning text-warning"></i> Duis malesuada justo eu sapien elementum, in semper diam posuere.
+					</a>
+				  </li>
+				  <li>
+					<a href="#">
+					  <i class="fa fa-users text-danger"></i> Donec at nisi sit amet tortor commodo porttitor pretium a erat.
+					</a>
+				  </li>
+				  <li>
+					<a href="#">
+					  <i class="fa fa-shopping-cart text-success"></i> In gravida mauris et nisi
+					</a>
+				  </li>
+				  <li>
+					<a href="#">
+					  <i class="fa fa-user text-danger"></i> Praesent eu lacus in libero dictum fermentum.
+					</a>
+				  </li>
+				  <li>
+					<a href="#">
+					  <i class="fa fa-user text-primary"></i> Nunc fringilla lorem 
+					</a>
+				  </li>
+				  <li>
+					<a href="#">
+					  <i class="fa fa-user text-success"></i> Nullam euismod dolor ut quam interdum, at scelerisque ipsum imperdiet.
+					</a>
+				  </li> -->
+				</ul>
+			  </li>
+			  <li class="footer">
+				  <a href="#">View all</a>
+			  </li>
+			</ul>
+		  </li>	
+		  
+		  <!-- User Account-->
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="User">
+				{% if i.profile_photo %}
+              <img src="{{ i.profile_photo.url }}" class="user-image rounded-circle" alt="User Image">
+			  {% endif %}
+            </a>
+            <ul class="dropdown-menu animated flipInX">
+              <!-- User image -->
+              <li class="user-header bg-img" style="background-image: url(../images/user-info.jpg)" data-overlay="3">
+				  <div class="flexbox align-self-center">	
+						{% if i.profile_photo %}				  
+				  	<img src="{{ i.profile_photo.url }}" class="float-left rounded-circle" alt="User Image">	
+					{% endif %}				  
+					<h4 class="user-name align-self-center">
+					  <span>{{ i.studentname | upper }}</span>
+					  <br>
+					  <small>{{i.emil}}</small>
+					</h4>
+				  </div>
+              </li>
+              <!-- Menu Body -->
+              <li class="user-body">
+				    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#photoModal"><i class="ion ion-person"></i> My Profile</a>
+					<a class="dropdown-item" href="/student_fee_management"><i class="ion ion-bag"></i> My Balance</a>
+					<a class="dropdown-item" href="/select_user_to_chat"><i class="ion ion-email-unread"></i> Inbox</a>
+					<a class="dropdown-item" href="/user_logout"><i class="ion-log-out"></i> Logout</a>
+              </li>
+            </ul>
+          </li>	
+
+          <!-- Modal -->
+<div class="modal" id="photoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">  <!-- Smaller modal -->
+    <div class="modal-content border-0 shadow-sm bg-white rounded">
+      <div class="position-relative">
+        <!-- Close button -->
+        <button type="button" class="btn btn-light btn-sm position-absolute top-0 end-0 m-1" data-bs-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+        <!-- Profile Photo -->
+        <img src="{{ i.profile_photo.url }}" alt="Profile Photo" class="img-fluid rounded">
+      </div>
+    </div>
+  </div>
+</div>
+			
+		  
+          <!-- Control Sidebar Toggle Button -->
+          <!-- <li>
+            <a href="#" data-toggle="control-sidebar" title="Setting"><i class="fa fa-cog fa-spin"></i></a>
+          </li> -->
+			
+        </ul>
+      </div>
+    </nav>
+  </header>
+  
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar-->
+    <section class="sidebar position-relative">	
+		
+        <div class="user-profile">
+			<div class="ulogo" style="display: none;">
+				 <a href="index.html">
+				
+				  <h3><b>CrmX</b>Admin</h3>
+				</a>
+			</div>
+			<div class="profile-pic">
+					{% if i.school.logo %}
+				<img src="{{ i.school.logo.url }}" alt="user">	
+				{% endif %}
+				<div class="profile-info"><p class="bd">{{ i.school.name | upper }}</p>
+					<!-- <div class="list-icons-item dropdown">
+						<a href="#" class="list-icons-item dropdown-toggle" data-toggle="dropdown"><span class="badge badge-ring fill badge-primary mr-2"></span>Online</a>
+						<div class="dropdown-menu dropdown-menu-right">
+							<a href="#" class="dropdown-item">Update data</a>
+							<a href="#" class="dropdown-item">Detailed log</a>
+							<a href="#" class="dropdown-item">Statistics</a>
+							<a href="#" class="dropdown-item">Clear list</a>
+						</div>
+					</div> -->
+				</div>
+			</div>
+        </div>
+	  <div class="multinav">
+		  <div class="scrollable" style="height: 100%;">
+		  <!-- sidebar menu-->
+			  <ul class="sidebar-menu" data-widget="tree">				  
+				<li class="active">
+				  <a href="/dashboard">
+					  <i class="bi bi-wrench-adjustable-circle-fill"></i>
+					  <span>Dashboard</span>
+				  </a>
+				</li> 
+
+				<li class="treeview">
+				  <a href="#">
+				
+
+                <i class="bi bi-mortarboard-fill"></i>
+					<span>Student Details</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/student_family_details"><i class="bi bi-activity"></i>Family Details</a></li>
+					<li><a href="/student_transport_details"><i class="bi bi-activity"></i>Transport Details</a></li>
+				  </ul>
+				</li>  
+
+
+
+				<li class="treeview">
+				  <a href="#">
+                <i class="bi bi-wallet"></i>
+					<span>Fee Details</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/student_fee_management"><i class="bi bi-activity"></i>Fee</a></li>
+				  </ul>
+				</li>  
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-calendar-check"></i>
+					<span>Attendance</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/student_attendence_management"><i class="bi bi-activity"></i>Show Attendance</a></li>
+					
+
+                </ul>
+				</li> 
+                
+                
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-clock-history"></i>
+					<span>Time Table</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/student_timetable"><i class="bi bi-activity"></i>Time Table</a></li>
+                </ul>
+				</li> 
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-journal-check"></i>
+					<span>Examination</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/view_marks_list"><i class="bi bi-activity"></i>Mark's List</a></li>
+					<li><a href="/student_report_card"><i class="bi bi-activity"></i>Report Card</a></li>
+                </ul>
+				</li> 
+
+
+        <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-calendar2-week"></i>
+					<span>Leaves</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/student_leave_request"><i class="bi bi-activity"></i>Leave Request</a></li>
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-file-earmark-text-fill"></i>
+					<span>Circular</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/student_circular"><i class="bi bi-activity"></i>View Circular</a></li>
+					
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-bus-front"></i>
+					<span>Transport</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/student_transport_details1"><i class="bi bi-activity"></i>View Transport Details</a></li>
+					<li><a href="/student_attendance_history"><i class="bi bi-activity"></i>View Transport Attendance</a></li>
+					<li><a href="/report_transport_issue"><i class="bi bi-activity"></i>Report Transport</a></li>
+                </ul>
+				</li>
+
+
+                <li class="treeview">
+				  <a href="#">
+                <i class="bi bi-chat-dots"></i>
+					<span>Communication</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="/select_user_to_chat"><i class="bi bi-activity"></i>Chat With</a></li>
+                </ul>
+				</li>
+			  </ul>
+		  </div>
+	  </div>
+    </section>
+  </aside>
+
+{% block content %}
+       
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+	  <div class="container-full">
+		<!-- Content Header (Page header) -->	  
+		<div class="content-header">
+			<div class="d-flex align-items-center">
+				<div class="mr-auto">
+					<marquee behavior="scroll" direction="left" scrollamount="5">
+					<h3 class="page-title br-0">{{ i.school.name | upper }}</h3></marquee>
+					<h4 class="page-title br-0">Welcome {{i.studentname}}</h4>
+				</div>
+				<div class="container mt-4">
+				<div class="d-flex justify-content-end">
+					<div class="date-display">
+						<span class="today-label">Today :</span>
+						<span class="date-info" id="currentDateDay"></span>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+
+		<!-- Main content -->
+		<section class="content">
+			<div class="row">
+				<div class="col-xl-4 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h5 class="card-title">Days in Month</h5>
+                    <p class="card-value">{{ num_days }}</p>
+                </div>
+				</div>
+				<div class="col-xl-4 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h5 class="card-title">Present Days</h5>
+                    <p class="card-value">{{ student_present_count }}</p>
+                </div>
+				</div>
+				<div class="col-xl-4 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-user-minus"></i>
+                    </div>
+                    <h5 class="card-title">Absent Days</h5>
+                    <p class="card-value">{{ student_absent_count }}</p>
+                </div>
+				</div>
+				</div>
+
+			<div class="row">
+				<div class="col-xl-3 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h5 class="card-title">Tution Fee</h5>
+                    <p class="card-value">₹ {{ total_fee }}</p>
+                </div>
+				</div>
+				<div class="col-xl-3 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h5 class="card-title">Transport Fee</h5>
+                    {% if transport_fee %}
+                    <p class="card-value">₹ {{ transport_fee }}</p>
+                    {% else %}
+                    <p class="card-value">₹0</p>
+                    {% endif %}
+                </div>
+				</div>
+				<div class="col-xl-3 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-cash-register"></i>
+                    </div>
+                    <h5 class="card-title">Paid Amount</h5>
+                    <p class="card-value">₹ {{ paid_amount }}</p>
+                </div>
+				</div>
+				<div class="col-xl-3 col-md-6 col-12">
+					<div class="card aaa" style="background-color: #fff; box-shadow: 5px 5px 5px 5px skyblue;">
+                    <div class="icon-circle">
+                        <i class="fas fa-money-check-alt"></i>
+                    </div>
+                    <h5 class="card-title">Balance Amount</h5>
+                    <p class="card-value">₹ {{ balance }}</p>
+                </div>
+				</div>
+			</div>	
+			<div class="row">
+        <!-- Donut Chart -->
+        <div class="col-lg-6 mb-6" >
+            <div class="card">
+                <div class="card-header text-center">
+                    Attendance Summary
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="width: 330px; text-align: center;">
+                        <canvas id="donutChart" height="150"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bar Chart -->
+        <div class="col-lg-6 mb-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    Daily Attendance
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="barChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Heatmap Grid -->
+    <div class="card">
+        <div class="card-header text-center">
+            Attendance Heatmap
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-7 text-center g-2">
+                {% for day, status in combined_attendance %}
+                <div class="col">
+                    <div class="p-3 rounded heatmap-cell"
+                         style="background-color: {% if status == 'Present' %}#4CAF50{% elif status == 'Absent' %}#F44336{% else %}#ccc{% endif %}; color: white;"
+                         title="{% if status == 'Present' %}Present on day {{ day }}{% elif status == 'Absent' %}Absent on day {{ day }}{% else %}No data for day {{ day }}{% endif %}">
+                        {{ day }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Donut Chart
+    new Chart(document.getElementById('donutChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Present', 'Absent'],
+            datasets: [{
+                data: [{{ student_present_count }}, {{ student_absent_count }}],
+                backgroundColor: ['#4CAF50', '#F44336'],
+                borderColor: ['#388E3C', '#D32F2F'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: { size: 10 },
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            let value = context.raw || 0;
+                            return `${label}: ${value} days`;
+                        }
+                    }
+                }
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    });
+
+    // Bar Chart
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ day_labels|safe }},
+            datasets: [{
+                label: 'Attendance',
+                data: {{ numeric_data|safe }},
+                backgroundColor: {{ color_data|safe }},
+                borderColor: {{ color_data|safe }},
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label: function(context) {
+                            let value = context.raw;
+                            return value === 1 ? 'Present' : value === 0 ? 'Absent' : 'No Data';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Day of the Month',
+                        font: { size: 14 }
+                    },
+                    grid: { display: false }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Status',
+                        font: { size: 14 }
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value === 1 ? 'Present' : value === 0 ? 'Absent' : '';
+                        },
+                        stepSize: 1,
+                        min: -0.1,
+                        max: 1.0
+                    },
+                    grid: { display: false }
+                }
+            },
+            animation: {
+                duration: 1000,
+                easing: 'easeOutQuart'
+            }
+        }
+    });
+});
+</script>
+				
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let attendanceChart;
+  const ctx = document.getElementById('attendanceChart').getContext('2d');
+
+  // Initialize the chart
+  function updateChart(present, absent) {
+    const data = [present, absent];
+    if (attendanceChart) {
+      attendanceChart.data.datasets[0].data = data;
+      attendanceChart.update();
+    } else {
+      attendanceChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Present', 'Absent'],
+          datasets: [{
+            data: data,
+            backgroundColor: ['#4caf50', '#f44336'],
+            borderColor: ['#ffffff'],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          cutout: '70%',
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Fetch attendance data from backend
+  function fetchAttendance(classId, sectionId) {
+  fetch("{% url 'dashboard' %}", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-CSRFToken': '{{ csrf_token }}'
+    },
+    body: `class_id=${classId}&section_id=${sectionId}`
+  })
+  .then(response => {
+    if (!response.ok) throw new Error('Network response was not ok.');
+    return response.json();
+  })
+  .then(data => {
+    document.getElementById('presentCount').innerText = data.admin_present_count;
+    document.getElementById('absentCount').innerText = data.admin_absent_count;
+    document.getElementById('totalCount').innerText = data.admin_total;
+    updateChart(data.admin_present_count, data.admin_absent_count);
+  })
+  .catch(error => {
+    console.error('Error fetching attendance:', error);
+  });
+}
+
+// On change of class or section
+document.getElementById('classSelect').addEventListener('change', function () {
+  const classId = this.value;
+  const sectionId = document.getElementById('sectionSelect').value;
+  fetchAttendance(classId, sectionId);
+});
+
+document.getElementById('sectionSelect').addEventListener('change', function () {
+  const classId = document.getElementById('classSelect').value;
+  const sectionId = this.value;
+  fetchAttendance(classId, sectionId);
+});
+
+// Load default attendance on page load
+window.addEventListener('DOMContentLoaded', () => {
+  const classId = document.getElementById('classSelect').value;
+  const sectionId = document.getElementById('sectionSelect').value;
+  if (classId && sectionId) {
+    fetchAttendance(classId, sectionId);
+  }
+});
+
+</script>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 20px;
+        }
+        .mango {
+            width: 48%;
+        }
+        canvas mango {
+            height: 200px !important;
+        }
+    </style>
+
+    <h3 style="text-align:center;">Student Fee Summary</h3>
+
+    <div class="chart-row">
+        <div class="chart-container mango">
+            <canvas class="mango" id="feePieChart"></canvas>
+        </div>
+        <div class="chart-container mango">
+            <canvas class="mango" id="feeBarChart" style="height: 200px;"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const pieData = {
+            labels: {{ pie_labels|safe }},
+            datasets: [{
+                label: 'Fee Distribution',
+                data: {{ pie_values|safe }},
+                backgroundColor: ['#4CAF50', '#F44336'],
+            }]
+        };
+
+        const barData = {
+            labels: {{ bar_labels|safe }},
+            datasets: [{
+                label: 'Installment Breakdown',
+                data: {{ bar_values|safe }},
+                backgroundColor: ['#2196F3', '#FFC107', '#9C27B0'],
+            }]
+        };
+
+        const pieConfig = {
+            type: 'pie',
+            data: pieData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: { display: true, text: 'Paid vs Balance' }
+                }
+            }
+        };
+
+        const barConfig = {
+            type: 'bar',
+            data: barData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: 'Term-wise Tution Fee' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) { return '₹' + value; }
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(document.getElementById('feePieChart'), pieConfig);
+        new Chart(document.getElementById('feeBarChart'), barConfig);
+    </script>
+
+			
+		
+  {% endblock %}
+  
+  
+  <!-- /.content-wrapper -->
+  <!-- <footer class="main-footer">
+    <div class="pull-right d-none d-sm-inline-block">
+        <ul class="nav nav-primary nav-dotted nav-dot-separated justify-content-center justify-content-md-end">
+		  <li class="nav-item">
+			<a class="nav-link" href="javascript:void(0)">FAQ</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="#">Purchase Now</a>
+		  </li>
+		</ul>
+    </div>
+	  &copy; 2020 <a href="https://www.multipurposethemes.com/">Multi-Purpose Themes</a>. All Rights Reserved.
+  </footer> -->
+
+  
+  	
+	 
+	
+	<!-- js -->
+	<script src="{% static 'assets/vendor_components/jquery-3.3.1/jquery-3.3.1.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/screenfull/screenfull.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/popper/dist/popper.min.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/bootstrap/dist/js/bootstrap.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/fastclick/lib/fastclick.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/perfect-scrollbar-master/perfect-scrollbar.jquery.min.js' %}"></script>
+		
+	<!-- Plugin -->
+	<script src="{% static 'assets/vendor_components/moment/min/moment.min.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+	<script src="{% static 'assets/vendor_components/apexcharts-bundle/dist/apexcharts.js' %}"></script>
+	
+	<!-- CrmX Admin App -->
+	<script src="{% static 'js/template.js' %}"></script>
+	<script src="{% static 'js/pages/dashboard.js' %}"></script>
+	<script src="{% static 'js/demo.js' %}"></script>
+	
+
+    <script src="{% static 'vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'vendors/jszip/dist/jszip.min.js' %}"></script>
+   
+    <script src="{% static 'vendors/pdfmake/build/pdfmake.min.js' %}"></script>
+    <script src="{% static 'vendors/pdfmake/build/vfs_fonts.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+    <script src="{% static 'assets/js/init-scripts/data-table/datatables-init.js' %}"></script>
+ 
+    <!-- Bootstrap JS and Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+    // STUDENT BIRTHDAY CAROUSEL
+    (function() {
+        const studentContainer = document.getElementById('studentBirthdayContainer');
+        const carousel = document.getElementById('birthdayCarousel');
+        let bootstrapCarousel = null;
+
+        {% if students %}
+            bootstrapCarousel = new bootstrap.Carousel(carousel);
+        {% endif %}
+
+        function animateNames() {
+            const activeCard = studentContainer.querySelector('.carousel-item.active .name-card');
+            if (activeCard) activeCard.classList.add('active');
+            const others = studentContainer.querySelectorAll('.carousel-item:not(.active) .name-card');
+            others.forEach(card => card.classList.remove('active'));
+        }
+
+        function createConfetti() {
+            {% if students %}
+                const colors = ['#ffd700', '#ff4081', '#d81b60', '#2196f3'];
+                for (let i = 0; i < 30; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = Math.random() * 100 + '%';
+                    confetti.style.setProperty('--x', (Math.random() - 0.5) * 200 + 'px');
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    studentContainer.appendChild(confetti);
+                }
+            {% endif %}
+        }
+
+        window.addEventListener('load', () => {
+            animateNames();
+            createConfetti();
+            {% if students %}
+                carousel.addEventListener('slid.bs.carousel', animateNames);
+            {% endif %}
+        });
+    })();
+
+
+    // TEACHER BIRTHDAY CAROUSEL
+    (function() {
+        const teacherContainer = document.getElementById('teacherBirthdayContainer');
+        const teacherCarousel = document.getElementById('teacherBirthdayCarousel');
+        let bootstrapTeacherCarousel = null;
+
+        {% if birthday_teachers %}
+            bootstrapTeacherCarousel = new bootstrap.Carousel(teacherCarousel, {
+                interval: 3000,
+                ride: 'carousel'
+            });
+        {% endif %}
+
+        function animateTeacherCards() {
+            const activeCard = teacherContainer.querySelector('.carousel-item.active .name-card');
+            if (activeCard) activeCard.classList.add('active');
+            const others = teacherContainer.querySelectorAll('.carousel-item:not(.active) .name-card');
+            others.forEach(card => card.classList.remove('active'));
+        }
+
+        function createTeacherConfetti() {
+            {% if birthday_teachers %}
+                const colors = ['#ffd700', '#ff4081', '#d81b60', '#2196f3'];
+                for (let i = 0; i < 30; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = Math.random() * 100 + '%';
+                    confetti.style.setProperty('--x', (Math.random() - 0.5) * 200 + 'px');
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    teacherContainer.appendChild(confetti);
+                }
+            {% endif %}
+        }
+
+        window.addEventListener('load', () => {
+            animateTeacherCards();
+            createTeacherConfetti();
+            {% if birthday_teachers %}
+                teacherCarousel.addEventListener('slid.bs.carousel', animateTeacherCards);
+            {% endif %}
+        });
+    })();
+</script>
+
+<!-- Bootstrap JS and Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        let currentIndex = 0;
+        const carousel = document.getElementById('leaveCarousel');
+        let bootstrapCarousel = null;
+        {% if leave_requests %}
+            bootstrapCarousel = new bootstrap.Carousel(carousel);
+        {% endif %}
+
+        // Animate request cards on carousel slide
+        function animateCards() {
+            const activeCard = document.querySelector('.carousel-item.active .request-card');
+            if (activeCard) {
+                activeCard.classList.add('active');
+            }
+            const otherCards = document.querySelectorAll('.carousel-item:not(.active) .request-card');
+            otherCards.forEach(card => card.classList.remove('active'));
+        }
+
+        // Restart animation
+        function restartAnimation() {
+            const requestCards = document.querySelectorAll('.request-card');
+            requestCards.forEach(card => {
+                card.classList.remove('active');
+            });
+            currentIndex = 0;
+            if (bootstrapCarousel) {
+                bootstrapCarousel.to(currentIndex);
+            }
+            setTimeout(animateCards, 100);
+        }
+
+        // Capture snapshot by moving to next request
+        function captureSnapshot() {
+            const items = document.querySelectorAll('.carousel-item').length;
+            if (bootstrapCarousel && items > 0) {
+                bootstrapCarousel.to(currentIndex);
+                animateCards();
+                alert(`Ready to capture snapshot for request ${currentIndex + 1}. Take a screenshot now!`);
+                currentIndex = (currentIndex + 1) % items;
+            }
+        }
+
+        // Create sparkle effect
+        function createSparkles() {
+            {% if leave_requests %}
+                const colors = ['#bbdefb', '#90caf9', '#1565c0'];
+                for (let i = 0; i < 20; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.top = Math.random() * 100 + '%';
+                    sparkle.style.animationDelay = Math.random() * 1.5 + 's';
+                    document.querySelector('.leave-container').appendChild(sparkle);
+                }
+            {% endif %}
+        }
+
+        // Initialize
+        window.onload = () => {
+            animateCards();
+            createSparkles();
+            {% if leave_requests %}
+                carousel.addEventListener('slid.bs.carousel', animateCards);
+            {% endif %}
+        };
+    </script>
+	<script>
+        const date = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const dayName = date.toLocaleDateString(undefined, { weekday: 'long' });
+        const formattedDate = date.toLocaleDateString(undefined, options);
+        document.getElementById("currentDateDay").textContent = `${formattedDate} (${dayName})`;
+    </script>
+
+</body>
+
+</html>
+
+
+
+

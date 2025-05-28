@@ -1,0 +1,132 @@
+{% extends 'student_base.html' %}
+{% block content %}
+<style>
+    .file-input-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .file-input-wrapper input[type="file"] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .file-icon-button {
+        background: none;
+        border: none;
+        font-size: 24px; /* bigger icon */
+        color: #555;
+        padding: 0 10px;
+    }
+
+    .file-icon-button:hover {
+        color: #007bff;
+    }
+</style>
+<div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+
+<h4 class="mb-3">Chating with {{ display_name }} ({{extra_subject}} {{ recipient.role|capfirst }})</h4>
+<div class="container mt-4">
+    <div class="chat-container d-flex flex-column">
+        <div class="chat-messages d-flex flex-column" id="chat-box">
+            <div id="message-list">
+                {% include 'messages_list.html' with messages=messages user=request.user %}
+            </div>
+        </div>
+        <div id="typing-indicator" class="px-3 text-muted" style="font-style: italic; display: none;">
+            {{ display_name }} is typing...
+        </div>
+        <br><br><br><br>
+
+        <form method="post" enctype="multipart/form-data" class="chat-input" style="position: sticky; bottom: 0; z-index: 10;">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" name="content" class="form-control" placeholder="Type your message..." required autocomplete="off">
+                <div class="file-input-wrapper">
+                    <button type="button" class="file-icon-button">📎</button>
+                    <input type="file" name="attachment" accept=".pdf,.doc,.docx,image/*" title="Attach file">
+                </div>
+                <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const chatBox = document.getElementById("chat-box");
+
+    function scrollToBottom() {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function refreshMessages() {
+        fetch(window.location.href, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("message-list").innerHTML = data.html;
+            scrollToBottom();
+        });
+    }
+
+    // Initial scroll to bottom
+    scrollToBottom();
+
+    // Auto-refresh every 5 seconds
+    setInterval(refreshMessages, 5000);
+</script>
+
+<script>
+    const chatInput = document.querySelector('input[name="content"]');
+    let typingTimer;
+
+    function sendTypingStatus(isTyping) {
+        fetch("{% url 'set_typing_status' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `recipient_id={{ recipient.id }}&is_typing=${isTyping}`
+        });
+    }
+
+    chatInput.addEventListener('input', () => {
+        sendTypingStatus(true);
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(() => sendTypingStatus(false), 3000); // stop typing after 3s
+    });
+
+    function checkTypingStatus() {
+        fetch("{% url 'get_typing_status' recipient.id %}")
+        .then(res => res.json())
+        .then(data => {
+            const indicator = document.getElementById('typing-indicator');
+            if (data.is_typing) {
+                indicator.style.display = 'block';
+            } else {
+                indicator.style.display = 'none';
+            }
+        });
+    }
+
+    // Poll every 2 seconds
+    setInterval(checkTypingStatus, 2000);
+</script>
+</div>
+    </div>
+</div>
+
+{% endblock %}

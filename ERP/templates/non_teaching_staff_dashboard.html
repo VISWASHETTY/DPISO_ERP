@@ -1,0 +1,58 @@
+{% extends 'non_teaching_staff_base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Transport Attendance Summary - {{ today }}</h2>
+
+    {% if has_attendance_data %}
+        <canvas id="attendanceChart" height="100"></canvas>
+    {% else %}
+        <p class="text-danger">No attendance data available for {{ today }}.</p>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const chartData = JSON.parse('{{ chart_data|escapejs }}');
+
+    const labels = chartData.map(item => item.bus_no);
+    const presentData = chartData.map(item => item.present);
+    const absentData = chartData.map(item => item.absent);
+
+    if (chartData.length > 0 && (presentData.some(e => e > 0) || absentData.some(e => e > 0))) {
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Present',
+                        data: presentData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)'
+                    },
+                    {
+                        label: 'Absent',
+                        data: absentData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Present vs Absent Students Per Bus'
+                    }
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

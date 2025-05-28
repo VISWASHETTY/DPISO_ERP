@@ -1,0 +1,135 @@
+{% extends 'student_base.html' %}
+
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks List</title>
+    <style>
+        .filter-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .filter-container select, .filter-container button {
+            padding: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+    <div class="container-full">
+        <div class="content-header">
+
+        <div class="animated fadeIn">
+            <div class="row justify-content-center">                        <div class="card-body">
+                            <form method="GET" action="" class="needs-validation" novalidate>
+                                <div class="form-group">
+                                    <label for="exam_id" class="form-label">Select Exam</label>
+                                    <select name="exam_id" id="exam_id" class="form-control" onchange="this.form.submit()" required>
+                                        <option value="">All Exams</option>
+                                        {% for exam in exams %}
+                                            <option value="{{ exam.id }}" {% if exam.id|stringformat:"s" == selected_exam_id %}selected{% endif %}>
+                                                {{ exam.examname }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select an exam.
+                                    </div>
+                                </div>
+                                <noscript><button type="submit" class="btn btn-primary">Filter</button></noscript>
+                            </form>
+                        </div>
+            </div>
+        </div>
+    
+    <script>
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+            
+                Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+    
+
+{% if marks2 %}
+    <h3>Marks List {% if selected_exam_id %} for {{ marks2.0.exam.examname }} {% endif %}</h3>
+{% else %}
+    <h3>No Marks Found</h3>
+{% endif %}
+
+<div class="content mt-3">
+    <div class="animated fadeIn">
+        <div class="row">
+  
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong class="card-title">Mark's Table</strong>
+                    </div>
+                    <div class="card-body">
+                        <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Sno</th>
+                                    <th>Student Name</th>
+                                    <th>Class</th>
+                                    <th>Section</th>
+                                    <th>Exam</th>
+                                    <th>Subject</th>
+                                    <th>Marks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in marks2 %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ i.student.studentname }}</td>
+                                        <td>{{ i.student.classs.name }}</td>
+                                        <td>{{ i.student.section.name }}</td>
+                                        <td>{{ i.exam.examname }}</td>
+                                        <td>{{ i.subject.name }}</td>
+                                        <td>{{ i.marks }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7">No marks available for the selected exam.</td>
+                                    </tr>
+                                    {% endfor %}
+                              
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+  
+  
+        </div>
+    </div>
+  </div>
+  </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+{% endblock %}

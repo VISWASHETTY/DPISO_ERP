@@ -1,0 +1,68 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Heading</title>
+</head>
+<body>
+  <div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+    <div class="content mt-4">
+        <div class="animated fadeIn">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <div class="card" style="box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 8px;">
+                <div class="card-header">
+                  <strong class="card-title">Add Dashboard Heading</strong>
+                </div>
+                <div class="card-body">
+                  <form method="POST" class="needs-validation" novalidate>
+                    {% csrf_token %}
+      
+                    <div class="form-group mb-3">
+                      <label for="heading">Heading:</label>
+                      <input type="text" name="heading" class="form-control" placeholder="Enter dashboard heading" required>
+                      <div class="invalid-feedback">Please enter a heading.</div>
+                    </div>
+      
+                    <div class="text-center mt-3">
+                      <button type="submit" class="btn btn-primary px-4">Add Heading</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      
+      <script>
+        // Bootstrap form validation script
+        (function () {
+          'use strict';
+          window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.forEach.call(forms, function (form) {
+              form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+              }, false);
+            });
+          }, false);
+        })();
+      </script>
+      
+</body>
+</html>
+
+{% endblock %}

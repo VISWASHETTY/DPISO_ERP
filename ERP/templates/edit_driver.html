@@ -1,0 +1,26 @@
+{% extends 'non_teaching_staff_base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Edit Driver</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" name="name" value="{{ driver.name }}" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label>Phone</label>
+      <input type="text" name="phone" value="{{ driver.phone }}" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label>License Number</label>
+      <input type="text" name="license_number" value="{{ driver.license_number }}" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label>Address</label>
+      <textarea name="address" class="form-control" required>{{ driver.address }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,262 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+
+   <div class="content-wrapper">
+	  <div class="container-full">
+	
+		<div class="content-header">
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                        <div class="card-header">
+                            <strong class="card-title">Teacher Details</strong>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="username" class="form-label">Username</label>
+                                            <input type="text" name="username" id="username" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please enter a username.
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" name="email" id="email" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please enter a valid email.
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="password" name="password" id="password" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please enter a password.
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-6" style="display: none;">
+                                        <input type="text" name="role" class="form-control" value="teacher">
+                                    </div>
+    
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="first_name" class="form-label">First Name</label>
+                                            <input type="text" name="first_name" id="first_name" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please enter your first name.
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="last_name" class="form-label">Last Name</label>
+                                            <input type="text" name="last_name" id="last_name" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please enter your last name.
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="date_of_birth" class="form-label">Date of Birth</label>
+                                            <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please enter your date of birth.
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="phone" class="form-label">Phone</label>
+                                            <input type="text" name="phone" id="phone" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please enter your phone number.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+   
+    
+
+        <hr>
+
+        <!-- Select Classes -->
+        <h4>Select Classes:</h4>
+        <div class="row g-3">
+            {% for class in classes %}
+                <div class="col-md-3">
+                    <div class="class-card border rounded p-3 text-center" data-class-id="{{ class.id }}">
+                        <input type="checkbox" class="d-none class-checkbox" name="assigned_classes" value="{{ class.id }}" id="class_{{ class.id }}">
+                        <label class="class-label d-block" for="class_{{ class.id }}">{{ class.name }}</label>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <hr>
+        <div id="dynamic-container"></div>
+
+        <br>
+      <input type="button" class="btn btn-primary" value="save">
+    </form>
+</div>
+</div>
+</div>
+</div>
+
+<style>
+/* Class Card Styling */
+.class-card {
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.class-card:hover {
+    background: #007bff;
+    color: white;
+}
+
+.class-card.selected {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.class-label {
+    font-size: 18px;
+}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let classCheckboxes = document.querySelectorAll(".class-checkbox");
+    let dynamicContainer = document.getElementById("dynamic-container");
+
+    classCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            let classId = this.value;
+            let classContainerId = `class-container-${classId}`;
+
+            if (this.checked) {
+                fetch(`/get-sections-subjects/?class_ids[]=` + classId)
+                    .then(response => response.json())
+                    .then(data => {
+                        let classContainer = document.createElement("div");
+                        classContainer.setAttribute("id", classContainerId);
+                        classContainer.classList.add("mt-4", "p-3", "border", "rounded", "shadow-sm", "bg-light");
+
+                        classContainer.innerHTML = `
+                            <h5 class="text-primary">${this.nextElementSibling.innerText}</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-success">Sections</h6>
+                                    <div id="sections-${classId}" class="btn-group d-flex flex-wrap">
+                                        ${data.sections.map(section => `
+                                            <input type="checkbox" class="btn-check section-checkbox" id="section_${section.id}" 
+                                                data-class-id="${classId}" name="assigned_sections" value="${section.id}">
+                                            <label class="btn btn-outline-success m-1" 
+                                                for="section_${section.id}">
+                                                ${section.name}
+                                            </label>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-warning">Subjects</h6>
+                                    <div id="subjects-${classId}" class="btn-group d-flex flex-wrap"></div>
+                                </div>
+                            </div>
+                        `;
+
+                        dynamicContainer.appendChild(classContainer);
+
+                        attachSectionListeners(classId, data.subjects, data.assigned_subjects_by_section);
+                    });
+            } else {
+                let existingContainer = document.getElementById(classContainerId);
+                if (existingContainer) {
+                    existingContainer.remove();
+                }
+            }
+        });
+    });
+
+    function attachSectionListeners(classId, allSubjects, assignedSubjectsBySection) {
+        setTimeout(() => {
+            document.querySelectorAll(`.section-checkbox[data-class-id="${classId}"]`).forEach(sectionCheckbox => {
+                sectionCheckbox.addEventListener("change", function () {
+                    let sectionId = this.value;
+                    let subjectsContainer = document.getElementById(`subjects-${classId}`);
+
+                    if (this.checked) {
+                        let assignedSubjects = assignedSubjectsBySection[sectionId] || [];
+
+                        subjectsContainer.innerHTML = allSubjects.map(subject => {
+                            let isAssigned = assignedSubjects.includes(subject.id);
+                            return `
+                                <input type="checkbox" class="btn-check subject-checkbox" id="subject_${subject.id}" 
+                                    name="assigned_subjects" value="${subject.id}" ${isAssigned ? "disabled" : ""}>
+                                <label class="btn ${isAssigned ? "btn-secondary" : "btn-outline-warning"} m-1" 
+                                    for="subject_${subject.id}">
+                                    ${subject.name} ${isAssigned ? "(Already Assigned)" : ""}
+                                </label>
+                            `;
+                        }).join('');
+                    } else {
+                        subjectsContainer.innerHTML = '';
+                    }
+                });
+            });
+        }, 300);
+    }
+});
+
+</script>
+<script>
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}
